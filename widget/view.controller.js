@@ -39,6 +39,7 @@
     var regexDict = {};
     var bulkImportIOCs = {};
     var indicatorTypePicklistUUID = '50ee5bfa-e18f-49ba-8af9-dcca25b0f9c0';
+    var customIOCTypeList = [];
 
     // Theme and Image File Paths
     $scope.isLightTheme = $rootScope.theme.id === 'light';
@@ -78,7 +79,7 @@
       // $scope._getNotEnteredIOCTypes = _getNotEnteredIOCTypes;
     $scope.indicatorTypeChanged = indicatorTypeChanged;
     $scope.saveNewIOCType = saveNewIOCType;
-      // $scope._updateIndicatorTypePicklist = _updateIndicatorTypePicklist;
+      // $scope._commitIndicatorTypePicklist = _commitIndicatorTypePicklist;
       // $scope._addNewIocTypeToKeystore = _addNewIocTypeToKeystore;
       // $scope._addNewRegexToKeystore = _addNewRegexToKeystore;
       // $scope._commitRegexPatternChanges = _commitRegexPatternChanges;
@@ -99,11 +100,14 @@
       $scope.updatedIOCTypeReGexMapping.recordValue.push(regexKeyStoreTemplate);
     }
 
-    function _updateIndicatorTypePicklist(iocTypeName) {
+    function _commitIndicatorTypePicklist(newIOCList) {
       iocExtractionConfigService.getPicklist(indicatorTypePicklistUUID).then(function (response) {
         let orderIndex = response.picklists.length;
-        let newPicklistItem = {'itemValue': iocTypeName, 'orderIndex': orderIndex };
-        response.picklists.push(newPicklistItem);
+        newIOCList.forEach(function(iocTypeName){
+          let newPicklistItem = {'itemValue': iocTypeName, 'orderIndex': orderIndex };
+          response.picklists.push(newPicklistItem);
+          orderIndex = orderIndex + 1;
+        });
         let payload = response;
         console.log(payload);
         iocExtractionConfigService.updatePicklist(payload, indicatorTypePicklistUUID);
@@ -179,7 +183,8 @@
         _addNewRegexToKeystore(iocTypeName);
       }
       if($scope.addCustomIOCType){
-        _updateIndicatorTypePicklist(iocTypeName);
+        
+        customIOCTypeList.push(iocTypeName);
       }
       _getNotEnteredIOCTypes();
       setAddNewIOCFlags('addNewIOCTypeDisabled');
@@ -398,6 +403,10 @@
         if (param === 'save') {
           _commitExclusionSettings();
           _commitRegexPatternChanges();
+          if (customIOCTypeList.length > 0){
+            _commitIndicatorTypePicklist(customIOCTypeList);
+            customIOCTypeList = [];
+          }
         }
       }
       WizardHandler.wizard('configureIndicatorExtraction').next();
