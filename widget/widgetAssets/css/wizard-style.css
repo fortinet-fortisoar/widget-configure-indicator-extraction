@@ -3,7 +3,7 @@
   Copyright (c) 2024 Fortinet Inc
   Copyright end */
 
-  .ioc-extraction-config-steps {
+.ioc-extraction-config-steps {
 	.steps-indicator {
 		li {
 			&:first-child {
@@ -11,26 +11,31 @@
 					content: "\e97c";
 				}
 			}
+
 			&:nth-child(2) {
 				a::before {
 					content: "\e977";
 				}
 			}
+
 			&:nth-child(3) {
 				a::before {
 					content: "\eef28";
 				}
 			}
+
 			&:nth-child(4) {
 				a::before {
 					content: "\e985";
 				}
 			}
+
 			&:nth-child(5) {
 				a::before {
 					content: "\e998";
 				}
 			}
+
 			&:last-child {
 				a::before {
 					content: "\e97e";
@@ -51,11 +56,20 @@
 	padding-top: 15px;
 }
 
-.bulk-import-footer{
+.bulk-import-footer {
 	padding-top: 15px !important;
-    text-align: right !important;
-    border: none;
-    background: transparent;
-    padding-right: 15px !important;
-    padding-bottom: 15px !important;
+	text-align: right !important;
+	border: none;
+	background: transparent;
+	padding-right: 15px !important;
+	padding-bottom: 15px !important;
+}
+
+.input-background-white {
+	background: #F7F8F9 !important;
+}
+
+.add-indicator-type-form {
+	margin: 6px 15px 0px 15px;
+	padding-top: 15px;
 }

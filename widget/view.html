@@ -206,7 +206,7 @@
                                                 class="padding-top-lg font-size-16">{{viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_FORM_LABEL}}</span>
                                         </label>
                                         <div id="add-indicator-type" class="margin-top-md">
-                                            <div class="bulk-import-file-upload">
+                                            <div class="add-indicator-type-form">
                                                 <form data-ng-submit="submit()" id="submit-indicator-type-form"
                                                     class="noMargin" name="submitIndicatorTypeForm"
                                                     data-ng-class="{'state-wait': processing }">
@@ -225,19 +225,19 @@
                                                         </select>
                                                     </div>
                                                     <div class="margin-bottom-md">
-                                                        <!-- <label class="font-size-12" style="color:#D2D5DA" data-ng-class="{'label-color-white': isLightTheme}"
-                                                      for="report-user-name"> Regex Pattern </label> -->
                                                         <input id="enterIndicatorName"
-                                                            data-ng-class="{'input-background-white': isLightTheme}"
                                                             data-ng-disabled="!addCustomIOCType"
                                                             class="form-control border-radius-5" type="text"
                                                             ng-model="selectedIndicatorType.iocType"
                                                             name="enterIndicatorName" placeholder="Enter Indicator Type"
                                                             style="width: 233px;">
+                                                        <span class="font-075em padding-left-10 text-danger"
+                                                            data-ng-if="duplicateIOCType">{{duplicateIOCErrorMsg}}
+                                                        </span>
                                                     </div>
                                                     <div>
-                                                        <input data-ng-class="{'input-background-white': isLightTheme}"
-                                                            data-ng-disabled="isSystemIOCType"
+                                                        <input 
+                                                            data-ng-disabled="isRegexAvailable"
                                                             class="form-control border-radius-5" type="text"
                                                             ng-model="selectedIndicatorType.pattern"
                                                             name="enterRegexPattern" placeholder="Enter Regex Pattern"
@@ -250,15 +250,6 @@
                                             <button type="submit" class="btn btn-primary btn-sm"
                                                 data-ng-disabled="!iocTypeSelected" id="add-new-ioc-button"
                                                 data-ng-click="saveNewIOCType(selectedIndicatorType.iocType)">
-                                                <!-- <cs-spinner data-ng-show="processing"
-                                                    class="pull-left margin-top-xsm state-wait button-spinner margin-right-sm"
-                                                    data-show-background="true" data-no-margin="margin-0"
-                                                    aria-hidden="true">
-                                                    <div class="loader background margin-0"
-                                                        data-ng-class="{'background' : showBackground, 'margin-0': noMargin}">
-                                                        <div class="cs-spinner"></div>
-                                                    </div>
-                                                </cs-spinner> -->
                                                 <i
                                                     class="icon icon-check margin-right-sm"></i>{{viewWidgetVars.SAVE_BUTTON}}
                                             </button>
