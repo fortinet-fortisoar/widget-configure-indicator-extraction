@@ -213,15 +213,18 @@
                                                     <div class="margin-bottom-md" id="selectIOCType">
                                                         <select data-ng-class="{'input-background-white': isLightTheme}"
                                                             name="indicatorType" id="indicatorType"
-                                                            class="form-control border-radius-5 "
-                                                            data-ng-model="selectedIndicatorType.iocType"
-                                                            data-ng-change="indicatorTypeChanged(selectedIndicatorType.iocType)"
+                                                            class="form-control border-radius-5"
+                                                            data-ng-model="selectedIndicatorType.dropDownValue"
+                                                            data-ng-change="indicatorTypeChanged(selectedIndicatorType.dropDownValue)"
                                                             style="width: auto;">
-                                                            <option value="">
+                                                            <option value="" disabled selected>
                                                                 {{viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_SELECT_INDICATOR_LABEL}}
                                                             </option>
                                                             <option ng-repeat="item in notYetEnteredIOCTypes"
                                                                 value="{{item}}">{{item}}</option>
+                                                            <option value="Add Custom Indicator Type">
+                                                                Add Custom Indicator Type
+                                                            </option>
                                                         </select>
                                                     </div>
                                                     <div class="margin-bottom-md">
@@ -230,14 +233,14 @@
                                                             class="form-control border-radius-5" type="text"
                                                             ng-model="selectedIndicatorType.iocType"
                                                             name="enterIndicatorName" placeholder="Enter Indicator Type"
-                                                            style="width: 233px;">
+                                                            style="width: 233px;"
+                                                            data-ng-class="{'has-error': duplicateIOCType}">
                                                         <span class="font-075em padding-left-10 text-danger"
                                                             data-ng-if="duplicateIOCType">{{duplicateIOCErrorMsg}}
                                                         </span>
                                                     </div>
                                                     <div>
-                                                        <input 
-                                                            data-ng-disabled="isRegexAvailable"
+                                                        <input data-ng-disabled="isRegexAvailable"
                                                             class="form-control border-radius-5" type="text"
                                                             ng-model="selectedIndicatorType.pattern"
                                                             name="enterRegexPattern" placeholder="Enter Regex Pattern"
@@ -313,8 +316,7 @@
                         class="icon icon-check margin-right-sm"></i>{{viewWidgetVars.SAVE_BUTTON}}
                 </button>
                 <button type="button" class="btn btn-sm btn-second-primary pull-right margin-top-lg margin-right-lg"
-                    data-ng-click="moveNext()"
-                    id="solutionpack-configure-env-next-btn">{{viewWidgetVars.SKIP_BUTTON}}<i
+                    data-ng-click="moveNext()" id="solutionpack-configure-env-next-btn">{{viewWidgetVars.SKIP_BUTTON}}<i
                         class="fa fa-chevron-right margin-left-sm"></i>
                 </button>
             </div>

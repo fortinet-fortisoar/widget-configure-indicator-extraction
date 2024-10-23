@@ -72,14 +72,14 @@
     // "Add New Indicator Type" Functionality
     var _customIOCTypeList = [];
     var _indicatorTypePicklistUUID = '50ee5bfa-e18f-49ba-8af9-dcca25b0f9c0';
-    $scope.notYetEnteredIOCTypes = ['Add Custom Indicator Type'];
-    $scope.selectedIndicatorType = { iocType: '', pattern: [] };
+    // $scope.notYetEnteredIOCTypes = ['Add Custom Indicator Type'];
+    $scope.notYetEnteredIOCTypes = [];
+    $scope.selectedIndicatorType = { iocType: '', pattern: [] , dropDownValue: ''};
     $scope.addCustomIOCType = false;
     $scope.isRegexAvailable = true;
     $scope.iocTypeSelected = false;
     $scope.customIOCAlreadyExists = false;
     $scope.duplicateIOCType = false;
-
     $scope.setAddNewIOCFlags = setAddNewIOCFlags;
     $scope.indicatorTypeChanged = indicatorTypeChanged;
     $scope.saveNewIOCType = saveNewIOCType;
@@ -207,10 +207,11 @@
       if (iocType === 'Add Custom Indicator Type') {
         $scope.isRegexAvailable = false;
         $scope.addCustomIOCType = true;
-        $scope.selectedIndicatorType = { iocType: '', pattern: [] };
+        $scope.selectedIndicatorType = { iocType: '', pattern: [], dropDownValue: 'Add Custom Indicator Type'};
       } else {
         $scope.addCustomIOCType = false;
         $scope.isRegexAvailable = true;
+        $scope.selectedIndicatorType['iocType'] = iocType;
         $scope.selectedIndicatorType['pattern'] = _getRegexPattern(iocType, _regexDict).join(',');
         if ($scope.selectedIndicatorType['pattern'].length === 0) {
           $scope.isRegexAvailable = false;
@@ -225,7 +226,7 @@
       }
       if (flag === 'addNewIOCTypeDisabled') {
         $scope.addNewIndicatorType = false;
-        $scope.selectedIndicatorType = { iocType: '', pattern: [] };
+        $scope.selectedIndicatorType = { iocType: '', pattern: [], dropDownValue: ''};
         $scope.addCustomIOCType = false;
         $scope.isRegexAvailable = true;
         $scope.iocTypeSelected = false;
@@ -247,7 +248,7 @@
           return alreadyEnteredIOCTypes.indexOf(item) === -1;
         }
       });
-      unCommonElements.push('Add Custom Indicator Type')
+      // unCommonElements.push('Add Custom Indicator Type');
       $scope.notYetEnteredIOCTypes = unCommonElements;
 
       return [...alreadyEnteredIOCTypes, ...defaultIOCTypeList];
