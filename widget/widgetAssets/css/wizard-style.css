@@ -83,3 +83,13 @@
 .add-indicator-type-form .has-error {
 	border: 1px solid #da393d;
 }
+
+.regex-label {
+    max-width: 400px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 12px;
+    margin-bottom: 0px;
+    margin-top: 8px;
+}

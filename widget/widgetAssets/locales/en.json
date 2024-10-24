@@ -30,6 +30,7 @@
         "EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_SELECT_INDICATOR_LABEL": "Select an Indicator Type",
         "EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ALREADY_EXISTS_ERR_MSG": " - Indicator Type Already Exists",
         "EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ALREADY_ADDED_ERR_MSG": " - Indicator Type Already Added",
+        "EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_EMPTY_ERR_MSG": "Please enter the Indicator Type",
         
         "CANCEL_BUTTON":"Cancel",
         "BACK_BUTTON": "Back",

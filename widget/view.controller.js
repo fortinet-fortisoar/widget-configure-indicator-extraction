@@ -72,22 +72,32 @@
     // "Add New Indicator Type" Functionality
     var _customIOCTypeList = [];
     var _indicatorTypePicklistUUID = '50ee5bfa-e18f-49ba-8af9-dcca25b0f9c0';
-    // $scope.notYetEnteredIOCTypes = ['Add Custom Indicator Type'];
     $scope.notYetEnteredIOCTypes = [];
-    $scope.selectedIndicatorType = { iocType: '', pattern: [] , dropDownValue: ''};
+    $scope.selectedIndicatorType = { iocType: '', pattern: [], dropDownValue: '' };
     $scope.addCustomIOCType = false;
-    $scope.isRegexAvailable = true;
-    $scope.iocTypeSelected = false;
     $scope.customIOCAlreadyExists = false;
-    $scope.duplicateIOCType = false;
+    $scope.duplicateIOCTypeFlag = false;
     $scope.setAddNewIOCFlags = setAddNewIOCFlags;
     $scope.indicatorTypeChanged = indicatorTypeChanged;
     $scope.saveNewIOCType = saveNewIOCType;
+    $scope.clearDuplicateIOCErrorMsg = clearDuplicateIOCErrorMsg;
+    // $scope.notYetEnteredIOCTypes = ['Add Custom Indicator Type'];
     // $scope._commitIndicatorTypePicklist = _commitIndicatorTypePicklist;
     // $scope._addNewIocTypeToKeystore = _addNewIocTypeToKeystore;
     // $scope._addNewRegexToKeystore = _addNewRegexToKeystore;
     // $scope._commitRegexPatternChanges = _commitRegexPatternChanges;
     // $scope._getNotEnteredIOCTypes = _getNotEnteredIOCTypes;
+
+
+    function clearDuplicateIOCErrorMsg() {
+      if ($scope.duplicateIOCTypeFlag) {
+        if ($scope.duplicateIOCTypeName !== $scope.selectedIndicatorType.iocType) {
+          $scope.duplicateIOCTypeFlag = false;
+        }
+      } else {
+        return;
+      }
+    }
 
 
     function _commitRegexPatternChanges() {
@@ -180,13 +190,21 @@
     function saveNewIOCType(iocTypeName) {
       if ($scope.addCustomIOCType) {
         let _existingIOCTypes = _getNotEnteredIOCTypes();
-        if (_customIOCTypeList.includes(iocTypeName)) {
-          $scope.duplicateIOCType = true;
-          $scope.duplicateIOCErrorMsg = '"' + iocTypeName + '"' + $scope.viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ALREADY_ADDED_ERR_MSG
+        if (iocTypeName === '' || iocTypeName === undefined) {
+          $scope.duplicateIOCTypeName = iocTypeName;
+          $scope.duplicateIOCTypeFlag = true;
+          $scope.duplicateIOCErrorMsg = $scope.viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_EMPTY_ERR_MSG;
+          return;
+        }
+        else if (_customIOCTypeList.includes(iocTypeName)) {
+          $scope.duplicateIOCTypeName = iocTypeName;
+          $scope.duplicateIOCTypeFlag = true;
+          $scope.duplicateIOCErrorMsg = '"' + iocTypeName + '"' + $scope.viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ALREADY_ADDED_ERR_MSG;
           return;
         } else if (_existingIOCTypes.includes(iocTypeName)) {
-          $scope.duplicateIOCType = true;
-          $scope.duplicateIOCErrorMsg = '"' + iocTypeName + '"' + $scope.viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ALREADY_EXISTS_ERR_MSG
+          $scope.duplicateIOCTypeName = iocTypeName;
+          $scope.duplicateIOCTypeFlag = true;
+          $scope.duplicateIOCErrorMsg = '"' + iocTypeName + '"' + $scope.viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ALREADY_EXISTS_ERR_MSG;
           return;
         }
         else {
@@ -207,15 +225,16 @@
       if (iocType === 'Add Custom Indicator Type') {
         $scope.isRegexAvailable = false;
         $scope.addCustomIOCType = true;
-        $scope.selectedIndicatorType = { iocType: '', pattern: [], dropDownValue: 'Add Custom Indicator Type'};
+        $scope.selectedIndicatorType = { iocType: '', pattern: [], dropDownValue: 'Add Custom Indicator Type' };
       } else {
         $scope.addCustomIOCType = false;
-        $scope.isRegexAvailable = true;
         $scope.selectedIndicatorType['iocType'] = iocType;
         $scope.selectedIndicatorType['pattern'] = _getRegexPattern(iocType, _regexDict).join(',');
+        $scope.isRegexAvailable = true;
         if ($scope.selectedIndicatorType['pattern'].length === 0) {
           $scope.isRegexAvailable = false;
         }
+        $scope.duplicateIOCTypeFlag = false;
       }
     }
 
@@ -223,14 +242,16 @@
       if (flag === 'addNewIOCTypeEnabled') {
         $scope.addNewIndicatorType = true;
         $scope.bulkImportEnable = false;
+        $scope.isRegexAvailable = true;
+        $scope.iocTypeSelected = false;
       }
       if (flag === 'addNewIOCTypeDisabled') {
         $scope.addNewIndicatorType = false;
-        $scope.selectedIndicatorType = { iocType: '', pattern: [], dropDownValue: ''};
+        $scope.selectedIndicatorType = { iocType: '', pattern: [], dropDownValue: '' };
         $scope.addCustomIOCType = false;
         $scope.isRegexAvailable = true;
         $scope.iocTypeSelected = false;
-        $scope.duplicateIOCType = false;
+        $scope.duplicateIOCTypeFlag = false;
       }
     }
 
@@ -520,6 +541,7 @@
             EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_SELECT_INDICATOR_LABEL: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_SELECT_INDICATOR_LABEL'),
             EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ALREADY_EXISTS_ERR_MSG: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ALREADY_EXISTS_ERR_MSG'),
             EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ALREADY_ADDED_ERR_MSG: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ALREADY_ADDED_ERR_MSG'),
+            EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_EMPTY_ERR_MSG: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_EMPTY_ERR_MSG'),
 
             BACK_BUTTON: widgetUtilityService.translate('configureIndicatorExtraction.BACK_BUTTON'),
             SAVE_BUTTON: widgetUtilityService.translate('configureIndicatorExtraction.SAVE_BUTTON'),
