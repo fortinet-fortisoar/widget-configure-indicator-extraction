@@ -181,11 +181,24 @@
                                             </div>
                                         </div>
                                         <div class="modal-footer bulk-import-footer">
+                                            <div>
+                                                <input type="checkbox"
+                                                    class="margin-left-lg margin-left-sm margin-right-md pull-left"
+                                                    name="select-defanging" id="select-defanging"
+                                                    data-ng-model="extractDefangedIOCsFlag"
+                                                    data-ng-change="updateDefangSelection(extractDefangedIOCsFlag)">
+                                                </input>
+                                                <label for="select-defanging"
+                                                    class="control-label font-size-12 margin-top-2 pull-left">Extract
+                                                    Defang Indicators</label>
+                                            </div>
                                             <button type="submit" class="btn btn-primary btn-sm"
-                                                data-ng-disabled="!bulkImportIOCExtractionDone"
-                                                id="upload-bulk-import-file" data-ng-click="importIOCsFromFile()">
-                                                <i
-                                                    class="icon icon-import margin-right-sm"></i>{{viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_FILE_IMPORT_BUTTON}}
+                                                data-ng-disabled="!uploadedFileFlag" id="upload-bulk-import-file"
+                                                data-ng-click="importIOCsFromFile()">
+                                                <i class="icon icon-import margin-right-sm"
+                                                    data-ng-show="!bulkImportInProgress"></i><i
+                                                    class="icon margin-right-sm"
+                                                    data-ng-class="{'fa fa-spin icon-refresh': bulkImportInProgress}"></i>{{viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_FILE_IMPORT_BUTTON}}
                                             </button>
                                             <button type="button" class="btn btn-second-primary btn-sm"
                                                 data-ng-click="setBulkImportFlags('bulkImportDisable')"

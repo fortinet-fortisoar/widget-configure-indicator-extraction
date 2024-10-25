@@ -95,10 +95,10 @@
       return executeConnectorOperation('file-content-extraction', 'extract_text', null, { file_iri: fileIRI });
     }
 
-    function getArtifactsFromFile(text) {
+    function getArtifactsFromFile(text, extractDefangedIOCs) {
       const htmlTagRegex = /<[^>]*>/g;
       text.replace(htmlTagRegex, '');
-      return executeConnectorOperation('cyops_utilities', 'extract_artifacts', null, { data: text });
+      return executeConnectorOperation('cyops_utilities', 'extract_artifacts_new', null, { data: text, extract_defang_indicators: extractDefangedIOCs});
     }
 
 
