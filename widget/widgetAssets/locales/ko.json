@@ -14,7 +14,7 @@
         "EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_LABEL": "지표를 수동으로 추가하거나",
         "EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_LAUNCH_BUTTON": "일괄 가져오기 사용",
         "EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_LAUNCH_BUTTON": "+ 새 지표 유형 추가",
-        "EXCLUDELIST_CONFIG_PAGE_BACK_BUTTON": "뒤로",
-        "EXCLUDELIST_CONFIG_PAGE_SAVE_BUTTON": "다음"
+        "BACK_BUTTON": "뒤로",
+        "SAVE_BUTTON": "다음"
     }
 }

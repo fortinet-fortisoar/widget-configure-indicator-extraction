@@ -22,8 +22,9 @@
       updateKeyStoreRecord: updateKeyStoreRecord,
       executeConnectorOperation: executeConnectorOperation,
       getArtifactsFromFile: getArtifactsFromFile,
-      getPicklistByIRI: getPicklistByIRI,
+      getPicklist: getPicklist,
       getFileContent: getFileContent,
+      updatePicklist: updatePicklist
     }
     return service;
 
@@ -79,6 +80,11 @@
           'Domain': ['Host'],
           'Email Address': ['Email'],
           'File': ['Filename']
+        },
+        regexKeyStoreTemplate: {
+          "defang_regx": "",
+          "pattern_regx": "",
+          "indicator_type": ""
         }
       }
     }
@@ -89,10 +95,10 @@
       return executeConnectorOperation('file-content-extraction', 'extract_text', null, { file_iri: fileIRI });
     }
 
-    function getArtifactsFromFile(text) {
+    function getArtifactsFromFile(text, extractDefangedIOCs) {
       const htmlTagRegex = /<[^>]*>/g;
       text.replace(htmlTagRegex, '');
-      return executeConnectorOperation('cyops_utilities', 'extract_artifacts', null, { data: text });
+      return executeConnectorOperation('cyops_utilities', 'extract_artifacts_new', null, { data: text, extract_defang_indicators: extractDefangedIOCs});
     }
 
 
@@ -109,17 +115,6 @@
         });
     }
 
-
-    function getPicklistByIRI() {
-      var defer = $q.defer();
-      var url = '/api/3/picklist_names/50ee5bfa-e18f-49ba-8af9-dcca25b0f9c0'; // IRI of 'Indicator Type' picklist
-      $resource(url).get(null, function (response) {
-        defer.resolve(response);
-      }, function (err) {
-        defer.reject(err);
-      })
-      return defer.promise;
-    }
 
     function createOrUpdateKeyStore(queryObject, module) {
       var defer = $q.defer();
@@ -144,6 +139,7 @@
       return defer.promise;
     }
 
+
     function updateKeyStoreRecord(keyStoreValue, recordUUID) {
       $resource(API.API_3_BASE + 'keys' + '/' + recordUUID, null, {
         'update': {
@@ -153,7 +149,36 @@
         return response;
       }).catch(function (err) {
         toaster.error({
-          body: 'Global Setting Configuration Failed.'
+          body: 'Exclusion Setting Configuration Failed.'
+        });
+        return $q.reject(err);
+      });
+    }
+
+
+    function getPicklist(uuid) {
+      var defer = $q.defer();
+      var url = API.API_3_BASE + 'picklist_names/' + uuid; // IRI of 'Indicator Type' picklist
+      $resource(url).get(null, function (response) {
+        defer.resolve(response);
+      }, function (err) {
+        defer.reject(err);
+      })
+      return defer.promise;
+    }
+
+
+    function updatePicklist(payload, picklistUUID) {
+      var url = API.API_3_BASE + 'picklist_names/' + picklistUUID;
+      $resource(url, null, {
+        'update': {
+          method: 'PUT'
+        }
+      }).update(payload).$promise.then(function (response) {
+        return response;
+      }).catch(function (err) {
+        toaster.error({
+          body: 'Picklist Update is Failed.'
         });
         return $q.reject(err);
       });

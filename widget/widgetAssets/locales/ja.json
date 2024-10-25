@@ -14,7 +14,7 @@
         "EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_LABEL": "インディケーターを手動で追加するか、または",
         "EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_LAUNCH_BUTTON": "一括インポート",
         "EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_LAUNCH_BUTTON": "+ 新しいインディケータータイプを追加",
-        "EXCLUDELIST_CONFIG_PAGE_BACK_BUTTON": "戻る",
-        "EXCLUDELIST_CONFIG_PAGE_SAVE_BUTTON": "次へ"
+        "BACK_BUTTON": "戻る",
+        "SAVE_BUTTON": "次へ"
     }
 }

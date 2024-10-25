@@ -181,16 +181,28 @@
                                             </div>
                                         </div>
                                         <div class="modal-footer bulk-import-footer">
+                                            <div>
+                                                <input type="checkbox"
+                                                    class="margin-left-lg margin-left-sm margin-right-md pull-left"
+                                                    name="select-defanging" id="select-defanging"
+                                                    data-ng-model="extractDefangedIOCsFlag"
+                                                    data-ng-change="updateDefangSelection(extractDefangedIOCsFlag)">
+                                                </input>
+                                                <label for="select-defanging"
+                                                    class="control-label font-size-12 margin-top-2 pull-left">{{viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_EXTRACT_DEFANGED_IOC}}</label>
+                                            </div>
                                             <button type="submit" class="btn btn-primary btn-sm"
-                                                data-ng-disabled="!bulkImportIOCExtractionDone"
-                                                id="upload-bulk-import-file" data-ng-click="importIOCsFromFile()">
-                                                <i
-                                                    class="icon icon-import margin-right-sm"></i>{{viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_FILE_IMPORT_BUTTON}}
+                                                data-ng-disabled="!uploadedFileFlag" id="upload-bulk-import-file"
+                                                data-ng-click="importIOCsFromFile()">
+                                                <i class="icon icon-import margin-right-sm"
+                                                    data-ng-show="!bulkImportInProgress"></i><i
+                                                    class="icon margin-right-sm"
+                                                    data-ng-class="{'fa fa-spin icon-refresh': bulkImportInProgress}"></i>{{viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_FILE_IMPORT_BUTTON}}
                                             </button>
                                             <button type="button" class="btn btn-second-primary btn-sm"
                                                 data-ng-click="setBulkImportFlags('bulkImportDisable')"
                                                 id="cancel-bulk-import"><i
-                                                    class="icon icon-close margin-right-sm"></i>{{viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_CANCEL_BUTTON}}
+                                                    class="icon icon-close margin-right-sm"></i>{{viewWidgetVars.CANCEL_BUTTON}}
                                             </button>
                                         </div>
                                     </div>
@@ -206,38 +218,42 @@
                                                 class="padding-top-lg font-size-16">{{viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_FORM_LABEL}}</span>
                                         </label>
                                         <div id="add-indicator-type" class="margin-top-md">
-                                            <div class="bulk-import-file-upload">
+                                            <div class="add-indicator-type-form">
                                                 <form data-ng-submit="submit()" id="submit-indicator-type-form"
                                                     class="noMargin" name="submitIndicatorTypeForm"
                                                     data-ng-class="{'state-wait': processing }">
                                                     <div class="margin-bottom-md" id="selectIOCType">
                                                         <select data-ng-class="{'input-background-white': isLightTheme}"
                                                             name="indicatorType" id="indicatorType"
-                                                            class="form-control border-radius-5 "
-                                                            data-ng-model="selectedIndicatorType.iocType"
-                                                            data-ng-change="indicatorTypeChanged(selectedIndicatorType.iocType)"
+                                                            class="form-control border-radius-5"
+                                                            data-ng-model="selectedIndicatorType.dropDownValue"
+                                                            data-ng-change="indicatorTypeChanged(selectedIndicatorType.dropDownValue)"
                                                             style="width: auto;">
-                                                            <option value="">
+                                                            <option value="" disabled selected>
                                                                 {{viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_SELECT_INDICATOR_LABEL}}
                                                             </option>
                                                             <option ng-repeat="item in notYetEnteredIOCTypes"
                                                                 value="{{item}}">{{item}}</option>
+                                                            <option value="Add Custom Indicator Type">
+                                                                Add Custom Indicator Type
+                                                            </option>
                                                         </select>
                                                     </div>
                                                     <div class="margin-bottom-md">
-                                                        <!-- <label class="font-size-12" style="color:#D2D5DA" data-ng-class="{'label-color-white': isLightTheme}"
-                                                      for="report-user-name"> Regex Pattern </label> -->
                                                         <input id="enterIndicatorName"
-                                                            data-ng-class="{'input-background-white': isLightTheme}"
                                                             data-ng-disabled="!addCustomIOCType"
                                                             class="form-control border-radius-5" type="text"
                                                             ng-model="selectedIndicatorType.iocType"
                                                             name="enterIndicatorName" placeholder="Enter Indicator Type"
-                                                            style="width: 233px;">
+                                                            style="width: 233px;"
+                                                            data-ng-class="{'has-error': duplicateIOCTypeFlag}" required
+                                                            data-ng-change="clearDuplicateIOCErrorMsg()">
+                                                        <span class="font-075em text-danger"
+                                                            data-ng-if="duplicateIOCTypeFlag">{{duplicateIOCErrorMsg}}
+                                                        </span>
                                                     </div>
                                                     <div>
-                                                        <input data-ng-class="{'input-background-white': isLightTheme}"
-                                                            data-ng-disabled="isSystemIOCType"
+                                                        <input data-ng-disabled="isRegexAvailable"
                                                             class="form-control border-radius-5" type="text"
                                                             ng-model="selectedIndicatorType.pattern"
                                                             name="enterRegexPattern" placeholder="Enter Regex Pattern"
@@ -249,23 +265,14 @@
                                         <div class="modal-footer bulk-import-footer">
                                             <button type="submit" class="btn btn-primary btn-sm"
                                                 data-ng-disabled="!iocTypeSelected" id="add-new-ioc-button"
-                                                data-ng-click="saveNewIOCType()">
-                                                <cs-spinner data-ng-show="processing"
-                                                    class="pull-left margin-top-xsm state-wait button-spinner margin-right-sm"
-                                                    data-show-background="true" data-no-margin="margin-0"
-                                                    aria-hidden="true">
-                                                    <div class="loader background margin-0"
-                                                        data-ng-class="{'background' : showBackground, 'margin-0': noMargin}">
-                                                        <div class="cs-spinner"></div>
-                                                    </div>
-                                                </cs-spinner>
+                                                data-ng-click="saveNewIOCType(selectedIndicatorType.iocType)">
                                                 <i
-                                                    class="icon icon-check margin-right-sm"></i>{{viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_SAVE_BUTTON}}
+                                                    class="icon icon-check margin-right-sm"></i>{{viewWidgetVars.SAVE_BUTTON}}
                                             </button>
                                             <button type="button" class="btn btn-second-primary btn-sm"
                                                 data-ng-click="setAddNewIOCFlags('addNewIOCTypeDisabled')"
                                                 id="cancel-bulk-import"><i
-                                                    class="icon icon-close margin-right-sm"></i>{{viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_CANCEL_BUTTON}}
+                                                    class="icon icon-close margin-right-sm"></i>{{viewWidgetVars.CANCEL_BUTTON}}
                                             </button>
                                         </div>
                                     </div>
@@ -275,13 +282,21 @@
                                     <div data-ng-repeat="(indicatorType, exclusionDetails) in updatedExclusionSettings.recordValue"
                                         class="excluded-ui-select" data-ng-show="!bulkImportEnable">
                                         <div class="padding-bottom-md">
-                                            <label class="control-label text-transform-none">{{indicatorType}}:
-                                                <span
-                                                    data-uib-tooltip="Specify {{indicatorType}} to exclude from enrichment."
-                                                    data-tooltip-placement="top-left"
-                                                    data-tooltip-append-to-body="true"><i class="icon icon-information"
-                                                        aria-hidden="true"></i></span>
-                                            </label>
+
+                                            <div>
+                                                <label class="control-label text-transform-none">{{indicatorType}}:
+                                                    <span
+                                                        data-uib-tooltip="Specify {{indicatorType}} to exclude from enrichment."
+                                                        data-tooltip-placement="top-left"
+                                                        data-tooltip-append-to-body="true"><i
+                                                            class="icon icon-information" aria-hidden="true"></i></span>
+                                                </label>
+                                                <label class="control-label text-transform-none pull-right regex-label">
+                                                    Regex: {{exclusionDetails.pattern.length > 0 ?
+                                                    exclusionDetails.pattern[0] : 'NA'}}
+                                                </label>
+                                            </div>
+
                                             <div class="cs-select padding-left-3">
                                                 <ui-select name="{{indicatorType}}"
                                                     data-ng-model="exclusionDetails.excludedIOCs" multiple
@@ -315,15 +330,14 @@
             <div class="ingestion-modal-footer">
                 <button type="button" class="btn btn-sm btn-second-primary margin-top-lg margin-left-lg"
                     id="solutionpack-configure-back-env-btn" data-ng-click="moveBack()"><i
-                        class="fa fa-chevron-left margin-right-sm"></i>{{viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_BACK_BUTTON}}</button>
+                        class="fa fa-chevron-left margin-right-sm"></i>{{viewWidgetVars.BACK_BUTTON}}</button>
                 <button type="button" class="btn btn-primary pull-right btn-sm margin-top-lg margin-right-lg"
                     data-ng-click="moveNext('save')" id="solutionpack-configure-env-next-btn"
                     data-ng-disabled="isInvalidIOCsNotEmpty()"><i
-                        class="icon icon-check margin-right-sm"></i>{{viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_SAVE_BUTTON}}
+                        class="icon icon-check margin-right-sm"></i>{{viewWidgetVars.SAVE_BUTTON}}
                 </button>
                 <button type="button" class="btn btn-sm btn-second-primary pull-right margin-top-lg margin-right-lg"
-                    data-ng-click="moveNext()"
-                    id="solutionpack-configure-env-next-btn">{{viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_SKIP_BUTTON}}<i
+                    data-ng-click="moveNext()" id="solutionpack-configure-env-next-btn">{{viewWidgetVars.SKIP_BUTTON}}<i
                         class="fa fa-chevron-right margin-left-sm"></i>
                 </button>
             </div>

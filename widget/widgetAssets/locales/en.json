@@ -19,22 +19,23 @@
         "EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_UPLOAD_FAILED":"Upload failed. Please try again.",
         "EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_FILE_SIZE_EXCEEDED":"File exceeds the maximum size.",
         "EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_FILE_TYPE_NOT_SUPPORTED": "File type not supported",
-        "EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_DROP_A_FILE":"Drop a file",
-        "EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_USE_STANDARD_UPLOADER":"or click to use standard uploader",
-        "EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_FILE_SIZE_SHOULD_NOT_EXCEED_25MB":"File Size should not exceed 25MB",
-        "EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_FILE_CONTENT_INVALID": "File content is null or invalid",
-        "EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_COMPLETED": "Bulk Import Completed",
+        "EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_DROP_A_FILE":"Drop a File",
+        "EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_USE_STANDARD_UPLOADER":"or Click to Use Standard Uploader",
+        "EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_FILE_SIZE_SHOULD_NOT_EXCEED_25MB":"File Size Should Not Exceed 25MB",
+        "EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_FILE_CONTENT_INVALID": "File Content is Null or Invalid",
+        "EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_COMPLETED": "Bulk Import Completed Successfully",
+        "EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_EXTRACT_DEFANGED_IOC": "Extract Defanged Indicators",
 
         "EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_LAUNCH_BUTTON": "+ Add New Indicator Type",
         "EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_FORM_LABEL": "New Indicator Type",
         "EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_SELECT_INDICATOR_LABEL": "Select an Indicator Type",
+        "EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ALREADY_EXISTS_ERR_MSG": " - Indicator Type Already Exists",
+        "EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ALREADY_ADDED_ERR_MSG": " - Indicator Type Already Added",
+        "EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_EMPTY_ERR_MSG": "Please enter the Indicator Type",
         
-        
-        "EXCLUDELIST_CONFIG_PAGE_CANCEL_BUTTON":"Cancel",
-        "EXCLUDELIST_CONFIG_PAGE_BACK_BUTTON": "Back",
-        "EXCLUDELIST_CONFIG_PAGE_SKIP_BUTTON": "Skip",
-        "EXCLUDELIST_CONFIG_PAGE_SAVE_BUTTON": "Save",
-
-        "SELECT_AN_OPTION":"Select an Option"
+        "CANCEL_BUTTON":"Cancel",
+        "BACK_BUTTON": "Back",
+        "SKIP_BUTTON": "Skip",
+        "SAVE_BUTTON": "Save"
     }
 }
