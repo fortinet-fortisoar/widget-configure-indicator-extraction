@@ -6,7 +6,7 @@
         "START_PAGE_DESCRIPTION": "Optimize your threat management with the Indicator Extraction Configuration widget in FortiSOAR. This tool lets you customize indicator extraction by excluding specific indicators, reducing false positives and improving threat analysis efficiency. Key features include custom exclusions, streamlined threat detection, and adaptability to evolving security needs.",
         "START_PAGE_BUTTON": "Let's get started",
         
-        "EXCLUDELIST_CONFIG_PAGE_WZ_TITLE": "Excludelist Configuration",
+        "EXCLUDELIST_CONFIG_PAGE_WZ_TITLE": "Exclusion Settings",
         "EXCLUDELIST_CONFIG_PAGE_TITLE": "Configure Exclude List",
         "EXCLUDELIST_CONFIG_PAGE_DESCRIPTION": "Specify artifacts that should be excluded from enrichment and further analysis.",
         "EXCLUDELIST_CONFIG_PAGE_SEARCH_PLACEHOLDER": "Search added artifacts",
@@ -32,6 +32,10 @@
         "EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ALREADY_EXISTS_ERR_MSG": " - Indicator Type Already Exists",
         "EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ALREADY_ADDED_ERR_MSG": " - Indicator Type Already Added",
         "EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_EMPTY_ERR_MSG": "Please enter the Indicator Type",
+
+        "IOC_TYPE_MAPPING_PAGE_WZ_TITLE": "Field Mapping",
+        "IOC_TYPE_MAPPING_PAGE_TITLE": "Indicator Field Type Mapping for ",
+        "IOC_TYPE_MAPPING_PAGE_DESCRIPTION": "Specify the fields from alerts and map them with the appropriate indicator types",
         
         "CANCEL_BUTTON":"Cancel",
         "BACK_BUTTON": "Back",
