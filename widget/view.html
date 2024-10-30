@@ -373,19 +373,19 @@
                                         {{viewWidgetVars.IOC_TYPE_MAPPING_PAGE_DESCRIPTION}}</p>
                                 </div><br />
 
-                                <div id="indicator-type-mapping-container"
+                                <div id="indicator-type-mapping-container" class="padding-15"
                                     style="height: 500px; overflow-y: auto; background-color: #29323e;">
-                                    <div id="field-search-bar" class="display-flex" style="margin: 15px 15px 0px 15px;">
+                                    <div id="field-search-bar" class="display-flex">
                                         <div class="width-500px"
                                             style="background-color: #1c212b; border: 1px solid #29323e;">
                                             <div
                                                 class="margin-bottom-xlg margin-left-30 margin-top-md position-relative width-300px filterSearch">
-                                                <label class="control-label font-primary-color">Field</label>
+                                                <label class="control-label font-primary-color">{{viewWidgetVars.IOC_TYPE_MAPPING_PAGE_FIELD_COLUMN_TITLE}}</label>
                                                 <span
                                                     class="font-075em icon icon-search margin-left-md position-absolute right-10 top-breadcrumb"
                                                     data-ng-click="" style="top: 37px;"></span>
                                                 <input id="search-by-field" type="text"
-                                                    class="form-control padding-right-30" placeholder="Search By Field"
+                                                    class="form-control padding-right-30" placeholder="{{viewWidgetVars.IOC_TYPE_MAPPING_PAGE_FIELD_COLUMN_PLACEHOLDER}}"
                                                     aria-labelledby="search-btn" data-ng-model="fieldNameSearchString"
                                                     aria-invalid="false"
                                                     data-ng-change="searchByField(fieldNameSearchString)"
@@ -396,12 +396,12 @@
                                             style="background-color: #1c212b; border: 1px solid #29323e;">
                                             <div
                                                 class="margin-bottom-xlg margin-left-30 margin-top-md position-relative width-190 filterSearch">
-                                                <label class="control-label font-primary-color">Type</label>
+                                                <label class="control-label font-primary-color">{{viewWidgetVars.IOC_TYPE_MAPPING_PAGE_TYPE_COLUMN_TITLE}}</label>
                                                 <span
                                                     class="font-075em icon icon-filter margin-left-md position-absolute right-10 top-breadcrumb"
                                                     data-ng-click="" style="top: 37px;"></span>
                                                 <input id="search-by-field" type="text"
-                                                    class="form-control padding-right-30" placeholder="Filter By Type"
+                                                    class="form-control padding-right-30" placeholder="{{viewWidgetVars.IOC_TYPE_MAPPING_PAGE_TYPE_COLUMN_PLACEHOLDER}}"
                                                     aria-labelledby="search-btn" data-ng-model="iOCTypeSearchString"
                                                     aria-invalid="false"
                                                     data-ng-change="searchByIOCType(iOCTypeSearchString)"
@@ -411,14 +411,14 @@
                                     </div>
                                     <div id="indicator-type-list" class="display-flex"
                                         data-ng-repeat="(fieldName, iocType) in indicatorTypeMappingDict">
-                                        <div class="width-500px margin-left-15"
+                                        <div class="width-500px"
                                             style="background-color: #1c212b; border: 1px solid #29323e;">
                                             <div
                                                 class="margin-bottom-xlg margin-left-30 margin-top-md position-relative width-300px">
                                                 <label class="control-label">{{fieldName}}</label>
                                             </div>
                                         </div>
-                                        <div class="width-300px margin-right-15"
+                                        <div class="width-300px"
                                             style="background-color: #1c212b; border: 1px solid #29323e;">
                                             <div
                                                 class="margin-bottom-xlg margin-left-30 margin-top-md position-relative width-190">

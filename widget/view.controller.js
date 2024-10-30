@@ -582,6 +582,10 @@
             IOC_TYPE_MAPPING_PAGE_WZ_TITLE: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_WZ_TITLE'),
             IOC_TYPE_MAPPING_PAGE_TITLE: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_TITLE'),
             IOC_TYPE_MAPPING_PAGE_DESCRIPTION: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_DESCRIPTION'),
+            IOC_TYPE_MAPPING_PAGE_FIELD_COLUMN_TITLE: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_FIELD_COLUMN_TITLE'),
+            IOC_TYPE_MAPPING_PAGE_TYPE_COLUMN_TITLE: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_TYPE_COLUMN_TITLE'),
+            IOC_TYPE_MAPPING_PAGE_FIELD_COLUMN_PLACEHOLDER: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_FIELD_COLUMN_PLACEHOLDER'),
+            IOC_TYPE_MAPPING_PAGE_TYPE_COLUMN_PLACEHOLDER: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_TYPE_COLUMN_PLACEHOLDER'),
 
             BACK_BUTTON: widgetUtilityService.translate('configureIndicatorExtraction.BACK_BUTTON'),
             SAVE_BUTTON: widgetUtilityService.translate('configureIndicatorExtraction.SAVE_BUTTON'),
