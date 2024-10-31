@@ -86,34 +86,30 @@
     // Field Mapping Page
     $scope.moduleList = ['Alerts', 'Incidents'];
     $scope.selectedModule = $scope.moduleList[0];
-    _loadAttributes();
-    $scope.indicatorTypeMappingDict = {
-      "url": "URL",
-      "domain": "Domain",
-      "dLLName": "",
-      "emailCc": "Email Address",
-      "emailTo": "Email Address",
-      "urlFull": "URL",
-      "fileHash": "FileHash-MD5",
-      "filehash": "FileHash-MD5",
-      "reporter": "Email Address",
-      "services": "Process",
-      "sourceIP": "IP Address"
-    }
+    $scope.fieldTypeMapping = {};
+
 
 
     function _loadAttributes() {
+      // Fetch all the fields of the selected module
       var entity = new Entity($scope.selectedModule.toLowerCase());
       entity.loadFields().then(function () {
-        $scope.fields = entity.getFormFields();
-
-        // $scope.fieldsArray = _.values($scope.fields);
-        // console.log($scope.fieldsArray);
+        let fields = entity.getFormFields();
+        const excludedTypes = new Set(['datetime', 'picklist', 'checkbox', 'lookup', 'tags']);
+        angular.forEach(fields, function (value, key) {
+          if (!excludedTypes.has(value.type)) {
+            $scope.fieldTypeMapping[key] = {
+              title: value.title,
+              iocType: $scope.updatedIOCTypeFieldMapping.recordValue.fieldTypeMapping[key] || ""
+            }
+          }
+        });
       });
     }
 
 
     function updateDefangSelection(status) {
+      // Sets a flag based of value of Defang checkbox
       $scope.extractDefangedIOCsFlag = status;
     }
 
@@ -468,6 +464,7 @@
           _updatedIndicatorTypePicklistItems = angular.copy(_defaultIndicatorTypePicklistItems);
         }
         _getNotEnteredIOCTypes();
+        _loadAttributes();
       }
       if (currentStepTitle === $scope.viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_WZ_TITLE) {
         if (param === 'save') {
@@ -607,6 +604,8 @@
       _initExclusionSetting();
       // To handle backward compatibility for widget
       _handleTranslations();
+      // Get module attributes
+      // _loadAttributes();
     }
 
     init();

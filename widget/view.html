@@ -410,19 +410,19 @@
                                         </div>
                                     </div>
                                     <div id="indicator-type-list" class="display-flex"
-                                        data-ng-repeat="(fieldName, iocType) in indicatorTypeMappingDict">
+                                        data-ng-repeat="(fieldAPIName, fieldTypeData) in fieldTypeMapping">
                                         <div class="width-500px"
                                             style="background-color: #1c212b; border: 1px solid #29323e;">
                                             <div
                                                 class="margin-bottom-xlg margin-left-30 margin-top-md position-relative width-300px">
-                                                <label class="control-label">{{fieldName}}</label>
+                                                <label class="control-label">{{fieldTypeData.title}}</label>
                                             </div>
                                         </div>
                                         <div class="width-300px"
                                             style="background-color: #1c212b; border: 1px solid #29323e;">
                                             <div
                                                 class="margin-bottom-xlg margin-left-30 margin-top-md position-relative width-190">
-                                                <label class="control-label font-primary-color">{{iocType}}</label>
+                                                <label class="control-label font-primary-color">{{fieldTypeData.iocType}}</label>
                                             </div>
                                         </div>
                                     </div>
