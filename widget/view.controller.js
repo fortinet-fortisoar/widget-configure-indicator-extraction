@@ -86,16 +86,47 @@
     // Field Mapping Page
     $scope.moduleList = ['Alerts', 'Incidents'];
     $scope.selectedModule = $scope.moduleList[0];
-    $scope.fieldTypeMapping = {};
+    $scope.getSelectedModuleFields = getSelectedModuleFields;
+    $scope.fieldIndicatorTypeChanged = fieldIndicatorTypeChanged;
+    // _commitFieldMappingChanges;
 
+    function _commitFieldMappingChanges() {
+      _defaultGlobalSettings['Indicator Type Mapping'] = $scope.updatedIOCTypeFieldMapping.recordValue;
+      iocExtractionConfigService.updateKeyStoreRecord(_defaultGlobalSettings, $scope.updatedIOCTypeFieldMapping.recordUUID);
+    }
+
+
+    function fieldIndicatorTypeChanged(key, value, action) {
+      const mapping = $scope.updatedIOCTypeFieldMapping.recordValue;
+
+      if (action === 'fieldMappingUpdate') {
+        if (value && value !== 'None') { // This checks for non-empty, non-undefined, and non-null values
+          mapping.fieldTypeMapping[key] = value;
+        } else {
+          delete mapping.fieldTypeMapping[key];
+        }
+      } else if (action === 'fieldFlagsUpdate') {
+        mapping[key] = value;
+      }
+    }
+
+
+    function getSelectedModuleFields(moduleName) {
+      $scope.selectedModule = moduleName;
+      _loadAttributes();
+    }
 
 
     function _loadAttributes() {
       // Fetch all the fields of the selected module
+      $scope.fieldTypeMapping = {};
+      $scope.iocTypePicklistItems = _updatedIndicatorTypePicklistItems.picklists.map(function (item) {
+        return item.itemValue;
+      });
       var entity = new Entity($scope.selectedModule.toLowerCase());
       entity.loadFields().then(function () {
         let fields = entity.getFormFields();
-        const excludedTypes = new Set(['datetime', 'picklist', 'checkbox', 'lookup', 'tags']);
+        const excludedTypes = new Set(['datetime', 'picklist', 'checkbox', 'lookup', 'tags', 'integer']);
         angular.forEach(fields, function (value, key) {
           if (!excludedTypes.has(value.type)) {
             $scope.fieldTypeMapping[key] = {
@@ -104,6 +135,12 @@
             }
           }
         });
+        $scope.sortedFieldTypes = Object.entries($scope.fieldTypeMapping).sort(function ([keyA], [keyB]) {
+          return keyA.localeCompare(keyB);
+        });
+        console.log($scope.sortedFieldTypes);
+      }).catch(function () {
+        toaster.error({ body: $scope.viewWidgetVars.IOC_TYPE_MAPPING_PAGE_FIELD_LOADING_ERROR });
       });
     }
 
@@ -126,10 +163,7 @@
 
 
     function _commitRegexPatternChanges() {
-      _defaultIOCTypeReGexMapping = _updatedIOCTypeReGexMapping;
-      let keyValue = _defaultIOCTypeReGexMapping.recordValue;
-      let uuid = _defaultIOCTypeReGexMapping.recordUUID;
-      iocExtractionConfigService.updateKeyStoreRecord(keyValue, uuid);
+      iocExtractionConfigService.updateKeyStoreRecord(_updatedIOCTypeReGexMapping.recordValue, _updatedIOCTypeReGexMapping.recordUUID);
     }
 
 
@@ -295,7 +329,6 @@
           return alreadyEnteredIOCTypes.indexOf(item) === -1;
         }
       });
-      // unCommonElements.push('Add Custom Indicator Type');
       $scope.notYetEnteredIOCTypes = unCommonElements;
 
       return [...alreadyEnteredIOCTypes, ...defaultIOCTypeList];
@@ -476,6 +509,11 @@
           }
         }
       }
+      if (currentStepTitle === $scope.viewWidgetVars.IOC_TYPE_MAPPING_PAGE_WZ_TITLE) {
+        if (param === 'save') {
+          _commitFieldMappingChanges();
+        }
+      }
       WizardHandler.wizard('configureIndicatorExtraction').next();
     }
 
@@ -575,6 +613,7 @@
             EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ALREADY_EXISTS_ERR_MSG: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ALREADY_EXISTS_ERR_MSG'),
             EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ALREADY_ADDED_ERR_MSG: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ALREADY_ADDED_ERR_MSG'),
             EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_EMPTY_ERR_MSG: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_EMPTY_ERR_MSG'),
+            EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_CUSTOM_IOC_LABEL: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_CUSTOM_IOC_LABEL'),
 
             IOC_TYPE_MAPPING_PAGE_WZ_TITLE: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_WZ_TITLE'),
             IOC_TYPE_MAPPING_PAGE_TITLE: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_TITLE'),
@@ -583,6 +622,7 @@
             IOC_TYPE_MAPPING_PAGE_TYPE_COLUMN_TITLE: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_TYPE_COLUMN_TITLE'),
             IOC_TYPE_MAPPING_PAGE_FIELD_COLUMN_PLACEHOLDER: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_FIELD_COLUMN_PLACEHOLDER'),
             IOC_TYPE_MAPPING_PAGE_TYPE_COLUMN_PLACEHOLDER: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_TYPE_COLUMN_PLACEHOLDER'),
+            IOC_TYPE_MAPPING_PAGE_FIELD_LOADING_ERROR: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_FIELD_LOADING_ERROR'),
 
             BACK_BUTTON: widgetUtilityService.translate('configureIndicatorExtraction.BACK_BUTTON'),
             SAVE_BUTTON: widgetUtilityService.translate('configureIndicatorExtraction.SAVE_BUTTON'),

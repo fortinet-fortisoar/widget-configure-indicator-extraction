@@ -32,6 +32,7 @@
         "EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ALREADY_EXISTS_ERR_MSG": " - Indicator Type Already Exists",
         "EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ALREADY_ADDED_ERR_MSG": " - Indicator Type Already Added",
         "EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_EMPTY_ERR_MSG": "Please enter the Indicator Type",
+        "EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_CUSTOM_IOC_LABEL": "Add Custom Indicator Type",
 
         "IOC_TYPE_MAPPING_PAGE_WZ_TITLE": "Field Mapping",
         "IOC_TYPE_MAPPING_PAGE_TITLE": "Indicator Field Type Mapping for ",
@@ -40,6 +41,7 @@
         "IOC_TYPE_MAPPING_PAGE_TYPE_COLUMN_TITLE": "Type",
         "IOC_TYPE_MAPPING_PAGE_FIELD_COLUMN_PLACEHOLDER": "Search By Field",
         "IOC_TYPE_MAPPING_PAGE_TYPE_COLUMN_PLACEHOLDER": "Filter By Type",
+        "IOC_TYPE_MAPPING_PAGE_FIELD_LOADING_ERROR": "Failed to load fields. Please try again later.",
         
         "CANCEL_BUTTON":"Cancel",
         "BACK_BUTTON": "Back",
