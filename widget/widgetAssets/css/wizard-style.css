@@ -97,3 +97,26 @@
 .padding-15 {
 	padding: 15px !important;
 }
+
+.field-mapping-checkbox {
+	display: flex;
+	align-items: center;
+	margin-bottom: 10px;
+}
+
+.field-mapping-checkbox label {
+	margin-bottom: 0px !important;
+	margin-top: 5px !important;
+}
+
+.width-35 {
+	width: 35%;
+}
+
+.width-65 {
+	width: 65%;
+}
+
+.border-radius-5 {
+	border-radius: 5px;
+}

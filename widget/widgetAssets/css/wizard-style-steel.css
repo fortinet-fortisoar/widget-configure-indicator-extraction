@@ -6,3 +6,21 @@
 .bulk-import-container-background {
 	background: #242b35 !important;
 }
+
+.field-mapping-container {
+	height: 550px;
+	overflow-y: auto;
+	background-color: #29323e;
+	margin-bottom: 10px !important;
+	padding: 15px !important;
+}
+
+.field-mapping-heading-bgcolor {
+	background-color: #222833;
+	border: 1px solid #29323e;
+}
+
+.field-mapping-rows-bgcolor {
+	background-color: #1c212b;
+	border: 1px solid #29323e;
+}

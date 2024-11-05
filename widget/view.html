@@ -54,7 +54,7 @@
                                 <div class="padding-right-30 margin-top-sm max-width-450px">
                                     <p class="font-size-14 grey-text margin-bottom-0 z-index-0">
                                         {{viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_DESCRIPTION}}</p>
-                                </div><br />
+                                </div>
 
                                 <!-- Search Div START -->
                                 <div class="margin-top-md position-relative filterSearch">
@@ -284,7 +284,8 @@
                                         <div class="padding-bottom-md">
 
                                             <div>
-                                                <label class="control-label text-transform-none">{{indicatorType}}:
+                                                <label
+                                                    class="control-label text-transform-none font-primary-color">{{indicatorType}}:
                                                     <span
                                                         data-uib-tooltip="Specify {{indicatorType}} to exclude from enrichment."
                                                         data-tooltip-placement="top-left"
@@ -376,11 +377,11 @@
                                 </div><br />
 
                                 <!-- Field Type Mapping Div START -->
-                                <div id="indicator-type-mapping-container" class="padding-15"
-                                    style="height: 500px; overflow-y: auto; background-color: #29323e;">
+                                <div id="indicator-type-mapping-container" class="field-mapping-container">
+
+                                    <!-- Search Bar START -->
                                     <div id="field-search-bar" class="display-flex">
-                                        <div class="width-500px"
-                                            style="background-color: #1c212b; border: 1px solid #29323e;">
+                                        <div class="field-mapping-heading-bgcolor width-65">
                                             <div
                                                 class="margin-bottom-xlg margin-left-30 margin-top-md position-relative width-300px filterSearch">
                                                 <label
@@ -397,8 +398,7 @@
                                                     style="font-size: 12px;">
                                             </div>
                                         </div>
-                                        <div class="width-300px"
-                                            style="background-color: #1c212b; border: 1px solid #29323e;">
+                                        <div class="field-mapping-heading-bgcolor width-35">
                                             <div
                                                 class="margin-bottom-xlg margin-left-30 margin-top-md position-relative width-190 filterSearch">
                                                 <label
@@ -407,39 +407,34 @@
                                                     class="font-075em icon icon-filter margin-left-md position-absolute right-10 top-breadcrumb"
                                                     data-ng-click="" style="top: 37px;"></span>
                                                 <input id="search-by-field" type="text"
-                                                    class="form-control padding-right-30"
+                                                    class="form-control padding-right-30 font-size-12"
                                                     placeholder="{{viewWidgetVars.IOC_TYPE_MAPPING_PAGE_TYPE_COLUMN_PLACEHOLDER}}"
                                                     aria-labelledby="search-btn" data-ng-model="iOCTypeSearchString"
                                                     aria-invalid="false"
-                                                    data-ng-change="searchByIOCType(iOCTypeSearchString)"
-                                                    style="font-size: 12px;">
+                                                    data-ng-change="searchByIOCType(iOCTypeSearchString)">
                                             </div>
                                         </div>
                                     </div>
+                                    <!-- Search Bar END -->
+
                                     <div id="indicator-type-list" class="display-flex"
-                                        data-ng-repeat="fieldInfo in sortedFieldTypes | orderBy: title">
-                                        <div class="width-500px"
-                                            style="background-color: #1c212b; border: 1px solid #29323e;">
-                                            <div
-                                                class="margin-bottom-xlg margin-left-30 margin-top-md position-relative width-300px">
-                                                <label class="control-label">{{fieldInfo[1].title}}</label>
+                                        data-ng-repeat="fieldInfo in sortedFieldTypes">
+                                        <div class="width-65 field-mapping-rows-bgcolor">
+                                            <div class="margin-left-30 margin-top-md position-relative width-300px">
+                                                <label class="control-label"
+                                                    style="font-size: 13px; margin-top: 10px;">{{fieldInfo[1].title}}</label>
                                             </div>
                                         </div>
-                                        <div class="width-300px"
-                                            style="background-color: #1c212b; border: 1px solid #29323e;">
+                                        <div class="width-35 field-mapping-rows-bgcolor">
                                             <div
-                                                class="margin-bottom-xlg margin-left-30 margin-top-md position-relative width-190">
-                                                <!-- <label class="control-label font-primary-color">{{item[1].iocType}}</label> -->
+                                                class="margin-bottom-md margin-left-30 margin-top-md position-relative width-190">
                                                 <select name="indicator-type-picklist" id="indicator-type-picklist"
-                                                    class="form-control border-radius-5"
+                                                    class="form-control border-radius-5 font-size-12"
                                                     data-ng-model="fieldInfo[1].iocType"
-                                                    data-ng-change="fieldIndicatorTypeChanged(fieldInfo[0], fieldInfo[1].iocType, 'fieldMappingUpdate')"
-                                                    style="width: auto;">
+                                                    data-ng-change="fieldIndicatorTypeChanged(fieldInfo[0], fieldInfo[1].iocType, 'fieldMappingUpdate')">
                                                     <option value="" disabled selected>
                                                         Select Type
                                                     </option>
-                                                    <!-- <option ng-repeat="item in notYetEnteredIOCTypes" value="{{fieldInfo[1].iocType}}">
-                                                        {{fieldInfo[1].iocType}}</option> -->
                                                     <option ng-repeat="item in iocTypePicklistItems" value="{{item}}"
                                                         data-ng-selected="item === fieldInfo[1].iocType">{{item}}
                                                     </option>
@@ -452,40 +447,48 @@
                                 <!-- Field Type Mapping Div END -->
 
                                 <div>
-                                    <label class="control-label">
+
+                                    <label class="control-label font-primary-color">
                                         File Type Indicator Setting:
                                     </label>
-                                    <input type="checkbox"
-                                        class="margin-left-lg margin-left-sm margin-right-md pull-left"
-                                        name="select-create-file-iocs" id="select-create-file-iocs"
-                                        data-ng-model="updatedIOCTypeFieldMapping.recordValue.createFileIOCs"
-                                        data-ng-change="fieldIndicatorTypeChanged('createFileIOCs', updatedIOCTypeFieldMapping.recordValue.createFileIOCs, 'fieldFlagsUpdate')">
-                                    </input>
-                                    <label for="select-create-file-iocs"
-                                        class="control-label font-size-12 margin-top-2 pull-left">Enable Create File
-                                        Indicator
-                                        <span
-                                            data-uib-tooltip="If checked then a file indicator will be created for email attachments in 'Suspicious Mail/Phishing' alerts during the indicator extraction process."
-                                            data-tooltip-placement="top-left" data-tooltip-append-to-body="true"><i
-                                                class="icon icon-information" aria-hidden="true"></i>
-                                        </span>
-                                    </label>
 
-                                    <input type="checkbox"
-                                        class="margin-left-lg margin-left-sm margin-right-md pull-left"
-                                        name="select-add-excluded-file-comment" id="select-add-excluded-file-comment"
-                                        data-ng-model="updatedIOCTypeFieldMapping.recordValue.addExcludedFileComment"
-                                        data-ng-change="fieldIndicatorTypeChanged('addExcludedFileComment', updatedIOCTypeFieldMapping.recordValue.addExcludedFileComment, 'fieldFlagsUpdate')">
-                                    </input>
-                                    <label for="select-add-excluded-file-comment"
-                                        class="control-label font-size-12 margin-top-2 pull-left">Enable Add Comment for
-                                        Excluded Files
-                                        <span
-                                            data-uib-tooltip="If checked then a comment will be added to the alert if any file is excluded during the indicator extraction process."
-                                            data-tooltip-placement="top-left" data-tooltip-append-to-body="true"><i
-                                                class="icon icon-information" aria-hidden="true"></i>
-                                        </span>
-                                    </label>
+
+                                    <div class="field-mapping-checkbox">
+                                        <input type="checkbox" class="margin-right-md pull-left"
+                                            name="select-create-file-iocs" id="select-create-file-iocs"
+                                            data-ng-model="updatedIOCTypeFieldMapping.recordValue.createFileIOCs"
+                                            data-ng-change="fieldIndicatorTypeChanged('createFileIOCs', updatedIOCTypeFieldMapping.recordValue.createFileIOCs, 'fieldFlagsUpdate')">
+                                        </input>
+                                        <label for="select-create-file-iocs"
+                                            class="control-label font-size-12 margin-top-2 pull-left">Enable Create File
+                                            Indicator
+                                            <span
+                                                data-uib-tooltip="If checked then a file indicator will be created for email attachments in 'Suspicious Mail/Phishing' alerts during the indicator extraction process."
+                                                data-tooltip-placement="top-left" data-tooltip-append-to-body="true"><i
+                                                    class="icon icon-information" aria-hidden="true"></i>
+                                            </span>
+                                        </label>
+                                    </div>
+
+                                    <div class="field-mapping-checkbox">
+                                        <input type="checkbox" class="margin-right-md pull-left"
+                                            name="select-add-excluded-file-comment"
+                                            id="select-add-excluded-file-comment"
+                                            data-ng-model="updatedIOCTypeFieldMapping.recordValue.addExcludedFileComment"
+                                            data-ng-change="fieldIndicatorTypeChanged('addExcludedFileComment', updatedIOCTypeFieldMapping.recordValue.addExcludedFileComment, 'fieldFlagsUpdate')">
+                                        </input>
+                                        <label for="select-add-excluded-file-comment"
+                                            class="control-label font-size-12 margin-top-2 pull-left">Enable Add Comment
+                                            for
+                                            Excluded Files
+                                            <span
+                                                data-uib-tooltip="If checked then a comment will be added to the alert if any file is excluded during the indicator extraction process."
+                                                data-tooltip-placement="top-left" data-tooltip-append-to-body="true"><i
+                                                    class="icon icon-information" aria-hidden="true"></i>
+                                            </span>
+                                        </label>
+                                    </div>
+
 
                                 </div>
 
