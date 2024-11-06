@@ -234,8 +234,8 @@
                                                             <option ng-repeat="item in notYetEnteredIOCTypes"
                                                                 value="{{item}}">{{item}}</option>
                                                             <option
-                                                                value="{{viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_ADD_CUSTOM_IOC_LABEL}}">
-                                                                {{viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_ADD_CUSTOM_IOC_LABEL}}
+                                                                value="{{viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_CUSTOM_IOC_LABEL}}">
+                                                                {{viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_CUSTOM_IOC_LABEL}}
                                                             </option>
                                                         </select>
                                                     </div>
@@ -392,9 +392,8 @@
                                                 <input id="search-by-field" type="text"
                                                     class="form-control padding-right-30"
                                                     placeholder="{{viewWidgetVars.IOC_TYPE_MAPPING_PAGE_FIELD_COLUMN_PLACEHOLDER}}"
-                                                    aria-labelledby="search-btn" data-ng-model="fieldNameSearchString"
-                                                    aria-invalid="false"
-                                                    data-ng-change="searchByField(fieldNameSearchString)"
+                                                    aria-labelledby="search-btn"
+                                                    data-ng-model="searchParam.searchByTitle" aria-invalid="false"
                                                     style="font-size: 12px;">
                                             </div>
                                         </div>
@@ -409,16 +408,16 @@
                                                 <input id="search-by-field" type="text"
                                                     class="form-control padding-right-30 font-size-12"
                                                     placeholder="{{viewWidgetVars.IOC_TYPE_MAPPING_PAGE_TYPE_COLUMN_PLACEHOLDER}}"
-                                                    aria-labelledby="search-btn" data-ng-model="iOCTypeSearchString"
-                                                    aria-invalid="false"
-                                                    data-ng-change="searchByIOCType(iOCTypeSearchString)">
+                                                    aria-labelledby="search-btn"
+                                                    data-ng-model="searchParam.searchByIocType" aria-invalid="false">
                                             </div>
                                         </div>
                                     </div>
                                     <!-- Search Bar END -->
 
+                                    <!-- Field Mapping List START -->
                                     <div id="indicator-type-list" class="display-flex"
-                                        data-ng-repeat="fieldInfo in sortedFieldTypes">
+                                        data-ng-repeat="fieldInfo in sortedFieldTypes | filter: fieldMappingSearchFilter">
                                         <div class="width-65 field-mapping-rows-bgcolor">
                                             <div class="margin-left-30 margin-top-md position-relative width-300px">
                                                 <label class="control-label"
@@ -432,22 +431,23 @@
                                                     class="form-control border-radius-5 font-size-12"
                                                     data-ng-model="fieldInfo[1].iocType"
                                                     data-ng-change="fieldIndicatorTypeChanged(fieldInfo[0], fieldInfo[1].iocType, 'fieldMappingUpdate')">
-                                                    <option value="" disabled selected>
-                                                        Select Type
+                                                    <option value="Not Set" selected>
+                                                        Not Set
                                                     </option>
                                                     <option ng-repeat="item in iocTypePicklistItems" value="{{item}}"
                                                         data-ng-selected="item === fieldInfo[1].iocType">{{item}}
                                                     </option>
-                                                    <option value="None">None</option>
+                                                    <!-- <option value="None">None</option> -->
                                                 </select>
                                             </div>
                                         </div>
                                     </div>
+                                    <!-- Field Mapping List END -->
+
                                 </div>
                                 <!-- Field Type Mapping Div END -->
 
-                                <div>
-
+                                <div id="file-type-indicator-setting">
                                     <label class="control-label font-primary-color">
                                         File Type Indicator Setting:
                                     </label>
@@ -479,8 +479,7 @@
                                         </input>
                                         <label for="select-add-excluded-file-comment"
                                             class="control-label font-size-12 margin-top-2 pull-left">Enable Add Comment
-                                            for
-                                            Excluded Files
+                                            for Excluded Files
                                             <span
                                                 data-uib-tooltip="If checked then a comment will be added to the alert if any file is excluded during the indicator extraction process."
                                                 data-tooltip-placement="top-left" data-tooltip-append-to-body="true"><i

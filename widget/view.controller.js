@@ -88,7 +88,29 @@
     $scope.selectedModule = $scope.moduleList[0];
     $scope.getSelectedModuleFields = getSelectedModuleFields;
     $scope.fieldIndicatorTypeChanged = fieldIndicatorTypeChanged;
-    // _commitFieldMappingChanges;
+    $scope.searchParam = { searchByTitle: '', searchByIocType: '' };
+    $scope.fieldMappingSearchFilter = fieldMappingSearchFilter;
+
+
+    function fieldMappingSearchFilter(item) {
+
+      let searchByTitle = $scope.searchParam.searchByTitle ? $scope.searchParam.searchByTitle.toLowerCase() : '';
+      let searchByIocType = $scope.searchParam.searchByIocType ? $scope.searchParam.searchByIocType.toLowerCase() : '';
+
+      let titleMatch = !searchByTitle || item[1].title.toLowerCase().includes(searchByTitle);
+      let iocTypeMatch = !searchByIocType || item[1].iocType.toLowerCase().includes(searchByIocType);
+
+      return titleMatch && iocTypeMatch;
+
+    }
+
+    function _getSortedFieldTypes(fieldTypeMapping) {
+      $scope.sortedFieldTypes = Object.entries(fieldTypeMapping).sort(function ([keyA], [keyB]) {
+        return keyA.localeCompare(keyB);
+      });
+      console.log($scope.sortedFieldTypes);
+    }
+
 
     function _commitFieldMappingChanges() {
       _defaultGlobalSettings['Indicator Type Mapping'] = $scope.updatedIOCTypeFieldMapping.recordValue;
@@ -100,7 +122,7 @@
       const mapping = $scope.updatedIOCTypeFieldMapping.recordValue;
 
       if (action === 'fieldMappingUpdate') {
-        if (value && value !== 'None') { // This checks for non-empty, non-undefined, and non-null values
+        if (value && value !== 'Not Set') { // This checks for non-empty, non-undefined, and non-null values
           mapping.fieldTypeMapping[key] = value;
         } else {
           delete mapping.fieldTypeMapping[key];
@@ -131,14 +153,11 @@
           if (!excludedTypes.has(value.type)) {
             $scope.fieldTypeMapping[key] = {
               title: value.title,
-              iocType: $scope.updatedIOCTypeFieldMapping.recordValue.fieldTypeMapping[key] || ""
+              iocType: $scope.updatedIOCTypeFieldMapping.recordValue.fieldTypeMapping[key] || 'Not Set'
             }
           }
         });
-        $scope.sortedFieldTypes = Object.entries($scope.fieldTypeMapping).sort(function ([keyA], [keyB]) {
-          return keyA.localeCompare(keyB);
-        });
-        console.log($scope.sortedFieldTypes);
+        _getSortedFieldTypes($scope.fieldTypeMapping);
       }).catch(function () {
         toaster.error({ body: $scope.viewWidgetVars.IOC_TYPE_MAPPING_PAGE_FIELD_LOADING_ERROR });
       });
@@ -280,10 +299,10 @@
 
     function indicatorTypeChanged(iocType) {
       $scope.iocTypeSelected = true;
-      if (iocType === 'Add Custom Indicator Type') {
+      if (iocType === $scope.viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_CUSTOM_IOC_LABEL) {
         $scope.isRegexAvailable = false;
         $scope.addCustomIOCType = true;
-        $scope.selectedIndicatorType = { iocType: '', pattern: [], dropDownValue: 'Add Custom Indicator Type' };
+        $scope.selectedIndicatorType = { iocType: '', pattern: [], dropDownValue: $scope.viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_CUSTOM_IOC_LABEL };
       } else {
         $scope.addCustomIOCType = false;
         $scope.selectedIndicatorType['iocType'] = iocType;
