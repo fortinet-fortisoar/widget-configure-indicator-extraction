@@ -30,7 +30,7 @@
     $scope.moveBack = moveBack;
 
     // Search Functionality
-    $scope.searchString = '';
+    $scope.searchString = { serachText: '' };
     $scope.searchStatus = 'off';
     $scope.setSearchStatus = setSearchStatus;
     $scope.updateSearchQuery = updateSearchQuery;
@@ -108,7 +108,6 @@
       $scope.sortedFieldTypes = Object.entries(fieldTypeMapping).sort(function ([keyA], [keyB]) {
         return keyA.localeCompare(keyB);
       });
-      console.log($scope.sortedFieldTypes);
     }
 
 
@@ -444,7 +443,7 @@
 
     function updateSearchQuery(searchStringValue) {
       $scope.searchStatus = 'on';
-      $scope.searchString = searchStringValue;
+      $scope.searchString = { serachText: searchStringValue };
       $scope.globalSearchList = {}; // Contains search result
       $scope.searchResultCount = 0; // This variable counts the search results found
       if (searchStringValue.length > 0) {
@@ -464,12 +463,10 @@
 
 
     function setSearchStatus(status) {
-      $scope.searchStatus = status;
       if (status === 'off') {
-        $timeout(function () {
-          $scope.searchString = '';
-        }, 0);
+        $scope.searchString = { serachText: '' };
       }
+      $scope.searchStatus = status;
     }
 
 

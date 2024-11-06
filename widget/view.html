@@ -67,8 +67,8 @@
                                         data-ng-if="searchStatus === 'on'"></span>
                                     <input id="search" type="text" class="form-control padding-right-30"
                                         placeholder="{{viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_SEARCH_PLACEHOLDER}}"
-                                        aria-labelledby="search-btn" data-ng-model="searchString" aria-invalid="false"
-                                        data-ng-change="updateSearchQuery(searchString)">
+                                        aria-labelledby="search-btn" data-ng-model="searchString.serachText" aria-invalid="false"
+                                        data-ng-change="updateSearchQuery(searchString.serachText)">
                                 </div>
                                 <div data-ng-if="searchStatus === 'on'">
                                     <div class="margin-bottom-lg margin-top-12">
