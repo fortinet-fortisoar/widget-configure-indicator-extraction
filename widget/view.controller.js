@@ -666,8 +666,6 @@
       _initExclusionSetting();
       // To handle backward compatibility for widget
       _handleTranslations();
-      // Get module attributes
-      // _loadAttributes();
     }
 
     init();
