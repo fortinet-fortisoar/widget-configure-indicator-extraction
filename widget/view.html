@@ -245,7 +245,7 @@
                                                             data-ng-disabled="!addCustomIOCType"
                                                             class="form-control border-radius-5" type="text"
                                                             ng-model="selectedIndicatorType.iocType"
-                                                            name="enterIndicatorName" placeholder="Enter Indicator Type"
+                                                            name="enterIndicatorName" placeholder="{{viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ENTER_IOC_PLACEHOLDER}}"
                                                             style="width: 233px;"
                                                             data-ng-class="{'has-error': duplicateIOCTypeFlag}" required
                                                             data-ng-change="clearDuplicateIOCErrorMsg()">
@@ -257,7 +257,7 @@
                                                         <input data-ng-disabled="isRegexAvailable"
                                                             class="form-control border-radius-5" type="text"
                                                             ng-model="selectedIndicatorType.pattern"
-                                                            name="enterRegexPattern" placeholder="Enter Regex Pattern"
+                                                            name="enterRegexPattern" placeholder="{{viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ENTER_REGEX_PLACEHOLDER}}"
                                                             id="enterRegexPattern">
                                                     </div>
                                                 </form>

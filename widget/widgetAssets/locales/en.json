@@ -33,6 +33,8 @@
         "EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ALREADY_ADDED_ERR_MSG": " - Indicator Type Already Added",
         "EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_EMPTY_ERR_MSG": "Please enter the Indicator Type",
         "EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_CUSTOM_IOC_LABEL": "+ Add Custom Indicator Type",
+        "EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ENTER_IOC_PLACEHOLDER": "Enter Indicator Type",
+        "EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ENTER_REGEX_PLACEHOLDER": "Enter Regex Pattern (Optional)",
 
         "IOC_TYPE_MAPPING_PAGE_WZ_TITLE": "Field Mapping",
         "IOC_TYPE_MAPPING_PAGE_TITLE": "Indicator Field Type Mapping for ",

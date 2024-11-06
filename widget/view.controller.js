@@ -630,6 +630,8 @@
             EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ALREADY_ADDED_ERR_MSG: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ALREADY_ADDED_ERR_MSG'),
             EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_EMPTY_ERR_MSG: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_EMPTY_ERR_MSG'),
             EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_CUSTOM_IOC_LABEL: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_CUSTOM_IOC_LABEL'),
+            EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ENTER_IOC_PLACEHOLDER: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ENTER_IOC_PLACEHOLDER'),
+            EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ENTER_REGEX_PLACEHOLDER: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ENTER_REGEX_PLACEHOLDER'),
 
             IOC_TYPE_MAPPING_PAGE_WZ_TITLE: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_WZ_TITLE'),
             IOC_TYPE_MAPPING_PAGE_TITLE: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_TITLE'),
