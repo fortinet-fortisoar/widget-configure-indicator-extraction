@@ -10,17 +10,17 @@
 .field-mapping-container {
 	height: 550px;
 	overflow-y: auto;
-	background-color: #29323e;
+	background-color: #2b2b2b;
 	margin-bottom: 10px !important;
 	padding: 15px !important;
 }
 
 .field-mapping-heading-bgcolor {
-	background-color: #222833;
-	border: 1px solid #29323e;
+	background-color: #1f1f1f;
+	border: 1px solid #2b2b2b;
 }
 
 .field-mapping-rows-bgcolor {
-	background-color: #1c212b;
-	border: 1px solid #29323e;
+	background-color: #161616;
+	border: 1px solid #2b2b2b;
 }
