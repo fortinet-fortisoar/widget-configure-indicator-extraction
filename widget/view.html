@@ -445,10 +445,10 @@
                                         </div>
                                     </div>
                                     <!-- Field Mapping List END -->
-
                                 </div>
                                 <!-- Field Type Mapping Div END -->
-
+                                 
+                                <!-- File Type Setting Div START -->
                                 <div id="file-type-indicator-setting">
                                     <label class="control-label font-primary-color">
                                         {{viewWidgetVars.IOC_TYPE_MAPPING_PAGE_FILETYPE_IOC_SETTING_LABEL}}
@@ -490,6 +490,7 @@
 
 
                                 </div>
+                                <!-- File Type Setting Div END -->
 
                             </div>
                         </div>
@@ -501,8 +502,7 @@
                     id="solutionpack-configure-back-env-btn" data-ng-click="moveBack()"><i
                         class="fa fa-chevron-left margin-right-sm"></i>{{viewWidgetVars.BACK_BUTTON}}</button>
                 <button type="button" class="btn btn-primary pull-right btn-sm margin-top-lg margin-right-lg"
-                    data-ng-click="moveNext('save')" id="solutionpack-configure-env-next-btn"
-                    data-ng-disabled="isInvalidIOCsNotEmpty()"><i
+                    data-ng-click="moveNext('save')" id="solutionpack-configure-env-next-btn"><i
                         class="icon icon-check margin-right-sm"></i>{{viewWidgetVars.SAVE_BUTTON}}
                 </button>
                 <button type="button" class="btn btn-sm btn-second-primary pull-right margin-top-lg margin-right-lg"
