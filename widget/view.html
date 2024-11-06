@@ -225,10 +225,9 @@
                                                     data-ng-class="{'state-wait': processing }">
                                                     <div class="margin-bottom-md" id="selectIOCType">
                                                         <select name="indicatorType" id="indicatorType"
-                                                            class="form-control border-radius-5"
+                                                            class="form-control border-radius-5 width-35"
                                                             data-ng-model="selectedIndicatorType.dropDownValue"
-                                                            data-ng-change="indicatorTypeChanged(selectedIndicatorType.dropDownValue)"
-                                                            style="width: auto;">
+                                                            data-ng-change="indicatorTypeChanged(selectedIndicatorType.dropDownValue)">
                                                             <option value="" disabled selected>
                                                                 {{viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_SELECT_INDICATOR_LABEL}}
                                                             </option>
@@ -243,10 +242,9 @@
                                                     <div class="margin-bottom-md">
                                                         <input id="enterIndicatorName"
                                                             data-ng-disabled="!addCustomIOCType"
-                                                            class="form-control border-radius-5" type="text"
+                                                            class="form-control border-radius-5 width-35" type="text"
                                                             ng-model="selectedIndicatorType.iocType"
                                                             name="enterIndicatorName" placeholder="{{viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ENTER_IOC_PLACEHOLDER}}"
-                                                            style="width: 233px;"
                                                             data-ng-class="{'has-error': duplicateIOCTypeFlag}" required
                                                             data-ng-change="clearDuplicateIOCErrorMsg()">
                                                         <span class="font-075em text-danger"
@@ -384,7 +382,7 @@
                                     <div id="field-search-bar" class="display-flex">
                                         <div class="field-mapping-heading-bgcolor width-65">
                                             <div
-                                                class="margin-bottom-xlg margin-left-30 margin-top-md position-relative width-300px filterSearch">
+                                                class="margin-bottom-xlg margin-left-30 margin-top-md position-relative width-65 filterSearch">
                                                 <label
                                                     class="control-label font-primary-color">{{viewWidgetVars.IOC_TYPE_MAPPING_PAGE_FIELD_COLUMN_TITLE}}</label>
                                                 <span
@@ -400,7 +398,7 @@
                                         </div>
                                         <div class="field-mapping-heading-bgcolor width-35">
                                             <div
-                                                class="margin-bottom-xlg margin-left-30 margin-top-md position-relative width-190 filterSearch">
+                                                class="margin-bottom-xlg margin-left-30 margin-top-md position-relative width-65 filterSearch">
                                                 <label
                                                     class="control-label font-primary-color">{{viewWidgetVars.IOC_TYPE_MAPPING_PAGE_TYPE_COLUMN_TITLE}}</label>
                                                 <span
@@ -420,14 +418,14 @@
                                     <div id="indicator-type-list" class="display-flex"
                                         data-ng-repeat="fieldInfo in sortedFieldTypes | filter: fieldMappingSearchFilter">
                                         <div class="width-65 field-mapping-rows-bgcolor">
-                                            <div class="margin-left-30 margin-top-md position-relative width-300px">
+                                            <div class="margin-left-30 margin-top-md position-relative width-65">
                                                 <label class="control-label"
                                                     style="font-size: 13px; margin-top: 10px;">{{fieldInfo[1].title}}</label>
                                             </div>
                                         </div>
                                         <div class="width-35 field-mapping-rows-bgcolor">
                                             <div
-                                                class="margin-bottom-md margin-left-30 margin-top-md position-relative width-190">
+                                                class="margin-bottom-md margin-left-30 margin-top-md position-relative width-65">
                                                 <select name="indicator-type-picklist" id="indicator-type-picklist"
                                                     class="form-control border-radius-5 font-size-12"
                                                     data-ng-model="fieldInfo[1].iocType"
