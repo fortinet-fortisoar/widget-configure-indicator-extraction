@@ -7,8 +7,8 @@
         "START_PAGE_BUTTON": "Let's get started",
         
         "EXCLUDELIST_CONFIG_PAGE_WZ_TITLE": "Exclusion Settings",
-        "EXCLUDELIST_CONFIG_PAGE_TITLE": "Configure Exclude List",
-        "EXCLUDELIST_CONFIG_PAGE_DESCRIPTION": "Specify artifacts that should be excluded from enrichment and further analysis.",
+        "EXCLUDELIST_CONFIG_PAGE_TITLE": "Exclusion Setting",
+        "EXCLUDELIST_CONFIG_PAGE_DESCRIPTION": "This page allows you to define specific indicators that should be excluded from the extraction process",
         "EXCLUDELIST_CONFIG_PAGE_SEARCH_PLACEHOLDER": "Search added artifacts",
         "EXCLUDELIST_CONFIG_PAGE_SEARCH_RESULT_LABEL": "Search Result :",
 
