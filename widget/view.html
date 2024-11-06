@@ -244,7 +244,8 @@
                                                             data-ng-disabled="!addCustomIOCType"
                                                             class="form-control border-radius-5 width-35" type="text"
                                                             ng-model="selectedIndicatorType.iocType"
-                                                            name="enterIndicatorName" placeholder="{{viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ENTER_IOC_PLACEHOLDER}}"
+                                                            name="enterIndicatorName"
+                                                            placeholder="{{viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ENTER_IOC_PLACEHOLDER}}"
                                                             data-ng-class="{'has-error': duplicateIOCTypeFlag}" required
                                                             data-ng-change="clearDuplicateIOCErrorMsg()">
                                                         <span class="font-075em text-danger"
@@ -255,7 +256,8 @@
                                                         <input data-ng-disabled="isRegexAvailable"
                                                             class="form-control border-radius-5" type="text"
                                                             ng-model="selectedIndicatorType.pattern"
-                                                            name="enterRegexPattern" placeholder="{{viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ENTER_REGEX_PLACEHOLDER}}"
+                                                            name="enterRegexPattern"
+                                                            placeholder="{{viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ENTER_REGEX_PLACEHOLDER}}"
                                                             id="enterRegexPattern">
                                                     </div>
                                                 </form>
@@ -445,7 +447,7 @@
                                     <!-- Field Mapping List END -->
                                 </div>
                                 <!-- Field Type Mapping Div END -->
-                                 
+
                                 <!-- File Type Setting Div START -->
                                 <div id="file-type-indicator-setting">
                                     <label class="control-label font-primary-color">
