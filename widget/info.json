@@ -10,7 +10,7 @@
         "certified": "Yes",
         "publisher": "Fortinet",
         "compatibility": [
-            "7.6.0"
+            "7.6.1"
         ],
         "snapshots": [
             "https://repo.fortisoar.fortinet.com/fsr-widgets/configureIndicatorExtraction-2.0.0/images/landing-page.png"
