@@ -42,7 +42,13 @@
         "IOC_TYPE_MAPPING_PAGE_FIELD_COLUMN_PLACEHOLDER": "Search By Field",
         "IOC_TYPE_MAPPING_PAGE_TYPE_COLUMN_PLACEHOLDER": "Filter By Type",
         "IOC_TYPE_MAPPING_PAGE_FIELD_LOADING_ERROR": "Failed to load fields. Please try again later.",
-        
+        "IOC_TYPE_MAPPING_PAGE_NOT_SET_LIST_ITEM": "Not Set",
+        "IOC_TYPE_MAPPING_PAGE_FILETYPE_IOC_SETTING_LABEL": "File Type Indicator Setting:",
+        "IOC_TYPE_MAPPING_PAGE_ENABLE_CREATE_FILE_INDICATOR": "Enable Create File Indicator",
+        "IOC_TYPE_MAPPING_PAGE_ENABLE_CREATE_FILE_INDICATOR_PLACEHOLDER": "If checked then a file indicator will be created for email attachments in 'Suspicious Mail/Phishing' alerts during the indicator extraction process.",
+        "IOC_TYPE_MAPPING_PAGE_ENABLE_ADD_COMMENT_FOR_EXCLUDED_FILES": "Enable Add Comment for Excluded Files",
+        "IOC_TYPE_MAPPING_PAGE_ENABLE_ADD_COMMENT_FOR_EXCLUDED_FILES_PLACEHOLDER": "If checked then a comment will be added to the alert if any file is excluded during the indicator extraction process.",
+
         "CANCEL_BUTTON":"Cancel",
         "BACK_BUTTON": "Back",
         "SKIP_BUTTON": "Skip",

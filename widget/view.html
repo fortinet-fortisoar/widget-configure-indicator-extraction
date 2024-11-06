@@ -67,7 +67,8 @@
                                         data-ng-if="searchStatus === 'on'"></span>
                                     <input id="search" type="text" class="form-control padding-right-30"
                                         placeholder="{{viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_SEARCH_PLACEHOLDER}}"
-                                        aria-labelledby="search-btn" data-ng-model="searchString.serachText" aria-invalid="false"
+                                        aria-labelledby="search-btn" data-ng-model="searchString.serachText"
+                                        aria-invalid="false"
                                         data-ng-change="updateSearchQuery(searchString.serachText)">
                                 </div>
                                 <div data-ng-if="searchStatus === 'on'">
@@ -431,13 +432,14 @@
                                                     class="form-control border-radius-5 font-size-12"
                                                     data-ng-model="fieldInfo[1].iocType"
                                                     data-ng-change="fieldIndicatorTypeChanged(fieldInfo[0], fieldInfo[1].iocType, 'fieldMappingUpdate')">
-                                                    <option value="Not Set" selected>
-                                                        Not Set
+                                                    <option
+                                                        value="{{viewWidgetVars.IOC_TYPE_MAPPING_PAGE_NOT_SET_LIST_ITEM}}"
+                                                        selected>
+                                                        {{viewWidgetVars.IOC_TYPE_MAPPING_PAGE_NOT_SET_LIST_ITEM}}
                                                     </option>
                                                     <option ng-repeat="item in iocTypePicklistItems" value="{{item}}"
                                                         data-ng-selected="item === fieldInfo[1].iocType">{{item}}
                                                     </option>
-                                                    <!-- <option value="None">None</option> -->
                                                 </select>
                                             </div>
                                         </div>
@@ -449,7 +451,7 @@
 
                                 <div id="file-type-indicator-setting">
                                     <label class="control-label font-primary-color">
-                                        File Type Indicator Setting:
+                                        {{viewWidgetVars.IOC_TYPE_MAPPING_PAGE_FILETYPE_IOC_SETTING_LABEL}}
                                     </label>
 
 
@@ -460,10 +462,9 @@
                                             data-ng-change="fieldIndicatorTypeChanged('createFileIOCs', updatedIOCTypeFieldMapping.recordValue.createFileIOCs, 'fieldFlagsUpdate')">
                                         </input>
                                         <label for="select-create-file-iocs"
-                                            class="control-label font-size-12 margin-top-2 pull-left">Enable Create File
-                                            Indicator
+                                            class="control-label font-size-12 margin-top-2 pull-left">{{viewWidgetVars.IOC_TYPE_MAPPING_PAGE_ENABLE_CREATE_FILE_INDICATOR}}
                                             <span
-                                                data-uib-tooltip="If checked then a file indicator will be created for email attachments in 'Suspicious Mail/Phishing' alerts during the indicator extraction process."
+                                                data-uib-tooltip="{{viewWidgetVars.IOC_TYPE_MAPPING_PAGE_ENABLE_CREATE_FILE_INDICATOR_PLACEHOLDER}}"
                                                 data-tooltip-placement="top-left" data-tooltip-append-to-body="true"><i
                                                     class="icon icon-information" aria-hidden="true"></i>
                                             </span>
@@ -478,10 +479,9 @@
                                             data-ng-change="fieldIndicatorTypeChanged('addExcludedFileComment', updatedIOCTypeFieldMapping.recordValue.addExcludedFileComment, 'fieldFlagsUpdate')">
                                         </input>
                                         <label for="select-add-excluded-file-comment"
-                                            class="control-label font-size-12 margin-top-2 pull-left">Enable Add Comment
-                                            for Excluded Files
+                                            class="control-label font-size-12 margin-top-2 pull-left">{{viewWidgetVars.IOC_TYPE_MAPPING_PAGE_ENABLE_ADD_COMMENT_FOR_EXCLUDED_FILES}}
                                             <span
-                                                data-uib-tooltip="If checked then a comment will be added to the alert if any file is excluded during the indicator extraction process."
+                                                data-uib-tooltip="{{viewWidgetVars.IOC_TYPE_MAPPING_PAGE_ENABLE_ADD_COMMENT_FOR_EXCLUDED_FILES_PLACEHOLDER}}"
                                                 data-tooltip-placement="top-left" data-tooltip-append-to-body="true"><i
                                                     class="icon icon-information" aria-hidden="true"></i>
                                             </span>

@@ -121,7 +121,7 @@
       const mapping = $scope.updatedIOCTypeFieldMapping.recordValue;
 
       if (action === 'fieldMappingUpdate') {
-        if (value && value !== 'Not Set') { // This checks for non-empty, non-undefined, and non-null values
+        if (value && value !== $scope.viewWidgetVars.IOC_TYPE_MAPPING_PAGE_NOT_SET_LIST_ITEM) { // This checks for non-empty, non-undefined, and non-null values
           mapping.fieldTypeMapping[key] = value;
         } else {
           delete mapping.fieldTypeMapping[key];
@@ -152,7 +152,7 @@
           if (!excludedTypes.has(value.type)) {
             $scope.fieldTypeMapping[key] = {
               title: value.title,
-              iocType: $scope.updatedIOCTypeFieldMapping.recordValue.fieldTypeMapping[key] || 'Not Set'
+              iocType: $scope.updatedIOCTypeFieldMapping.recordValue.fieldTypeMapping[key] || $scope.viewWidgetVars.IOC_TYPE_MAPPING_PAGE_NOT_SET_LIST_ITEM
             }
           }
         });
@@ -639,6 +639,12 @@
             IOC_TYPE_MAPPING_PAGE_FIELD_COLUMN_PLACEHOLDER: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_FIELD_COLUMN_PLACEHOLDER'),
             IOC_TYPE_MAPPING_PAGE_TYPE_COLUMN_PLACEHOLDER: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_TYPE_COLUMN_PLACEHOLDER'),
             IOC_TYPE_MAPPING_PAGE_FIELD_LOADING_ERROR: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_FIELD_LOADING_ERROR'),
+            IOC_TYPE_MAPPING_PAGE_NOT_SET_LIST_ITEM: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_NOT_SET_LIST_ITEM'),
+            IOC_TYPE_MAPPING_PAGE_FILETYPE_IOC_SETTING_LABEL: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_FILETYPE_IOC_SETTING_LABEL'),
+            IOC_TYPE_MAPPING_PAGE_ENABLE_CREATE_FILE_INDICATOR: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_ENABLE_CREATE_FILE_INDICATOR'),
+            IOC_TYPE_MAPPING_PAGE_ENABLE_CREATE_FILE_INDICATOR_PLACEHOLDER: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_ENABLE_CREATE_FILE_INDICATOR_PLACEHOLDER'),
+            IOC_TYPE_MAPPING_PAGE_ENABLE_ADD_COMMENT_FOR_EXCLUDED_FILES: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_ENABLE_ADD_COMMENT_FOR_EXCLUDED_FILES'),
+            IOC_TYPE_MAPPING_PAGE_ENABLE_ADD_COMMENT_FOR_EXCLUDED_FILES_PLACEHOLDER: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_ENABLE_ADD_COMMENT_FOR_EXCLUDED_FILES_PLACEHOLDER'),
 
             BACK_BUTTON: widgetUtilityService.translate('configureIndicatorExtraction.BACK_BUTTON'),
             SAVE_BUTTON: widgetUtilityService.translate('configureIndicatorExtraction.SAVE_BUTTON'),
