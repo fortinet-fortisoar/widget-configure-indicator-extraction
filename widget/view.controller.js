@@ -30,7 +30,7 @@
     $scope.moveBack = moveBack;
 
     // Search Functionality
-    $scope.searchString = { serachText: '' };
+    $scope.searchString = { searchText: '' };
     $scope.searchStatus = 'off';
     $scope.setSearchStatus = setSearchStatus;
     $scope.updateSearchQuery = updateSearchQuery;
@@ -298,10 +298,10 @@
 
     function indicatorTypeChanged(iocType) {
       $scope.iocTypeSelected = true;
-      if (iocType === $scope.viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_CUSTOM_IOC_LABEL) {
+      if (iocType === '+ Add Custom Indicator Type') {
         $scope.isRegexAvailable = false;
         $scope.addCustomIOCType = true;
-        $scope.selectedIndicatorType = { iocType: '', pattern: [], dropDownValue: $scope.viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_CUSTOM_IOC_LABEL };
+        $scope.selectedIndicatorType = { iocType: '', pattern: [], dropDownValue: '+ Add Custom Indicator Type' };
       } else {
         $scope.addCustomIOCType = false;
         $scope.selectedIndicatorType['iocType'] = iocType;
@@ -443,7 +443,7 @@
 
     function updateSearchQuery(searchStringValue) {
       $scope.searchStatus = 'on';
-      $scope.searchString = { serachText: searchStringValue };
+      $scope.searchString = { searchText: searchStringValue };
       $scope.globalSearchList = {}; // Contains search result
       $scope.searchResultCount = 0; // This variable counts the search results found
       if (searchStringValue.length > 0) {
@@ -464,7 +464,7 @@
 
     function setSearchStatus(status) {
       if (status === 'off') {
-        $scope.searchString = { serachText: '' };
+        $scope.searchString = { searchText: '' };
       }
       $scope.searchStatus = status;
     }
@@ -629,7 +629,6 @@
             EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ALREADY_EXISTS_ERR_MSG: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ALREADY_EXISTS_ERR_MSG'),
             EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ALREADY_ADDED_ERR_MSG: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ALREADY_ADDED_ERR_MSG'),
             EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_EMPTY_ERR_MSG: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_EMPTY_ERR_MSG'),
-            EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_CUSTOM_IOC_LABEL: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_CUSTOM_IOC_LABEL'),
             EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ENTER_IOC_PLACEHOLDER: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ENTER_IOC_PLACEHOLDER'),
             EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ENTER_REGEX_PLACEHOLDER: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ENTER_REGEX_PLACEHOLDER'),
 

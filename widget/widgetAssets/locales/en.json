@@ -3,11 +3,11 @@
         "LABEL_TITLE": "Indicator Extraction Configuration",
         "START_PAGE_WZ_TITLE": "Start",
         "START_PAGE_TITLE": "Welcome to Indicator Extraction Configuration",
-        "START_PAGE_DESCRIPTION": "Optimize your threat management with the Indicator Extraction Configuration widget in FortiSOAR. This tool lets you customize indicator extraction by excluding specific indicators, reducing false positives and improving threat analysis efficiency. Key features include custom exclusions, streamlined threat detection, and adaptability to evolving security needs.",
+        "START_PAGE_DESCRIPTION": "Optimize your incident response and threat management with the Indicator Extraction Configuration widget in FortiSOAR. This tool lets you customize indicator extraction by excluding specific indicators, reducing false positives and improving overall efficiency. Key features include indicator exclusion, search any indicator from excluded list, add new custom indicator type, setup exclude indicators using bulk import and setup indicator type mapping.",
         "START_PAGE_BUTTON": "Let's get started",
         
         "EXCLUDELIST_CONFIG_PAGE_WZ_TITLE": "Exclusion Settings",
-        "EXCLUDELIST_CONFIG_PAGE_TITLE": "Exclusion Setting",
+        "EXCLUDELIST_CONFIG_PAGE_TITLE": "Exclusion Settings",
         "EXCLUDELIST_CONFIG_PAGE_DESCRIPTION": "This page allows you to define specific indicators that should be excluded from the extraction process",
         "EXCLUDELIST_CONFIG_PAGE_SEARCH_PLACEHOLDER": "Search added artifacts",
         "EXCLUDELIST_CONFIG_PAGE_SEARCH_RESULT_LABEL": "Search Result :",
@@ -32,7 +32,6 @@
         "EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ALREADY_EXISTS_ERR_MSG": " - Indicator Type Already Exists",
         "EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ALREADY_ADDED_ERR_MSG": " - Indicator Type Already Added",
         "EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_EMPTY_ERR_MSG": "Please Enter the Indicator Type",
-        "EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_CUSTOM_IOC_LABEL": "+ Add Custom Indicator Type",
         "EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ENTER_IOC_PLACEHOLDER": "Enter Indicator Type",
         "EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ENTER_REGEX_PLACEHOLDER": "Enter Regex Pattern (Optional)",
 

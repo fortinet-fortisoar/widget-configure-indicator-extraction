@@ -67,9 +67,9 @@
                                         data-ng-if="searchStatus === 'on'"></span>
                                     <input id="search" type="text" class="form-control padding-right-30"
                                         placeholder="{{viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_SEARCH_PLACEHOLDER}}"
-                                        aria-labelledby="search-btn" data-ng-model="searchString.serachText"
+                                        aria-labelledby="search-btn" data-ng-model="searchString.searchText"
                                         aria-invalid="false"
-                                        data-ng-change="updateSearchQuery(searchString.serachText)">
+                                        data-ng-change="updateSearchQuery(searchString.searchText)">
                                 </div>
                                 <div data-ng-if="searchStatus === 'on'">
                                     <div class="margin-bottom-lg margin-top-12">
@@ -234,9 +234,7 @@
                                                             <option ng-repeat="item in notYetEnteredIOCTypes"
                                                                 value="{{item}}">{{item}}</option>
                                                             <option
-                                                                value="{{viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_CUSTOM_IOC_LABEL}}">
-                                                                {{viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_CUSTOM_IOC_LABEL}}
-                                                            </option>
+                                                                value="+ Add Custom Indicator Type">+ Add Custom Indicator Type</option>
                                                         </select>
                                                     </div>
                                                     <div class="margin-bottom-md">
