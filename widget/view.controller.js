@@ -9,9 +9,9 @@
     .module('cybersponse')
     .controller('configureIndicatorExtraction200Ctrl', configureIndicatorExtraction200Ctrl);
 
-  configureIndicatorExtraction200Ctrl.$inject = ['$scope', 'widgetUtilityService', '$rootScope', 'widgetBasePath', 'WizardHandler', 'iocExtractionConfigService', 'toaster', 'Upload', 'API'];
+  configureIndicatorExtraction200Ctrl.$inject = ['$scope', 'widgetUtilityService', '$rootScope', 'widgetBasePath', 'WizardHandler', 'iocExtractionConfigService', 'toaster', 'Upload', 'API', 'Entity'];
 
-  function configureIndicatorExtraction200Ctrl($scope, widgetUtilityService, $rootScope, widgetBasePath, WizardHandler, iocExtractionConfigService, toaster, Upload, API) {
+  function configureIndicatorExtraction200Ctrl($scope, widgetUtilityService, $rootScope, widgetBasePath, WizardHandler, iocExtractionConfigService, toaster, Upload, API, Entity) {
     // Exclusion List Setting Functionality
     var _defaultGlobalSettings = {};
     var _defaultExclusionSettings = {};
@@ -30,7 +30,7 @@
     $scope.moveBack = moveBack;
 
     // Search Functionality
-    $scope.searchString = '';
+    $scope.searchString = { searchText: '' };
     $scope.searchStatus = 'off';
     $scope.setSearchStatus = setSearchStatus;
     $scope.updateSearchQuery = updateSearchQuery;
@@ -65,9 +65,17 @@
     $scope.clearDuplicateIOCErrorMsg = clearDuplicateIOCErrorMsg;
 
     // Theme and Image File Paths
-    $scope.isLightTheme = $rootScope.theme.id === 'light';
-    $scope.isSteelTheme = $rootScope.theme.id === 'steel';
-    $scope.widgetCSS = widgetBasePath + 'widgetAssets/css/wizard-style.css';
+    $scope.widgetCSS = widgetBasePath + 'widgetAssets/css/wizard-style.css'
+    let _themeID = $rootScope.theme.id;
+    $scope.isDarkTheme = _themeID === 'dark';
+    $scope.isLightTheme = _themeID === 'light';
+    $scope.isSteelTheme = _themeID === 'steel';
+    const _themeCSS = {
+      dark: 'wizard-style-dark.css',
+      light: 'wizard-style-light.css',
+      steel: 'wizard-style-steel.css',
+    }
+    $scope.themeCSS = widgetBasePath + 'widgetAssets/css/' + (_themeCSS[_themeID]);
     $scope.pageImages = {
       'startPageImage': $scope.isLightTheme ? widgetBasePath + 'images/ioc-extraction-start-light.png' : widgetBasePath + 'images/ioc-extraction-start-dark.png',
       'excludeIOCPageImage': $scope.isLightTheme ? widgetBasePath + 'images/ioc-extraction-exclusion-light.png' : widgetBasePath + 'images/ioc-extraction-exclusion-dark.png',
@@ -75,10 +83,89 @@
       'finishPageImage': widgetBasePath + 'images/ioc-extraction-finish-both.png'
     };
 
+    // Field Mapping Page
+    $scope.moduleList = ['Alerts', 'Incidents'];
+    $scope.selectedModule = $scope.moduleList[0];
+    $scope.getSelectedModuleFields = getSelectedModuleFields;
+    $scope.fieldIndicatorTypeChanged = fieldIndicatorTypeChanged;
+    $scope.searchParam = { searchByTitle: '', searchByIocType: '' };
+    $scope.fieldMappingSearchFilter = fieldMappingSearchFilter;
+
+
+    function fieldMappingSearchFilter(item) {
+
+      let searchByTitle = $scope.searchParam.searchByTitle ? $scope.searchParam.searchByTitle.toLowerCase() : '';
+      let searchByIocType = $scope.searchParam.searchByIocType ? $scope.searchParam.searchByIocType.toLowerCase() : '';
+
+      let titleMatch = !searchByTitle || item[1].title.toLowerCase().includes(searchByTitle);
+      let iocTypeMatch = !searchByIocType || item[1].iocType.toLowerCase().includes(searchByIocType);
+
+      return titleMatch && iocTypeMatch;
+
+    }
+
+    function _getSortedFieldTypes(fieldTypeMapping) {
+      $scope.sortedFieldTypes = Object.entries(fieldTypeMapping).sort(function ([keyA], [keyB]) {
+        return keyA.localeCompare(keyB);
+      });
+    }
+
+
+    function _commitFieldMappingChanges() {
+      _defaultGlobalSettings['Indicator Type Mapping'] = $scope.updatedIOCTypeFieldMapping.recordValue;
+      iocExtractionConfigService.updateKeyStoreRecord(_defaultGlobalSettings, $scope.updatedIOCTypeFieldMapping.recordUUID);
+    }
+
+
+    function fieldIndicatorTypeChanged(key, value, action) {
+      const mapping = $scope.updatedIOCTypeFieldMapping.recordValue;
+
+      if (action === 'fieldMappingUpdate') {
+        if (value && value !== $scope.viewWidgetVars.IOC_TYPE_MAPPING_PAGE_NOT_SET_LIST_ITEM) { // This checks for non-empty, non-undefined, and non-null values
+          mapping.fieldTypeMapping[key] = value;
+        } else {
+          delete mapping.fieldTypeMapping[key];
+        }
+      } else if (action === 'fieldFlagsUpdate') {
+        mapping[key] = value;
+      }
+    }
+
+
+    function getSelectedModuleFields(moduleName) {
+      $scope.selectedModule = moduleName;
+      _loadAttributes();
+    }
+
+
+    function _loadAttributes() {
+      // Fetch all the fields of the selected module
+      $scope.fieldTypeMapping = {};
+      $scope.iocTypePicklistItems = _updatedIndicatorTypePicklistItems.picklists.map(function (item) {
+        return item.itemValue;
+      });
+      var entity = new Entity($scope.selectedModule.toLowerCase());
+      entity.loadFields().then(function () {
+        let fields = entity.getFormFields();
+        const excludedTypes = new Set(['datetime', 'picklist', 'checkbox', 'lookup', 'tags', 'integer']);
+        angular.forEach(fields, function (value, key) {
+          if (!excludedTypes.has(value.type)) {
+            $scope.fieldTypeMapping[key] = {
+              title: value.title,
+              iocType: $scope.updatedIOCTypeFieldMapping.recordValue.fieldTypeMapping[key] || $scope.viewWidgetVars.IOC_TYPE_MAPPING_PAGE_NOT_SET_LIST_ITEM
+            }
+          }
+        });
+        _getSortedFieldTypes($scope.fieldTypeMapping);
+      }).catch(function () {
+        toaster.error({ body: $scope.viewWidgetVars.IOC_TYPE_MAPPING_PAGE_FIELD_LOADING_ERROR });
+      });
+    }
+
 
     function updateDefangSelection(status) {
+      // Sets a flag based of value of Defang checkbox
       $scope.extractDefangedIOCsFlag = status;
-      console.log($scope.extractDefangedIOCsFlag);
     }
 
 
@@ -94,10 +181,7 @@
 
 
     function _commitRegexPatternChanges() {
-      _defaultIOCTypeReGexMapping = _updatedIOCTypeReGexMapping;
-      let keyValue = _defaultIOCTypeReGexMapping.recordValue;
-      let uuid = _defaultIOCTypeReGexMapping.recordUUID;
-      iocExtractionConfigService.updateKeyStoreRecord(keyValue, uuid);
+      iocExtractionConfigService.updateKeyStoreRecord(_updatedIOCTypeReGexMapping.recordValue, _updatedIOCTypeReGexMapping.recordUUID);
     }
 
 
@@ -214,10 +298,10 @@
 
     function indicatorTypeChanged(iocType) {
       $scope.iocTypeSelected = true;
-      if (iocType === 'Add Custom Indicator Type') {
+      if (iocType === '+ Add Custom Indicator Type') {
         $scope.isRegexAvailable = false;
         $scope.addCustomIOCType = true;
-        $scope.selectedIndicatorType = { iocType: '', pattern: [], dropDownValue: 'Add Custom Indicator Type' };
+        $scope.selectedIndicatorType = { iocType: '', pattern: [], dropDownValue: '+ Add Custom Indicator Type' };
       } else {
         $scope.addCustomIOCType = false;
         $scope.selectedIndicatorType['iocType'] = iocType;
@@ -263,7 +347,6 @@
           return alreadyEnteredIOCTypes.indexOf(item) === -1;
         }
       });
-      // unCommonElements.push('Add Custom Indicator Type');
       $scope.notYetEnteredIOCTypes = unCommonElements;
 
       return [...alreadyEnteredIOCTypes, ...defaultIOCTypeList];
@@ -360,7 +443,7 @@
 
     function updateSearchQuery(searchStringValue) {
       $scope.searchStatus = 'on';
-      $scope.searchString = searchStringValue;
+      $scope.searchString = { searchText: searchStringValue };
       $scope.globalSearchList = {}; // Contains search result
       $scope.searchResultCount = 0; // This variable counts the search results found
       if (searchStringValue.length > 0) {
@@ -380,12 +463,10 @@
 
 
     function setSearchStatus(status) {
-      $scope.searchStatus = status;
       if (status === 'off') {
-        $timeout(function () {
-          $scope.searchString = '';
-        }, 0);
+        $scope.searchString = { searchText: '' };
       }
+      $scope.searchStatus = status;
     }
 
 
@@ -424,7 +505,7 @@
 
     function moveNext(param) {
       let currentStepTitle = WizardHandler.wizard('configureIndicatorExtraction').currentStep().wzTitle
-      if (currentStepTitle === 'Start') {
+      if (currentStepTitle === $scope.viewWidgetVars.START_PAGE_WZ_TITLE) {
         if (Object.keys($scope.updatedExclusionSettings).length === 0) {
           $scope.updatedExclusionSettings = angular.copy(_defaultExclusionSettings);
           $scope.updatedIOCTypeFieldMapping = angular.copy(_defaultIOCTypeFieldMapping);
@@ -432,8 +513,9 @@
           _updatedIndicatorTypePicklistItems = angular.copy(_defaultIndicatorTypePicklistItems);
         }
         _getNotEnteredIOCTypes();
+        _loadAttributes();
       }
-      if (currentStepTitle === 'Excludelist Configuration') {
+      if (currentStepTitle === $scope.viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_WZ_TITLE) {
         if (param === 'save') {
           _commitExclusionSettings();
           _commitRegexPatternChanges();
@@ -441,6 +523,11 @@
             _commitIndicatorTypePicklist(_customIOCTypeList);
             _customIOCTypeList = [];
           }
+        }
+      }
+      if (currentStepTitle === $scope.viewWidgetVars.IOC_TYPE_MAPPING_PAGE_WZ_TITLE) {
+        if (param === 'save') {
+          _commitFieldMappingChanges();
         }
       }
       WizardHandler.wizard('configureIndicatorExtraction').next();
@@ -517,12 +604,13 @@
             EXCLUDELIST_CONFIG_PAGE_WZ_TITLE: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_WZ_TITLE'),
             EXCLUDELIST_CONFIG_PAGE_TITLE: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_TITLE'),
             EXCLUDELIST_CONFIG_PAGE_DESCRIPTION: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_DESCRIPTION'),
+
             EXCLUDELIST_CONFIG_PAGE_SEARCH_PLACEHOLDER: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_SEARCH_PLACEHOLDER'),
             EXCLUDELIST_CONFIG_PAGE_SEARCH_RESULT_LABEL: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_SEARCH_RESULT_LABEL'),
             EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_LABEL: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_LABEL'),
             EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_LAUNCH_BUTTON: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_LAUNCH_BUTTON'),
             EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_FILE_IMPORT_BUTTON: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_FILE_IMPORT_BUTTON'),
-            CANCEL_BUTTON: widgetUtilityService.translate('configureIndicatorExtraction.CANCEL_BUTTON'),
+
 
             EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_UPLOAD_FAILED: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_UPLOAD_FAILED'),
             EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_FILE_SIZE_EXCEEDED: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_FILE_SIZE_EXCEEDED'),
@@ -541,10 +629,28 @@
             EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ALREADY_EXISTS_ERR_MSG: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ALREADY_EXISTS_ERR_MSG'),
             EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ALREADY_ADDED_ERR_MSG: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ALREADY_ADDED_ERR_MSG'),
             EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_EMPTY_ERR_MSG: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_EMPTY_ERR_MSG'),
+            EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ENTER_IOC_PLACEHOLDER: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ENTER_IOC_PLACEHOLDER'),
+            EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ENTER_REGEX_PLACEHOLDER: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ENTER_REGEX_PLACEHOLDER'),
+
+            IOC_TYPE_MAPPING_PAGE_WZ_TITLE: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_WZ_TITLE'),
+            IOC_TYPE_MAPPING_PAGE_TITLE: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_TITLE'),
+            IOC_TYPE_MAPPING_PAGE_DESCRIPTION: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_DESCRIPTION'),
+            IOC_TYPE_MAPPING_PAGE_FIELD_COLUMN_TITLE: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_FIELD_COLUMN_TITLE'),
+            IOC_TYPE_MAPPING_PAGE_TYPE_COLUMN_TITLE: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_TYPE_COLUMN_TITLE'),
+            IOC_TYPE_MAPPING_PAGE_FIELD_COLUMN_PLACEHOLDER: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_FIELD_COLUMN_PLACEHOLDER'),
+            IOC_TYPE_MAPPING_PAGE_TYPE_COLUMN_PLACEHOLDER: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_TYPE_COLUMN_PLACEHOLDER'),
+            IOC_TYPE_MAPPING_PAGE_FIELD_LOADING_ERROR: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_FIELD_LOADING_ERROR'),
+            IOC_TYPE_MAPPING_PAGE_NOT_SET_LIST_ITEM: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_NOT_SET_LIST_ITEM'),
+            IOC_TYPE_MAPPING_PAGE_FILETYPE_IOC_SETTING_LABEL: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_FILETYPE_IOC_SETTING_LABEL'),
+            IOC_TYPE_MAPPING_PAGE_ENABLE_CREATE_FILE_INDICATOR: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_ENABLE_CREATE_FILE_INDICATOR'),
+            IOC_TYPE_MAPPING_PAGE_ENABLE_CREATE_FILE_INDICATOR_TOOLTIP: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_ENABLE_CREATE_FILE_INDICATOR_TOOLTIP'),
+            IOC_TYPE_MAPPING_PAGE_ENABLE_ADD_COMMENT_FOR_EXCLUDED_FILES: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_ENABLE_ADD_COMMENT_FOR_EXCLUDED_FILES'),
+            IOC_TYPE_MAPPING_PAGE_ENABLE_ADD_COMMENT_FOR_EXCLUDED_FILES_TOOLTIP: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_ENABLE_ADD_COMMENT_FOR_EXCLUDED_FILES_TOOLTIP'),
 
             BACK_BUTTON: widgetUtilityService.translate('configureIndicatorExtraction.BACK_BUTTON'),
             SAVE_BUTTON: widgetUtilityService.translate('configureIndicatorExtraction.SAVE_BUTTON'),
             SKIP_BUTTON: widgetUtilityService.translate('configureIndicatorExtraction.SKIP_BUTTON'),
+            CANCEL_BUTTON: widgetUtilityService.translate('configureIndicatorExtraction.CANCEL_BUTTON'),
           };
         });
       }

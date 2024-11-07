@@ -4,6 +4,7 @@
   Copyright end -->
 
 <link rel="stylesheet" type="text/css" href="{{widgetCSS}}" />
+<link rel="stylesheet" type="text/css" href="{{themeCSS}}" />
 <div class="modal-header">
     <h3 class="modal-title col-md-9">{{viewWidgetVars.LABEL_TITLE}}</h3>
 </div>
@@ -53,7 +54,7 @@
                                 <div class="padding-right-30 margin-top-sm max-width-450px">
                                     <p class="font-size-14 grey-text margin-bottom-0 z-index-0">
                                         {{viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_DESCRIPTION}}</p>
-                                </div><br />
+                                </div>
 
                                 <!-- Search Div START -->
                                 <div class="margin-top-md position-relative filterSearch">
@@ -66,8 +67,9 @@
                                         data-ng-if="searchStatus === 'on'"></span>
                                     <input id="search" type="text" class="form-control padding-right-30"
                                         placeholder="{{viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_SEARCH_PLACEHOLDER}}"
-                                        aria-labelledby="search-btn" data-ng-model="searchString" aria-invalid="false"
-                                        data-ng-change="updateSearchQuery(searchString)">
+                                        aria-labelledby="search-btn" data-ng-model="searchString.searchText"
+                                        aria-invalid="false"
+                                        data-ng-change="updateSearchQuery(searchString.searchText)">
                                 </div>
                                 <div data-ng-if="searchStatus === 'on'">
                                     <div class="margin-bottom-lg margin-top-12">
@@ -130,7 +132,7 @@
 
                                     <!-- Bulk Import Div START -->
                                     <div id="bulk-import-container" data-ng-show="bulkImportEnable"
-                                        data-ng-style="{'background': isLightTheme ? '#fafaf9' : (isSteelTheme ? '#242b35' : '#262626')}">
+                                        class="bulk-import-container-background">
                                         <label class="control-label display-block manual-input-list-container"
                                             style="padding: 10px 20px;">
                                             <span
@@ -210,8 +212,7 @@
 
                                     <!-- Add New IOC Div START -->
                                     <div id="add-new-indicator-type-container" data-ng-show="addNewIndicatorType"
-                                        data-ng-style="{'background': isLightTheme ? '#fafaf9' : (isSteelTheme ? '#242b35' : '#262626')}"
-                                        class="margin-bottom-22">
+                                        class="bulk-import-container-background margin-bottom-22">
                                         <label class="control-label display-block manual-input-list-container"
                                             style="padding: 10px 20px;">
                                             <span
@@ -223,29 +224,26 @@
                                                     class="noMargin" name="submitIndicatorTypeForm"
                                                     data-ng-class="{'state-wait': processing }">
                                                     <div class="margin-bottom-md" id="selectIOCType">
-                                                        <select data-ng-class="{'input-background-white': isLightTheme}"
-                                                            name="indicatorType" id="indicatorType"
-                                                            class="form-control border-radius-5"
+                                                        <select name="indicatorType" id="indicatorType"
+                                                            class="form-control border-radius-5 width-35"
                                                             data-ng-model="selectedIndicatorType.dropDownValue"
-                                                            data-ng-change="indicatorTypeChanged(selectedIndicatorType.dropDownValue)"
-                                                            style="width: auto;">
+                                                            data-ng-change="indicatorTypeChanged(selectedIndicatorType.dropDownValue)">
                                                             <option value="" disabled selected>
                                                                 {{viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_SELECT_INDICATOR_LABEL}}
                                                             </option>
                                                             <option ng-repeat="item in notYetEnteredIOCTypes"
                                                                 value="{{item}}">{{item}}</option>
-                                                            <option value="Add Custom Indicator Type">
-                                                                Add Custom Indicator Type
-                                                            </option>
+                                                            <option
+                                                                value="+ Add Custom Indicator Type">+ Add Custom Indicator Type</option>
                                                         </select>
                                                     </div>
                                                     <div class="margin-bottom-md">
                                                         <input id="enterIndicatorName"
                                                             data-ng-disabled="!addCustomIOCType"
-                                                            class="form-control border-radius-5" type="text"
+                                                            class="form-control border-radius-5 width-35" type="text"
                                                             ng-model="selectedIndicatorType.iocType"
-                                                            name="enterIndicatorName" placeholder="Enter Indicator Type"
-                                                            style="width: 233px;"
+                                                            name="enterIndicatorName"
+                                                            placeholder="{{viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ENTER_IOC_PLACEHOLDER}}"
                                                             data-ng-class="{'has-error': duplicateIOCTypeFlag}" required
                                                             data-ng-change="clearDuplicateIOCErrorMsg()">
                                                         <span class="font-075em text-danger"
@@ -256,7 +254,8 @@
                                                         <input data-ng-disabled="isRegexAvailable"
                                                             class="form-control border-radius-5" type="text"
                                                             ng-model="selectedIndicatorType.pattern"
-                                                            name="enterRegexPattern" placeholder="Enter Regex Pattern"
+                                                            name="enterRegexPattern"
+                                                            placeholder="{{viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ENTER_REGEX_PLACEHOLDER}}"
                                                             id="enterRegexPattern">
                                                     </div>
                                                 </form>
@@ -284,7 +283,8 @@
                                         <div class="padding-bottom-md">
 
                                             <div>
-                                                <label class="control-label text-transform-none">{{indicatorType}}:
+                                                <label
+                                                    class="control-label text-transform-none font-primary-color">{{indicatorType}}:
                                                     <span
                                                         data-uib-tooltip="Specify {{indicatorType}} to exclude from enrichment."
                                                         data-tooltip-placement="top-left"
@@ -343,7 +343,174 @@
             </div>
         </div>
     </wz-step>
-    <wz-step wz-title="Finish" wz-order="3" class="ingestion-modal-padding">
+    <wz-step wz-title="{{viewWidgetVars.IOC_TYPE_MAPPING_PAGE_WZ_TITLE}}" wz-order="3" class="ingestion-modal-padding">
+        <div class="full-width wz-step-height padding-bottom-md solutionpack-wizard-modal-body">
+            <div class="full-height overflow-auto">
+                <div class="display-table fixed-table-layout full-height full-width">
+                    <div class="full-height display-table-cell vertical-align-middle">
+                        <div class="col-md-5 full-height padding-bottom-md"
+                            style="padding-left: 5%; padding-top: 200px;">
+                            <div class="full-width">
+                                <img class="img-responsive d-info-image" src="{{pageImages.fieldMappingPageImage}}">
+                            </div>
+                        </div>
+                        <div class="col-md-7 config-section">
+                            <div class="padding-20">
+                                <div class="font-size-25 display-inline-flex">
+                                    <div id="fieldMappingTitle" class="margin-right-md">
+                                        {{viewWidgetVars.IOC_TYPE_MAPPING_PAGE_TITLE}}
+                                    </div>
+                                    <div id="module-selection">
+                                        <select name="select-module" id="select-module"
+                                            class="form-control border-radius-5" data-ng-model="selectedModule"
+                                            data-ng-change="getSelectedModuleFields(selectedModule)"
+                                            style="width: auto;">
+                                            <option ng-repeat="item in moduleList" value="{{item}}"
+                                                data-ng-selected="item === selectedModule">{{item}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="padding-right-30 margin-top-sm max-width-450px">
+                                    <p class="font-size-14 grey-text margin-bottom-0 z-index-0">
+                                        {{viewWidgetVars.IOC_TYPE_MAPPING_PAGE_DESCRIPTION}}</p>
+                                </div><br />
+
+                                <!-- Field Type Mapping Div START -->
+                                <div id="indicator-type-mapping-container" class="field-mapping-container">
+
+                                    <!-- Search Bar START -->
+                                    <div id="field-search-bar" class="display-flex">
+                                        <div class="field-mapping-heading-bgcolor width-65">
+                                            <div
+                                                class="margin-bottom-xlg margin-left-30 margin-top-md position-relative width-65 filterSearch">
+                                                <label
+                                                    class="control-label font-primary-color">{{viewWidgetVars.IOC_TYPE_MAPPING_PAGE_FIELD_COLUMN_TITLE}}</label>
+                                                <span
+                                                    class="font-075em icon icon-search margin-left-md position-absolute right-10 top-breadcrumb"
+                                                    data-ng-click="" style="top: 37px;"></span>
+                                                <input id="search-by-field" type="text"
+                                                    class="form-control padding-right-30"
+                                                    placeholder="{{viewWidgetVars.IOC_TYPE_MAPPING_PAGE_FIELD_COLUMN_PLACEHOLDER}}"
+                                                    aria-labelledby="search-btn"
+                                                    data-ng-model="searchParam.searchByTitle" aria-invalid="false"
+                                                    style="font-size: 12px;">
+                                            </div>
+                                        </div>
+                                        <div class="field-mapping-heading-bgcolor width-35">
+                                            <div
+                                                class="margin-bottom-xlg margin-left-30 margin-top-md position-relative width-65 filterSearch">
+                                                <label
+                                                    class="control-label font-primary-color">{{viewWidgetVars.IOC_TYPE_MAPPING_PAGE_TYPE_COLUMN_TITLE}}</label>
+                                                <span
+                                                    class="font-075em icon icon-filter margin-left-md position-absolute right-10 top-breadcrumb"
+                                                    data-ng-click="" style="top: 37px;"></span>
+                                                <input id="search-by-field" type="text"
+                                                    class="form-control padding-right-30 font-size-12"
+                                                    placeholder="{{viewWidgetVars.IOC_TYPE_MAPPING_PAGE_TYPE_COLUMN_PLACEHOLDER}}"
+                                                    aria-labelledby="search-btn"
+                                                    data-ng-model="searchParam.searchByIocType" aria-invalid="false">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Search Bar END -->
+
+                                    <!-- Field Mapping List START -->
+                                    <div id="indicator-type-list" class="display-flex"
+                                        data-ng-repeat="fieldInfo in sortedFieldTypes | filter: fieldMappingSearchFilter">
+                                        <div class="width-65 field-mapping-rows-bgcolor">
+                                            <div class="margin-left-30 margin-top-md position-relative width-65">
+                                                <label class="control-label"
+                                                    style="font-size: 13px; margin-top: 10px;">{{fieldInfo[1].title}}</label>
+                                            </div>
+                                        </div>
+                                        <div class="width-35 field-mapping-rows-bgcolor">
+                                            <div
+                                                class="margin-bottom-md margin-left-30 margin-top-md position-relative width-65">
+                                                <select name="indicator-type-picklist" id="indicator-type-picklist"
+                                                    class="form-control border-radius-5 font-size-12"
+                                                    data-ng-model="fieldInfo[1].iocType"
+                                                    data-ng-change="fieldIndicatorTypeChanged(fieldInfo[0], fieldInfo[1].iocType, 'fieldMappingUpdate')">
+                                                    <option
+                                                        value="{{viewWidgetVars.IOC_TYPE_MAPPING_PAGE_NOT_SET_LIST_ITEM}}"
+                                                        selected>
+                                                        {{viewWidgetVars.IOC_TYPE_MAPPING_PAGE_NOT_SET_LIST_ITEM}}
+                                                    </option>
+                                                    <option ng-repeat="item in iocTypePicklistItems" value="{{item}}"
+                                                        data-ng-selected="item === fieldInfo[1].iocType">{{item}}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Field Mapping List END -->
+                                </div>
+                                <!-- Field Type Mapping Div END -->
+
+                                <!-- File Type Setting Div START -->
+                                <div id="file-type-indicator-setting">
+                                    <label class="control-label font-primary-color">
+                                        {{viewWidgetVars.IOC_TYPE_MAPPING_PAGE_FILETYPE_IOC_SETTING_LABEL}}
+                                    </label>
+
+
+                                    <div class="field-mapping-checkbox">
+                                        <input type="checkbox" class="margin-right-md pull-left"
+                                            name="select-create-file-iocs" id="select-create-file-iocs"
+                                            data-ng-model="updatedIOCTypeFieldMapping.recordValue.createFileIOCs"
+                                            data-ng-change="fieldIndicatorTypeChanged('createFileIOCs', updatedIOCTypeFieldMapping.recordValue.createFileIOCs, 'fieldFlagsUpdate')">
+                                        </input>
+                                        <label for="select-create-file-iocs"
+                                            class="control-label font-size-12 margin-top-2 pull-left">{{viewWidgetVars.IOC_TYPE_MAPPING_PAGE_ENABLE_CREATE_FILE_INDICATOR}}
+                                            <span
+                                                data-uib-tooltip="{{viewWidgetVars.IOC_TYPE_MAPPING_PAGE_ENABLE_CREATE_FILE_INDICATOR_TOOLTIP}}"
+                                                data-tooltip-placement="top-left" data-tooltip-append-to-body="true"><i
+                                                    class="icon icon-information" aria-hidden="true"></i>
+                                            </span>
+                                        </label>
+                                    </div>
+
+                                    <div class="field-mapping-checkbox">
+                                        <input type="checkbox" class="margin-right-md pull-left"
+                                            name="select-add-excluded-file-comment"
+                                            id="select-add-excluded-file-comment"
+                                            data-ng-model="updatedIOCTypeFieldMapping.recordValue.addExcludedFileComment"
+                                            data-ng-change="fieldIndicatorTypeChanged('addExcludedFileComment', updatedIOCTypeFieldMapping.recordValue.addExcludedFileComment, 'fieldFlagsUpdate')">
+                                        </input>
+                                        <label for="select-add-excluded-file-comment"
+                                            class="control-label font-size-12 margin-top-2 pull-left">{{viewWidgetVars.IOC_TYPE_MAPPING_PAGE_ENABLE_ADD_COMMENT_FOR_EXCLUDED_FILES}}
+                                            <span
+                                                data-uib-tooltip="{{viewWidgetVars.IOC_TYPE_MAPPING_PAGE_ENABLE_ADD_COMMENT_FOR_EXCLUDED_FILES_TOOLTIP}}"
+                                                data-tooltip-placement="top-left" data-tooltip-append-to-body="true"><i
+                                                    class="icon icon-information" aria-hidden="true"></i>
+                                            </span>
+                                        </label>
+                                    </div>
+
+
+                                </div>
+                                <!-- File Type Setting Div END -->
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="ingestion-modal-footer">
+                <button type="button" class="btn btn-sm btn-second-primary margin-top-lg margin-left-lg"
+                    id="solutionpack-configure-back-env-btn" data-ng-click="moveBack()"><i
+                        class="fa fa-chevron-left margin-right-sm"></i>{{viewWidgetVars.BACK_BUTTON}}</button>
+                <button type="button" class="btn btn-primary pull-right btn-sm margin-top-lg margin-right-lg"
+                    data-ng-click="moveNext('save')" id="solutionpack-configure-env-next-btn"><i
+                        class="icon icon-check margin-right-sm"></i>{{viewWidgetVars.SAVE_BUTTON}}
+                </button>
+                <button type="button" class="btn btn-sm btn-second-primary pull-right margin-top-lg margin-right-lg"
+                    data-ng-click="moveNext()" id="solutionpack-configure-env-next-btn">{{viewWidgetVars.SKIP_BUTTON}}<i
+                        class="fa fa-chevron-right margin-left-sm"></i>
+                </button>
+            </div>
+        </div>
+    </wz-step>
+    <wz-step wz-title="Finish" wz-order="4" class="ingestion-modal-padding">
         <div class="full-width wz-step-height padding-bottom-md solutionpack-wizard-modal-body">
             <div class="full-height">
                 <div class="display-table fixed-table-layout full-height full-width">
