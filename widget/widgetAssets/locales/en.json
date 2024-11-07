@@ -50,6 +50,11 @@
         "IOC_TYPE_MAPPING_PAGE_ENABLE_ADD_COMMENT_FOR_EXCLUDED_FILES": "Enable Add Comment for Excluded Files",
         "IOC_TYPE_MAPPING_PAGE_ENABLE_ADD_COMMENT_FOR_EXCLUDED_FILES_TOOLTIP": "If checked then a comment will be added to the alert if any file is excluded during the indicator extraction process.",
 
+        "FINISH_PAGE_WZ_TITLE": "Finish",
+        "FINISH_PAGE_TITLE": "Summary",
+        "FINISH_PAGE_DESCRIPTION": "In accordance with your selection from the previous step, below is the list of items that will be excluded.",
+
+
         "CANCEL_BUTTON":"Cancel",
         "BACK_BUTTON": "Back",
         "SKIP_BUTTON": "Skip",

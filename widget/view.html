@@ -233,8 +233,8 @@
                                                             </option>
                                                             <option ng-repeat="item in notYetEnteredIOCTypes"
                                                                 value="{{item}}">{{item}}</option>
-                                                            <option
-                                                                value="+ Add Custom Indicator Type">+ Add Custom Indicator Type</option>
+                                                            <option value="+ Add Custom Indicator Type">+ Add Custom
+                                                                Indicator Type</option>
                                                         </select>
                                                     </div>
                                                     <div class="margin-bottom-md">
@@ -486,7 +486,6 @@
                                         </label>
                                     </div>
 
-
                                 </div>
                                 <!-- File Type Setting Div END -->
 
@@ -510,18 +509,28 @@
             </div>
         </div>
     </wz-step>
-    <wz-step wz-title="Finish" wz-order="4" class="ingestion-modal-padding">
+    <wz-step wz-title="{{viewWidgetVars.FINISH_PAGE_WZ_TITLE}}" wz-order="4" class="ingestion-modal-padding">
         <div class="full-width wz-step-height padding-bottom-md solutionpack-wizard-modal-body">
             <div class="full-height">
                 <div class="display-table fixed-table-layout full-height full-width">
                     <div class="full-height display-table-cell vertical-align-middle">
-                        <div class="col-md-6 display-flex align-items-center margin-top-34 padding-0">
+                        <div class="col-md-5 full-height padding-bottom-md">
                             <div class="full-width">
-                                <img class="d-info-image img-responsive padding-left-20-per"
+                                <img class="d-info-image img-responsive padding-left-20-per padding-top-35-per"
                                     src="{{pageImages.finishPageImage}}">
                             </div>
                         </div>
-                        <div class="col-md-6 prerequisites-section padding-bottom-25 padding-left-0">
+                        <div class="col-md-7 config-section">
+                            <div class="padding-20">
+                                <div class="font-size-25">{{viewWidgetVars.FINISH_PAGE_TITLE}}
+                                </div>
+                                <div class="padding-right-30 margin-top-sm max-width-450px">
+                                    <p class="font-size-14 grey-text margin-bottom-0 z-index-0">
+                                        {{viewWidgetVars.FINISH_PAGE_DESCRIPTION}}
+                                    </p>
+                                </div>
+
+                            </div>
                         </div>
                     </div>
                 </div>

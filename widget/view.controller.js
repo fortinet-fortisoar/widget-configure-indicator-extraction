@@ -647,6 +647,10 @@
             IOC_TYPE_MAPPING_PAGE_ENABLE_ADD_COMMENT_FOR_EXCLUDED_FILES: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_ENABLE_ADD_COMMENT_FOR_EXCLUDED_FILES'),
             IOC_TYPE_MAPPING_PAGE_ENABLE_ADD_COMMENT_FOR_EXCLUDED_FILES_TOOLTIP: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_ENABLE_ADD_COMMENT_FOR_EXCLUDED_FILES_TOOLTIP'),
 
+            FINISH_PAGE_WZ_TITLE: widgetUtilityService.translate('configureIndicatorExtraction.FINISH_PAGE_WZ_TITLE'),
+            FINISH_PAGE_TITLE: widgetUtilityService.translate('configureIndicatorExtraction.FINISH_PAGE_TITLE'),
+            FINISH_PAGE_DESCRIPTION: widgetUtilityService.translate('configureIndicatorExtraction.FINISH_PAGE_DESCRIPTION'),
+
             BACK_BUTTON: widgetUtilityService.translate('configureIndicatorExtraction.BACK_BUTTON'),
             SAVE_BUTTON: widgetUtilityService.translate('configureIndicatorExtraction.SAVE_BUTTON'),
             SKIP_BUTTON: widgetUtilityService.translate('configureIndicatorExtraction.SKIP_BUTTON'),
