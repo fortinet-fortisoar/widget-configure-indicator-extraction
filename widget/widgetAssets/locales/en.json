@@ -38,7 +38,7 @@
         "IOC_TYPE_MAPPING_PAGE_WZ_TITLE": "Field Mapping",
         "IOC_TYPE_MAPPING_PAGE_TITLE": "Indicator Field Type Mapping for ",
         "IOC_TYPE_MAPPING_PAGE_DESCRIPTION": "Specify the fields from alerts and map them with the appropriate indicator types",
-        "IOC_TYPE_MAPPING_PAGE_FIELD_COLUMN_TITLE": "Field",
+        "IOC_TYPE_MAPPING_PAGE_FIELD_COLUMN_TITLE": "Fields",
         "IOC_TYPE_MAPPING_PAGE_TYPE_COLUMN_TITLE": "Type",
         "IOC_TYPE_MAPPING_PAGE_FIELD_COLUMN_PLACEHOLDER": "Search By Field",
         "IOC_TYPE_MAPPING_PAGE_TYPE_COLUMN_PLACEHOLDER": "Filter By Type",
