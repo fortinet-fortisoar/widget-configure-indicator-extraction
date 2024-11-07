@@ -644,9 +644,9 @@
             IOC_TYPE_MAPPING_PAGE_NOT_SET_LIST_ITEM: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_NOT_SET_LIST_ITEM'),
             IOC_TYPE_MAPPING_PAGE_FILETYPE_IOC_SETTING_LABEL: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_FILETYPE_IOC_SETTING_LABEL'),
             IOC_TYPE_MAPPING_PAGE_ENABLE_CREATE_FILE_INDICATOR: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_ENABLE_CREATE_FILE_INDICATOR'),
-            IOC_TYPE_MAPPING_PAGE_ENABLE_CREATE_FILE_INDICATOR_PLACEHOLDER: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_ENABLE_CREATE_FILE_INDICATOR_PLACEHOLDER'),
+            IOC_TYPE_MAPPING_PAGE_ENABLE_CREATE_FILE_INDICATOR_TOOLTIP: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_ENABLE_CREATE_FILE_INDICATOR_TOOLTIP'),
             IOC_TYPE_MAPPING_PAGE_ENABLE_ADD_COMMENT_FOR_EXCLUDED_FILES: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_ENABLE_ADD_COMMENT_FOR_EXCLUDED_FILES'),
-            IOC_TYPE_MAPPING_PAGE_ENABLE_ADD_COMMENT_FOR_EXCLUDED_FILES_PLACEHOLDER: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_ENABLE_ADD_COMMENT_FOR_EXCLUDED_FILES_PLACEHOLDER'),
+            IOC_TYPE_MAPPING_PAGE_ENABLE_ADD_COMMENT_FOR_EXCLUDED_FILES_TOOLTIP: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_ENABLE_ADD_COMMENT_FOR_EXCLUDED_FILES_TOOLTIP'),
 
             BACK_BUTTON: widgetUtilityService.translate('configureIndicatorExtraction.BACK_BUTTON'),
             SAVE_BUTTON: widgetUtilityService.translate('configureIndicatorExtraction.SAVE_BUTTON'),
