@@ -24,6 +24,11 @@
     $scope.initList = [];
     $scope.invalidIOCs = {}; // This dict holds invalid IOCs for various indicator types
     $scope.validateIOC = validateIOC;
+    var _exclusionSummary = [];
+    $scope.summary = {
+      exclusionSettingSummary: [],
+      fieldMappingSummary: {}
+    }
 
     // Wizard Functions
     $scope.moveNext = moveNext;
@@ -56,7 +61,7 @@
     var _defaultIndicatorTypePicklistItems = {};
     var _updatedIndicatorTypePicklistItems = {};
     $scope.notYetEnteredIOCTypes = [];
-    $scope.selectedIndicatorType = { iocType: '', pattern: [], dropDownValue: '' };
+    $scope.selectedIndicatorType = { iocType: '', pattern: '', dropDownValue: '' };
     $scope.addCustomIOCType = false;
     $scope.duplicateIOCTypeFlag = false;
     $scope.setAddNewIOCFlags = setAddNewIOCFlags;
@@ -207,9 +212,14 @@
 
     function _addNewIocTypeToKeystore(iocTypeName) {
       let keyStoreTemplate = iocExtractionConfigService.constants().keyStoreTemplate;
-      keyStoreTemplate['pattern'].push($scope.selectedIndicatorType.pattern);
+      if ($scope.selectedIndicatorType.pattern !== '') {
+        keyStoreTemplate['pattern'].push($scope.selectedIndicatorType.pattern);
+      }
       if ($scope.addCustomIOCType) {
         keyStoreTemplate['system'] = false;
+      }
+      if (!$scope.isRegexAvailable) {
+        keyStoreTemplate['isRegexEditable'] = true;
       }
       $scope.updatedExclusionSettings.recordValue[iocTypeName] = keyStoreTemplate;
     }
@@ -301,13 +311,13 @@
       if (iocType === '+ Add Custom Indicator Type') {
         $scope.isRegexAvailable = false;
         $scope.addCustomIOCType = true;
-        $scope.selectedIndicatorType = { iocType: '', pattern: [], dropDownValue: '+ Add Custom Indicator Type' };
+        $scope.selectedIndicatorType = { iocType: '', pattern: '', dropDownValue: '+ Add Custom Indicator Type' };
       } else {
         $scope.addCustomIOCType = false;
         $scope.selectedIndicatorType['iocType'] = iocType;
         $scope.selectedIndicatorType['pattern'] = _getRegexPattern(iocType, _regexDict).join(',');
         $scope.isRegexAvailable = true;
-        if ($scope.selectedIndicatorType['pattern'].length === 0) {
+        if ($scope.selectedIndicatorType.pattern === '' || $scope.selectedIndicatorType.pattern.length === 0) {
           $scope.isRegexAvailable = false;
         }
         $scope.duplicateIOCTypeFlag = false;
@@ -494,12 +504,31 @@
 
 
     function _commitExclusionSettings() {
-      Object.keys($scope.updatedExclusionSettings.recordValue).forEach(function (item) {
-        _defaultGlobalSettings[item] = $scope.updatedExclusionSettings.recordValue[item];
+      const updatedExclusionSettings = $scope.updatedExclusionSettings.recordValue;
+      const defaultExclusionSettings = _defaultExclusionSettings.recordValue;
+      const defaultExclusionItems = new Set(Object.keys(defaultExclusionSettings));
+
+      Object.keys(updatedExclusionSettings).forEach(function (iocType) {
+        const updatedItem = updatedExclusionSettings[iocType];
+        const defaultItem = defaultExclusionSettings[iocType];
+        _defaultGlobalSettings[iocType] = updatedItem;
+
+        if (defaultExclusionItems.has(iocType)) {
+          let _diffCount = updatedItem.excludedIOCs.length - defaultItem.excludedIOCs.length;
+          if (_diffCount > 0) {
+            let summaryMsg = iocType + ' added: ' + _diffCount;
+            _exclusionSummary.push(summaryMsg);
+          }
+          if (_diffCount < 0) {
+            let summaryMsg = iocType + ' removed: ' + Math.abs(_diffCount);
+            _exclusionSummary.push(summaryMsg);
+          }
+        } else {
+          let summaryMsg = "New Indicator Type '" + iocType + "'. Values added: " + updatedItem.excludedIOCs.length;
+          _exclusionSummary.push(summaryMsg);
+        }
       });
-      let keyValue = _defaultGlobalSettings;
-      let uuid = $scope.updatedExclusionSettings.recordUUID;
-      iocExtractionConfigService.updateKeyStoreRecord(keyValue, uuid);
+      iocExtractionConfigService.updateKeyStoreRecord(_defaultGlobalSettings, $scope.updatedExclusionSettings.recordUUID);
     }
 
 
@@ -523,6 +552,8 @@
             _commitIndicatorTypePicklist(_customIOCTypeList);
             _customIOCTypeList = [];
           }
+          $scope.summary.exclusionSettingSummary = _exclusionSummary;
+          $scope.isExclusionSettingChanged =  _exclusionSummary.length > 0 ? true : false;
         }
       }
       if (currentStepTitle === $scope.viewWidgetVars.IOC_TYPE_MAPPING_PAGE_WZ_TITLE) {

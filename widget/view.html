@@ -291,9 +291,11 @@
                                                         data-tooltip-append-to-body="true"><i
                                                             class="icon icon-information" aria-hidden="true"></i></span>
                                                 </label>
+                                                <!-- data-ng-mouseenter="" data-ng-mouseleave="" -->
+                                                <span class="icon icon-edit control-label"
+                                                    data-ng-if="exclusionDetails.isRegexEditable"></span>
                                                 <label class="control-label text-transform-none pull-right regex-label">
-                                                    Regex: {{exclusionDetails.pattern.length > 0 ?
-                                                    exclusionDetails.pattern[0] : 'NA'}}
+                                                    Regex: {{exclusionDetails.pattern[0] || 'NA'}}
                                                 </label>
                                             </div>
 
@@ -522,14 +524,80 @@
                         </div>
                         <div class="col-md-7 config-section">
                             <div class="padding-20">
-                                <div class="font-size-25">{{viewWidgetVars.FINISH_PAGE_TITLE}}
+                                <div class="margin-top-10per">
+                                    <div class="font-size-25">{{viewWidgetVars.FINISH_PAGE_TITLE}}
+                                    </div>
+                                    <div class="padding-right-30 margin-top-sm max-width-450px">
+                                        <p class="font-size-14 grey-text margin-bottom-0 z-index-0">
+                                            {{viewWidgetVars.FINISH_PAGE_DESCRIPTION}}
+                                        </p>
+                                    </div>
                                 </div>
-                                <div class="padding-right-30 margin-top-sm max-width-450px">
-                                    <p class="font-size-14 grey-text margin-bottom-0 z-index-0">
-                                        {{viewWidgetVars.FINISH_PAGE_DESCRIPTION}}
-                                    </p>
+                                <div class="margin-top-20">
+                                    <div class="font-size-18">Exclusions:
+                                    </div>
+                                    <div data-ng-if="isExclusionSettingChanged">
+                                        <ul>
+                                            <li
+                                                data-ng-repeat="item in summary.exclusionSettingSummary">
+                                                <span class="control-label grey-text">{{item}}</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div data-ng-if="!isExclusionSettingChanged">
+                                        <ul>
+                                            <li>
+                                                <span class="control-label grey-text">No Change</span>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </div>
-
+                                <div class="margin-top-20">
+                                    <div class="font-size-18">Field Type Mapping:
+                                    </div>
+                                    <div data-ng-if="isFieldMappingChanged">
+                                        <ul>
+                                            <li
+                                                data-ng-repeat="(iocType, iocSummary) in summary.exclusionSettingSummary">
+                                                <span class="control-label grey-text">{{iocType}}
+                                                    ({{iocSummary.diffCount}}){{iocSummary.isNewlyAdded ? ' : Newly
+                                                    Added
+                                                    Indicator Type' :
+                                                    ''}}</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div data-ng-if="!isFieldMappingChanged">
+                                        <ul>
+                                            <li>
+                                                <span class="control-label grey-text">No Change</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="margin-top-20">
+                                    <div class="font-size-18">File Type Setting:
+                                    </div>
+                                    <div data-ng-if="isFileTypeSettingChanged">
+                                        <ul>
+                                            <li
+                                                data-ng-repeat="(iocType, iocSummary) in summary.exclusionSettingSummary">
+                                                <span class="control-label grey-text">{{iocType}}
+                                                    ({{iocSummary.diffCount}}){{iocSummary.isNewlyAdded ? ' : Newly
+                                                    Added
+                                                    Indicator Type' :
+                                                    ''}}</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div data-ng-if="!isFileTypeSettingChanged">
+                                        <ul>
+                                            <li>
+                                                <span class="control-label grey-text">No Change</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
