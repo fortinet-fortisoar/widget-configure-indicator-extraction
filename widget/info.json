@@ -4,6 +4,7 @@
     "subTitle": "Configures Excluded IOC List from Extraction",
     "version": "2.0.0",
     "published_date": 1716368544,
+    "releaseNotes": "available",
     "metadata": {
         "description": "The widget configures specific IOCs to be excluded for the indicator extraction.",
         "pages": [],
