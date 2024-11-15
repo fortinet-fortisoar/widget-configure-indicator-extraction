@@ -112,7 +112,6 @@
           const _fieldTypeSummaryMessage = $scope.viewWidgetVars.FINISH_PAGE_FIELD_TYPE_SUMMARY_MESSAGE + Array.from(new Set(_changedModules)).join(' and ');
           $scope.summary.fieldMappingSummary.push(_fieldTypeSummaryMessage);
         }
-        console.log(_fieldMappingSummary);
       } else {
         $scope.summary.fieldMappingSummary.push($scope.viewWidgetVars.FINISH_PAGE_NO_FIELD_MAPPING_CHANGE_MESSAGE);
       }
