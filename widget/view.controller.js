@@ -56,7 +56,7 @@
     var _defaultIndicatorTypePicklistItems = {};
     var _updatedIndicatorTypePicklistItems = {};
     $scope.notYetEnteredIOCTypes = [];
-    $scope.selectedIndicatorType = { iocType: '', pattern: [], dropDownValue: '' };
+    $scope.selectedIndicatorType = { iocType: '', pattern: '', dropDownValue: '' };
     $scope.addCustomIOCType = false;
     $scope.duplicateIOCTypeFlag = false;
     $scope.setAddNewIOCFlags = setAddNewIOCFlags;
@@ -91,6 +91,51 @@
     $scope.searchParam = { searchByTitle: '', searchByIocType: '' };
     $scope.fieldMappingSearchFilter = fieldMappingSearchFilter;
 
+    // Summary Page
+    var _fieldMappingSummary = { fieldMappingUpdate: [], fieldFlagsUpdate: [] }
+    var _exclusionSummary = [];
+    $scope.summary = {
+      exclusionSettingSummary: [],
+      fieldMappingSummary: []
+    }
+
+    function _computeFieldMappingSummary() {
+      if (_fieldMappingSummary.fieldMappingUpdate.length > 0) {
+        let _updatedFieldMapping = new Set(Object.keys($scope.updatedIOCTypeFieldMapping.recordValue.fieldTypeMapping));
+        let _changedModules = [];
+        _fieldMappingSummary.fieldMappingUpdate.forEach(function (item) {
+          if (_updatedFieldMapping.has(item.field)) {
+            _changedModules.push(item.module);
+          }
+        });
+        if (_changedModules.length > 0) {
+          const _fieldTypeSummaryMessage = $scope.viewWidgetVars.FINISH_PAGE_FIELD_TYPE_SUMMARY_MESSAGE + Array.from(new Set(_changedModules)).join(' and ');
+          $scope.summary.fieldMappingSummary.push(_fieldTypeSummaryMessage);
+        }
+      } else {
+        $scope.summary.fieldMappingSummary.push($scope.viewWidgetVars.FINISH_PAGE_NO_FIELD_MAPPING_CHANGE_MESSAGE);
+      }
+      if (_fieldMappingSummary.fieldFlagsUpdate.length > 0) {
+        _fieldMappingSummary.fieldFlagsUpdate.forEach(function (item) {
+          if ($scope.updatedIOCTypeFieldMapping.recordValue[item.field]) {
+            if (item.field === 'createFileIOCs') {
+              $scope.summary.fieldMappingSummary.push($scope.viewWidgetVars.FINISH_PAGE_CREATE_FILE_IOC_MESSAGE);
+            }
+            if (item.field === 'addExcludedFileComment') {
+              $scope.summary.fieldMappingSummary.push($scope.viewWidgetVars.FINISH_PAGE_ADD_EXCLUDED_FILE_COMMENT_MESSAGE);
+            }
+          } else {
+            if (item.field === 'createFileIOCs') {
+              $scope.summary.fieldMappingSummary.push($scope.viewWidgetVars.FINISH_PAGE_SKIP_CREATE_FILE_IOC_MESSAGE);
+            }
+            if (item.field === 'addExcludedFileComment') {
+              $scope.summary.fieldMappingSummary.push($scope.viewWidgetVars.FINISH_PAGE_SKIP_EXCLUDED_FILE_COMMENT_MESSAGE);
+            }
+          }
+        });
+      }
+    }
+
 
     function fieldMappingSearchFilter(item) {
 
@@ -117,17 +162,20 @@
     }
 
 
-    function fieldIndicatorTypeChanged(key, value, action) {
+    function fieldIndicatorTypeChanged(fieldName, iocType, action) {
       const mapping = $scope.updatedIOCTypeFieldMapping.recordValue;
 
       if (action === 'fieldMappingUpdate') {
-        if (value && value !== $scope.viewWidgetVars.IOC_TYPE_MAPPING_PAGE_NOT_SET_LIST_ITEM) { // This checks for non-empty, non-undefined, and non-null values
-          mapping.fieldTypeMapping[key] = value;
+        if (iocType && iocType !== $scope.viewWidgetVars.IOC_TYPE_MAPPING_PAGE_NOT_SET_LIST_ITEM) { // This checks for non-empty, non-undefined, and non-null values
+          mapping.fieldTypeMapping[fieldName] = iocType;
+          _fieldMappingSummary[action].push({ module: $scope.selectedModule, field: fieldName });
         } else {
-          delete mapping.fieldTypeMapping[key];
+          delete mapping.fieldTypeMapping[fieldName];
+          _fieldMappingSummary[action].push({ module: $scope.selectedModule, field: fieldName });
         }
       } else if (action === 'fieldFlagsUpdate') {
-        mapping[key] = value;
+        mapping[fieldName] = iocType;
+        _fieldMappingSummary[action].push({ module: $scope.selectedModule, field: fieldName });
       }
     }
 
@@ -207,9 +255,14 @@
 
     function _addNewIocTypeToKeystore(iocTypeName) {
       let keyStoreTemplate = iocExtractionConfigService.constants().keyStoreTemplate;
-      keyStoreTemplate['pattern'].push($scope.selectedIndicatorType.pattern);
+      if ($scope.selectedIndicatorType.pattern !== '' && $scope.selectedIndicatorType.pattern.length > 0) {
+        keyStoreTemplate['pattern'].push($scope.selectedIndicatorType.pattern);
+      }
       if ($scope.addCustomIOCType) {
         keyStoreTemplate['system'] = false;
+      }
+      if (!$scope.isRegexAvailable) {
+        keyStoreTemplate['isRegexEditable'] = true;
       }
       $scope.updatedExclusionSettings.recordValue[iocTypeName] = keyStoreTemplate;
     }
@@ -301,13 +354,13 @@
       if (iocType === '+ Add Custom Indicator Type') {
         $scope.isRegexAvailable = false;
         $scope.addCustomIOCType = true;
-        $scope.selectedIndicatorType = { iocType: '', pattern: [], dropDownValue: '+ Add Custom Indicator Type' };
+        $scope.selectedIndicatorType = { iocType: '', pattern: '', dropDownValue: '+ Add Custom Indicator Type' };
       } else {
         $scope.addCustomIOCType = false;
         $scope.selectedIndicatorType['iocType'] = iocType;
         $scope.selectedIndicatorType['pattern'] = _getRegexPattern(iocType, _regexDict).join(',');
         $scope.isRegexAvailable = true;
-        if ($scope.selectedIndicatorType['pattern'].length === 0) {
+        if ($scope.selectedIndicatorType.pattern === '' || $scope.selectedIndicatorType.pattern.length === 0) {
           $scope.isRegexAvailable = false;
         }
         $scope.duplicateIOCTypeFlag = false;
@@ -494,12 +547,31 @@
 
 
     function _commitExclusionSettings() {
-      Object.keys($scope.updatedExclusionSettings.recordValue).forEach(function (item) {
-        _defaultGlobalSettings[item] = $scope.updatedExclusionSettings.recordValue[item];
+      const updatedExclusionSettings = $scope.updatedExclusionSettings.recordValue;
+      const defaultExclusionSettings = _defaultExclusionSettings.recordValue;
+      const defaultExclusionItems = new Set(Object.keys(defaultExclusionSettings));
+
+      Object.keys(updatedExclusionSettings).forEach(function (iocType) {
+        const updatedItem = updatedExclusionSettings[iocType];
+        const defaultItem = defaultExclusionSettings[iocType];
+        _defaultGlobalSettings[iocType] = updatedItem;
+
+        if (defaultExclusionItems.has(iocType)) {
+          let _diffCount = updatedItem.excludedIOCs.length - defaultItem.excludedIOCs.length;
+          if (_diffCount > 0) {
+            let summaryMsg = iocType + ' added: ' + _diffCount;
+            _exclusionSummary.push(summaryMsg);
+          }
+          if (_diffCount < 0) {
+            let summaryMsg = iocType + ' removed: ' + Math.abs(_diffCount);
+            _exclusionSummary.push(summaryMsg);
+          }
+        } else {
+          let summaryMsg = "New Indicator Type '" + iocType + "'. Values added: " + updatedItem.excludedIOCs.length;
+          _exclusionSummary.push(summaryMsg);
+        }
       });
-      let keyValue = _defaultGlobalSettings;
-      let uuid = $scope.updatedExclusionSettings.recordUUID;
-      iocExtractionConfigService.updateKeyStoreRecord(keyValue, uuid);
+      iocExtractionConfigService.updateKeyStoreRecord(_defaultGlobalSettings, $scope.updatedExclusionSettings.recordUUID);
     }
 
 
@@ -523,11 +595,14 @@
             _commitIndicatorTypePicklist(_customIOCTypeList);
             _customIOCTypeList = [];
           }
+          $scope.summary.exclusionSettingSummary = _exclusionSummary;
+          $scope.isExclusionSettingChanged = _exclusionSummary.length > 0 ? true : false;
         }
       }
       if (currentStepTitle === $scope.viewWidgetVars.IOC_TYPE_MAPPING_PAGE_WZ_TITLE) {
         if (param === 'save') {
           _commitFieldMappingChanges();
+          _computeFieldMappingSummary();
         }
       }
       WizardHandler.wizard('configureIndicatorExtraction').next();
@@ -647,10 +722,24 @@
             IOC_TYPE_MAPPING_PAGE_ENABLE_ADD_COMMENT_FOR_EXCLUDED_FILES: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_ENABLE_ADD_COMMENT_FOR_EXCLUDED_FILES'),
             IOC_TYPE_MAPPING_PAGE_ENABLE_ADD_COMMENT_FOR_EXCLUDED_FILES_TOOLTIP: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_ENABLE_ADD_COMMENT_FOR_EXCLUDED_FILES_TOOLTIP'),
 
+            FINISH_PAGE_WZ_TITLE: widgetUtilityService.translate('configureIndicatorExtraction.FINISH_PAGE_WZ_TITLE'),
+            FINISH_PAGE_TITLE: widgetUtilityService.translate('configureIndicatorExtraction.FINISH_PAGE_TITLE'),
+            FINISH_PAGE_DESCRIPTION: widgetUtilityService.translate('configureIndicatorExtraction.FINISH_PAGE_DESCRIPTION'),
+            FINISH_PAGE_EXCLUSION_SETTING_SUMMARY_HEADING: widgetUtilityService.translate('configureIndicatorExtraction.FINISH_PAGE_EXCLUSION_SETTING_SUMMARY_HEADING'),
+            FINISH_PAGE_NO_EXCLUSION_CHANGE_MESSAGE: widgetUtilityService.translate('configureIndicatorExtraction.FINISH_PAGE_NO_EXCLUSION_CHANGE_MESSAGE'),
+            FINISH_PAGE_FIELD_MAPPING_SUMMARY_HEADING: widgetUtilityService.translate('configureIndicatorExtraction.FINISH_PAGE_FIELD_MAPPING_SUMMARY_HEADING'),
+            FINISH_PAGE_FIELD_TYPE_SUMMARY_MESSAGE: widgetUtilityService.translate('configureIndicatorExtraction.FINISH_PAGE_FIELD_TYPE_SUMMARY_MESSAGE'),
+            FINISH_PAGE_CREATE_FILE_IOC_MESSAGE: widgetUtilityService.translate('configureIndicatorExtraction.FINISH_PAGE_CREATE_FILE_IOC_MESSAGE'),
+            FINISH_PAGE_NO_FIELD_MAPPING_CHANGE_MESSAGE: widgetUtilityService.translate('configureIndicatorExtraction.FINISH_PAGE_NO_FIELD_MAPPING_CHANGE_MESSAGE'),
+            FINISH_PAGE_SKIP_CREATE_FILE_IOC_MESSAGE: widgetUtilityService.translate('configureIndicatorExtraction.FINISH_PAGE_SKIP_CREATE_FILE_IOC_MESSAGE'),
+            FINISH_PAGE_ADD_EXCLUDED_FILE_COMMENT_MESSAGE: widgetUtilityService.translate('configureIndicatorExtraction.FINISH_PAGE_ADD_EXCLUDED_FILE_COMMENT_MESSAGE'),
+            FINISH_PAGE_SKIP_EXCLUDED_FILE_COMMENT_MESSAGE: widgetUtilityService.translate('configureIndicatorExtraction.FINISH_PAGE_SKIP_EXCLUDED_FILE_COMMENT_MESSAGE'),
+
             BACK_BUTTON: widgetUtilityService.translate('configureIndicatorExtraction.BACK_BUTTON'),
             SAVE_BUTTON: widgetUtilityService.translate('configureIndicatorExtraction.SAVE_BUTTON'),
             SKIP_BUTTON: widgetUtilityService.translate('configureIndicatorExtraction.SKIP_BUTTON'),
             CANCEL_BUTTON: widgetUtilityService.translate('configureIndicatorExtraction.CANCEL_BUTTON'),
+            FINISH_BUTTON: widgetUtilityService.translate('configureIndicatorExtraction.FINISH_BUTTON')
           };
         });
       }

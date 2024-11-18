@@ -72,7 +72,8 @@
           "globalVariable": "",
           "system": true,
           "migratedFromGlobalVariable": true,
-          "applyIOCExtractionFilter": true
+          "applyIOCExtractionFilter": true,
+          "isRegexEditable" : false
         },
         iocTypeNameMapping: {
           'IP Address': ['IPv4', 'IPv6', 'IP'],
