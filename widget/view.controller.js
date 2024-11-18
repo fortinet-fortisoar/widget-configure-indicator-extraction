@@ -255,7 +255,7 @@
 
     function _addNewIocTypeToKeystore(iocTypeName) {
       let keyStoreTemplate = iocExtractionConfigService.constants().keyStoreTemplate;
-      if ($scope.selectedIndicatorType.pattern !== '') {
+      if ($scope.selectedIndicatorType.pattern !== '' && $scope.selectedIndicatorType.pattern.length > 0) {
         keyStoreTemplate['pattern'].push($scope.selectedIndicatorType.pattern);
       }
       if ($scope.addCustomIOCType) {
@@ -734,11 +734,12 @@
             FINISH_PAGE_SKIP_CREATE_FILE_IOC_MESSAGE: widgetUtilityService.translate('configureIndicatorExtraction.FINISH_PAGE_SKIP_CREATE_FILE_IOC_MESSAGE'),
             FINISH_PAGE_ADD_EXCLUDED_FILE_COMMENT_MESSAGE: widgetUtilityService.translate('configureIndicatorExtraction.FINISH_PAGE_ADD_EXCLUDED_FILE_COMMENT_MESSAGE'),
             FINISH_PAGE_SKIP_EXCLUDED_FILE_COMMENT_MESSAGE: widgetUtilityService.translate('configureIndicatorExtraction.FINISH_PAGE_SKIP_EXCLUDED_FILE_COMMENT_MESSAGE'),
-            
+
             BACK_BUTTON: widgetUtilityService.translate('configureIndicatorExtraction.BACK_BUTTON'),
             SAVE_BUTTON: widgetUtilityService.translate('configureIndicatorExtraction.SAVE_BUTTON'),
             SKIP_BUTTON: widgetUtilityService.translate('configureIndicatorExtraction.SKIP_BUTTON'),
             CANCEL_BUTTON: widgetUtilityService.translate('configureIndicatorExtraction.CANCEL_BUTTON'),
+            FINISH_BUTTON: widgetUtilityService.translate('configureIndicatorExtraction.FINISH_BUTTON')
           };
         });
       }
