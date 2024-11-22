@@ -117,7 +117,8 @@
                                             class="btn-link text-decoration-none font-light italic font-size-14"
                                             style="margin-left: -6px !important;"
                                             data-ng-click="setBulkImportFlags('bulkImportEnable')"
-                                            id="indicator-bulk-import-button" aria-hidden="false"><span
+                                            id="indicator-bulk-import-button" aria-hidden="false"
+                                            data-ng-disabled="editIOCTypeRegexFlag"><span
                                                 class="icon icon-import"></span>&nbsp;{{viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_LAUNCH_BUTTON}}
                                         </button>
 
@@ -125,8 +126,8 @@
                                         <button type="button"
                                             class="btn-link text-decoration-none font-light pull-right italic font-size-14"
                                             data-ng-click="setAddNewIOCFlags('addNewIOCTypeEnabled')"
-                                            id="add-new-indicator-type"
-                                            aria-hidden="false">{{viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_LAUNCH_BUTTON}}
+                                            id="add-new-indicator-type" aria-hidden="false"
+                                            data-ng-disabled="editIOCTypeRegexFlag">{{viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_LAUNCH_BUTTON}}
                                         </button>
                                     </div>
 
@@ -266,7 +267,7 @@
                                                 data-ng-disabled="!iocTypeSelected" id="add-new-ioc-button"
                                                 data-ng-click="saveNewIOCType(selectedIndicatorType.iocType)">
                                                 <i
-                                                    class="icon icon-check margin-right-sm"></i>{{viewWidgetVars.SAVE_BUTTON}}
+                                                    class="icon icon-check margin-right-sm"></i>{{viewWidgetVars.SUBMIT_BUTTON}}
                                             </button>
                                             <button type="button" class="btn btn-second-primary btn-sm"
                                                 data-ng-click="setAddNewIOCFlags('addNewIOCTypeDisabled')"
@@ -280,7 +281,8 @@
                                     <!-- UI-SELECT Excluded List Div START -->
                                     <div data-ng-repeat="(indicatorType, exclusionDetails) in updatedExclusionSettings.recordValue"
                                         class="excluded-ui-select" data-ng-show="!bulkImportEnable">
-                                        <div class="padding-bottom-md">
+                                        <!-- && !editIOCTypeRegexFlag" -->
+                                        <div class="padding-bottom-xlg">
 
                                             <div>
                                                 <label
@@ -291,9 +293,10 @@
                                                         data-tooltip-append-to-body="true"><i
                                                             class="icon icon-information" aria-hidden="true"></i></span>
                                                 </label>
-                                                <!-- data-ng-mouseenter="" data-ng-mouseleave="" -->
+                                                <!-- Regex Edit Button -->
                                                 <span class="icon icon-edit control-label"
-                                                    data-ng-if="exclusionDetails.isRegexEditable"></span>
+                                                    data-ng-if="exclusionDetails.isRegexEditable"
+                                                    data-ng-click="editIndicatorTypeRegex(indicatorType, exclusionDetails.pattern[0])"></span>
                                                 <label class="control-label text-transform-none pull-right regex-label">
                                                     Regex: {{exclusionDetails.pattern[0] || 'NA'}}
                                                 </label>
@@ -302,10 +305,9 @@
                                             <div class="cs-select padding-left-3">
                                                 <ui-select name="{{indicatorType}}"
                                                     data-ng-model="exclusionDetails.excludedIOCs" multiple
-                                                    class="custom-multi-select" tagging="undefined"
-                                                    tagging-label="false"
-                                                    data-ng-change="validateIOC($select.selected, indicatorType)"
-                                                    style="max-height: 90px; overflow-y: auto;">
+                                                    class="custom-multi-select"
+                                                    tagging="undefined" tagging-label="false"
+                                                    data-ng-change="validateIOC($select.selected, indicatorType)">
                                                     <ui-select-match
                                                         placeholder="Excluded {{indicatorType}}">{{$item}}</ui-select-match>
                                                     <ui-select-choices repeat="option in initList" refresh-delay="0"
@@ -318,6 +320,47 @@
                                                     {{indicatorType}} -
                                                     <strong>{{invalidIOCs[indicatorType]}}</strong>
                                                 </span>
+                                                <!-- Edit Regex Div START -->
+                                                <div id="edit-indicator-type-regex-container"
+                                                    data-ng-if="editedRegexPattern.iocType === indicatorType && editedRegexPattern.isEditing"
+                                                    class="bulk-import-container-background margin-top-11">
+                                                    <label
+                                                        class="control-label display-block manual-input-list-container"
+                                                        style="padding: 10px 20px;">
+                                                        <span class="padding-top-lg font-size-16">Editing
+                                                            {{editedRegexPattern.iocType}} Regex</span>
+                                                    </label>
+                                                    <div id="add-indicator-type" class="margin-top-md">
+                                                        <div class="add-indicator-type-form">
+                                                            <form data-ng-submit="submit()"
+                                                                id="submit-indicator-type-form" class="noMargin"
+                                                                name="submitIndicatorTypeForm"
+                                                                data-ng-class="{'state-wait': processing }">
+                                                                <div>
+                                                                    <input class="form-control border-radius-5"
+                                                                        type="text"
+                                                                        ng-model="editedRegexPattern.pattern"
+                                                                        name="editRegexPattern"
+                                                                        placeholder="{{viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_EDIT_REGEX_ENTER_REGEX_PLACEHOLDER}}"
+                                                                        id="editRegexPattern">
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer bulk-import-footer">
+                                                        <button type="submit" class="btn btn-primary btn-sm"
+                                                            id="add-new-ioc-button" data-ng-click="saveIOCTypeRegex()">
+                                                            <i
+                                                                class="icon icon-check margin-right-sm"></i>{{viewWidgetVars.SUBMIT_BUTTON}}
+                                                        </button>
+                                                        <button type="button" class="btn btn-second-primary btn-sm"
+                                                            data-ng-click="resetEditRegexFlags()"
+                                                            id="cancel-bulk-import"><i
+                                                                class="icon icon-close margin-right-sm"></i>{{viewWidgetVars.CANCEL_BUTTON}}
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <!-- Edit Regex Div END -->
                                             </div>
                                         </div>
                                     </div>
@@ -576,7 +619,8 @@
                     id="solutionpack-configure-back-env-btn" data-ng-click="moveBack()"><i
                         class="fa fa-chevron-left margin-right-sm"></i>{{viewWidgetVars.BACK_BUTTON}}</button>
                 <button type="button" class="btn btn-primary pull-right btn-sm margin-top-lg margin-right-lg"
-                    data-ng-click="moveNext()" id="solutionpack-configure-env-next-btn">{{viewWidgetVars.FINISH_BUTTON}}<i
+                    data-ng-click="moveNext()"
+                    id="solutionpack-configure-env-next-btn">{{viewWidgetVars.FINISH_BUTTON}}<i
                         class="fa fa-chevron-right margin-left-sm"></i>
                 </button>
             </div>

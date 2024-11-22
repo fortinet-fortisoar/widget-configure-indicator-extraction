@@ -74,6 +74,12 @@
 	padding-top: 15px;
 }
 
+.excluded-ui-select .custom-multi-select.ui-select-bootstrap {
+	max-height: 90px;
+	overflow-y: auto;
+	padding: 8px 10px !important;
+}
+
 .excluded-ui-select .custom-multi-select.ui-select-bootstrap .ui-select-search {
 	max-width: max-content !important;
 	animation: none !important;
