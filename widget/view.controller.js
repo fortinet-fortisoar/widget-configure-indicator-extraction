@@ -64,6 +64,12 @@
     $scope.saveNewIOCType = saveNewIOCType;
     $scope.clearDuplicateIOCErrorMsg = clearDuplicateIOCErrorMsg;
 
+    // "Edit Indicator Type Regex" Functionality
+    $scope.editedRegexPattern = { iocType: '', pattern: '', isEditing: false };
+    $scope.editIndicatorTypeRegex = editIndicatorTypeRegex;
+    $scope.saveIOCTypeRegex = saveIOCTypeRegex;
+    $scope.resetEditRegexFlags = resetEditRegexFlags;
+
     // Theme and Image File Paths
     $scope.widgetCSS = widgetBasePath + 'widgetAssets/css/wizard-style.css'
     let _themeID = $rootScope.theme.id;
@@ -98,6 +104,35 @@
       exclusionSettingSummary: [],
       fieldMappingSummary: []
     }
+
+
+    function resetEditRegexFlags() {
+      $scope.editedRegexPattern = { iocType: '', pattern: '' , isEditing: false};
+      $scope.editIOCTypeRegexFlag = false;
+    }
+
+
+    function saveIOCTypeRegex() {
+      const iocTypeName = $scope.editedRegexPattern.iocType;
+      const regexPattern = $scope.editedRegexPattern.pattern;
+      $scope.updatedExclusionSettings.recordValue[iocTypeName].pattern[0] = regexPattern;
+      _updatedIOCTypeReGexMapping.recordValue.forEach(function (item) {
+        if (item.indicator_type == iocTypeName) {
+          item.pattern_regx = regexPattern;
+        }
+      });
+      resetEditRegexFlags();
+    }
+
+
+    function editIndicatorTypeRegex(indicatorType, iocRegex) {
+      $scope.bulkImportEnable = false;
+      $scope.addNewIndicatorType = false;
+      $scope.editIOCTypeRegexFlag = true;
+      $scope.editedRegexPattern = { iocType: indicatorType, pattern: iocRegex , isEditing: true};
+      console.log(indicatorType);
+    }
+
 
     function _computeFieldMappingSummary() {
       if (_fieldMappingSummary.fieldMappingUpdate.length > 0) {
@@ -374,6 +409,7 @@
         $scope.bulkImportEnable = false;
         $scope.isRegexAvailable = true;
         $scope.iocTypeSelected = false;
+        $scope.editIOCTypeRegexFlag = false;
       }
       if (flag === 'addNewIOCTypeDisabled') {
         $scope.addNewIndicatorType = false;
@@ -382,6 +418,7 @@
         $scope.isRegexAvailable = true;
         $scope.iocTypeSelected = false;
         $scope.duplicateIOCTypeFlag = false;
+        $scope.editIOCTypeRegexFlag = false;
       }
     }
 
@@ -421,6 +458,7 @@
         $scope.addNewIndicatorType = false;
         $scope.extractDefangedIOCsFlag = false;
         $scope.bulkImportInProgress = false;
+        $scope.editIOCTypeRegexFlag = false;
       }
       if (flag === 'bulkImportDisable') {
         $scope.bulkImportEnable = false;
@@ -707,6 +745,8 @@
             EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ENTER_IOC_PLACEHOLDER: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ENTER_IOC_PLACEHOLDER'),
             EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ENTER_REGEX_PLACEHOLDER: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ENTER_REGEX_PLACEHOLDER'),
 
+            EXCLUDELIST_CONFIG_PAGE_EDIT_REGEX_ENTER_REGEX_PLACEHOLDER: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_EDIT_REGEX_ENTER_REGEX_PLACEHOLDER'),
+
             IOC_TYPE_MAPPING_PAGE_WZ_TITLE: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_WZ_TITLE'),
             IOC_TYPE_MAPPING_PAGE_TITLE: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_TITLE'),
             IOC_TYPE_MAPPING_PAGE_DESCRIPTION: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_DESCRIPTION'),
@@ -737,6 +777,7 @@
 
             BACK_BUTTON: widgetUtilityService.translate('configureIndicatorExtraction.BACK_BUTTON'),
             SAVE_BUTTON: widgetUtilityService.translate('configureIndicatorExtraction.SAVE_BUTTON'),
+            SUBMIT_BUTTON: widgetUtilityService.translate('configureIndicatorExtraction.SUBMIT_BUTTON'),
             SKIP_BUTTON: widgetUtilityService.translate('configureIndicatorExtraction.SKIP_BUTTON'),
             CANCEL_BUTTON: widgetUtilityService.translate('configureIndicatorExtraction.CANCEL_BUTTON'),
             FINISH_BUTTON: widgetUtilityService.translate('configureIndicatorExtraction.FINISH_BUTTON')

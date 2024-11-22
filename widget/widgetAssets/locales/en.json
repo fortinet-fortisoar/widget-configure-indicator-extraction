@@ -35,6 +35,8 @@
         "EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ENTER_IOC_PLACEHOLDER": "Enter Indicator Type",
         "EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ENTER_REGEX_PLACEHOLDER": "Enter Regex Pattern (Optional)",
 
+        "EXCLUDELIST_CONFIG_PAGE_EDIT_REGEX_ENTER_REGEX_PLACEHOLDER": "Enter Regex Pattern",
+
         "IOC_TYPE_MAPPING_PAGE_WZ_TITLE": "Field Mapping",
         "IOC_TYPE_MAPPING_PAGE_TITLE": "Indicator Field Type Mapping for ",
         "IOC_TYPE_MAPPING_PAGE_DESCRIPTION": "Map following fields with appropriate indicator types",
@@ -52,7 +54,7 @@
 
         "FINISH_PAGE_WZ_TITLE": "Finish",
         "FINISH_PAGE_TITLE": "Summary",
-        "FINISH_PAGE_DESCRIPTION": "As per your selection, following is the list of items to be excluded.",
+        "FINISH_PAGE_DESCRIPTION": "Following is the summary of your selections:",
         "FINISH_PAGE_EXCLUSION_SETTING_SUMMARY_HEADING": "Exclusions Settings:",
         "FINISH_PAGE_NO_EXCLUSION_CHANGE_MESSAGE": "No Change in exclusion settings",
         "FINISH_PAGE_FIELD_MAPPING_SUMMARY_HEADING": "Field Mapping Settings:",
@@ -66,6 +68,7 @@
         "BACK_BUTTON": "Back",
         "SKIP_BUTTON": "Skip",
         "SAVE_BUTTON": "Save",
+        "SUBMIT_BUTTON": "Submit",
         "FINISH_BUTTON": "Finish"
     }
 }
