@@ -294,9 +294,11 @@
                                                             class="icon icon-information" aria-hidden="true"></i></span>
                                                 </label>
                                                 <!-- Regex Edit Button -->
-                                                <span class="icon icon-edit control-label"
+                                                <span class="control-label" data-uib-tooltip="{{viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_EDIT_REGEX_TOOLTIP}}"
+                                                    data-tooltip-placement="top-left" data-tooltip-append-to-body="true"
                                                     data-ng-if="exclusionDetails.isRegexEditable"
-                                                    data-ng-click="editIndicatorTypeRegex(indicatorType, exclusionDetails.pattern[0])"></span>
+                                                    data-ng-click="editIndicatorTypeRegex(indicatorType, exclusionDetails.pattern[0])"><i
+                                                        class="icon icon-edit" aria-hidden="true"></i></span>
                                                 <label class="control-label text-transform-none pull-right regex-label">
                                                     Regex: {{exclusionDetails.pattern[0] || 'NA'}}
                                                 </label>
@@ -305,9 +307,10 @@
                                             <div class="cs-select padding-left-3">
                                                 <ui-select name="{{indicatorType}}"
                                                     data-ng-model="exclusionDetails.excludedIOCs" multiple
-                                                    class="custom-multi-select"
-                                                    tagging="undefined" tagging-label="false"
-                                                    data-ng-change="validateIOC($select.selected, indicatorType)">
+                                                    class="custom-multi-select" tagging="undefined"
+                                                    tagging-label="false"
+                                                    data-ng-change="validateIOC($select.selected, indicatorType)"
+                                                    data-ng-class="{'has-error': invalidIOCs[indicatorType].length > 0}">
                                                     <ui-select-match
                                                         placeholder="Excluded {{indicatorType}}">{{$item}}</ui-select-match>
                                                     <ui-select-choices repeat="option in initList" refresh-delay="0"
@@ -322,13 +325,13 @@
                                                 </span>
                                                 <!-- Edit Regex Div START -->
                                                 <div id="edit-indicator-type-regex-container"
-                                                    data-ng-if="editedRegexPattern.iocType === indicatorType && editedRegexPattern.isEditing"
+                                                    data-ng-if="iocRegexUnderEdit[indicatorType].isEditing"
                                                     class="bulk-import-container-background margin-top-11">
                                                     <label
                                                         class="control-label display-block manual-input-list-container"
                                                         style="padding: 10px 20px;">
                                                         <span class="padding-top-lg font-size-16">Editing
-                                                            {{editedRegexPattern.iocType}} Regex</span>
+                                                            {{indicatorType}} Regex</span>
                                                     </label>
                                                     <div id="add-indicator-type" class="margin-top-md">
                                                         <div class="add-indicator-type-form">
@@ -339,22 +342,23 @@
                                                                 <div>
                                                                     <input class="form-control border-radius-5"
                                                                         type="text"
-                                                                        ng-model="editedRegexPattern.pattern"
+                                                                        ng-model="iocRegexUnderEdit[indicatorType].pattern"
                                                                         name="editRegexPattern"
                                                                         placeholder="{{viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_EDIT_REGEX_ENTER_REGEX_PLACEHOLDER}}"
-                                                                        id="editRegexPattern">
+                                                                        id="editRegexPattern" data-ng-class="{'has-error': unsubmittedRegex}">
                                                                 </div>
                                                             </form>
                                                         </div>
                                                     </div>
                                                     <div class="modal-footer bulk-import-footer">
                                                         <button type="submit" class="btn btn-primary btn-sm"
-                                                            id="add-new-ioc-button" data-ng-click="saveIOCTypeRegex()">
+                                                            id="add-new-ioc-button"
+                                                            data-ng-click="saveIOCTypeRegex(indicatorType)">
                                                             <i
                                                                 class="icon icon-check margin-right-sm"></i>{{viewWidgetVars.SUBMIT_BUTTON}}
                                                         </button>
                                                         <button type="button" class="btn btn-second-primary btn-sm"
-                                                            data-ng-click="resetEditRegexFlags()"
+                                                            data-ng-click="resetEditRegexFlags(indicatorType)"
                                                             id="cancel-bulk-import"><i
                                                                 class="icon icon-close margin-right-sm"></i>{{viewWidgetVars.CANCEL_BUTTON}}
                                                         </button>
@@ -372,13 +376,13 @@
                     </div>
                 </div>
             </div>
+
             <div class="ingestion-modal-footer">
                 <button type="button" class="btn btn-sm btn-second-primary margin-top-lg margin-left-lg"
                     id="solutionpack-configure-back-env-btn" data-ng-click="moveBack()"><i
                         class="fa fa-chevron-left margin-right-sm"></i>{{viewWidgetVars.BACK_BUTTON}}</button>
                 <button type="button" class="btn btn-primary pull-right btn-sm margin-top-lg margin-right-lg"
-                    data-ng-click="moveNext('save')" id="solutionpack-configure-env-next-btn"
-                    data-ng-disabled="isInvalidIOCsNotEmpty()"><i
+                    data-ng-click="moveNext('save')" id="solutionpack-configure-env-next-btn"><i
                         class="icon icon-check margin-right-sm"></i>{{viewWidgetVars.SAVE_BUTTON}}
                 </button>
                 <button type="button" class="btn btn-sm btn-second-primary pull-right margin-top-lg margin-right-lg"

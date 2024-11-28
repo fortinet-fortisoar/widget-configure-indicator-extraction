@@ -65,13 +65,14 @@
     $scope.clearDuplicateIOCErrorMsg = clearDuplicateIOCErrorMsg;
 
     // "Edit Indicator Type Regex" Functionality
-    $scope.editedRegexPattern = { iocType: '', pattern: '', isEditing: false };
+    $scope.unsubmittedRegex = false;
+    $scope.iocRegexUnderEdit = {};
     $scope.editIndicatorTypeRegex = editIndicatorTypeRegex;
     $scope.saveIOCTypeRegex = saveIOCTypeRegex;
     $scope.resetEditRegexFlags = resetEditRegexFlags;
 
     // Theme and Image File Paths
-    $scope.widgetCSS = widgetBasePath + 'widgetAssets/css/wizard-style.css'
+    $scope.widgetCSS = widgetBasePath + 'widgetAssets/css/wizard-style.css';
     let _themeID = $rootScope.theme.id;
     $scope.isDarkTheme = _themeID === 'dark';
     $scope.isLightTheme = _themeID === 'light';
@@ -106,22 +107,24 @@
     }
 
 
-    function resetEditRegexFlags() {
-      $scope.editedRegexPattern = { iocType: '', pattern: '' , isEditing: false};
-      $scope.editIOCTypeRegexFlag = false;
+    function resetEditRegexFlags(iocTypeName) {
+      delete $scope.iocRegexUnderEdit[iocTypeName];
+      if (Object.keys($scope.iocRegexUnderEdit).length === 0) {
+        $scope.editIOCTypeRegexFlag = false;
+        $scope.unsubmittedRegex = false;
+      }
     }
 
 
-    function saveIOCTypeRegex() {
-      const iocTypeName = $scope.editedRegexPattern.iocType;
-      const regexPattern = $scope.editedRegexPattern.pattern;
+    function saveIOCTypeRegex(iocTypeName) {
+      const regexPattern = $scope.iocRegexUnderEdit[iocTypeName].pattern;
       $scope.updatedExclusionSettings.recordValue[iocTypeName].pattern[0] = regexPattern;
       _updatedIOCTypeReGexMapping.recordValue.forEach(function (item) {
         if (item.indicator_type == iocTypeName) {
           item.pattern_regx = regexPattern;
         }
       });
-      resetEditRegexFlags();
+      resetEditRegexFlags(iocTypeName);
     }
 
 
@@ -129,8 +132,7 @@
       $scope.bulkImportEnable = false;
       $scope.addNewIndicatorType = false;
       $scope.editIOCTypeRegexFlag = true;
-      $scope.editedRegexPattern = { iocType: indicatorType, pattern: iocRegex , isEditing: true};
-      console.log(indicatorType);
+      $scope.iocRegexUnderEdit[indicatorType] = { pattern: iocRegex, isEditing: true };
     }
 
 
@@ -576,10 +578,6 @@
         } else {
           delete $scope.invalidIOCs[indicatorType];
         }
-
-        $scope.isInvalidIOCsNotEmpty = function () {
-          return Object.keys($scope.invalidIOCs).length > 0;
-        };
       }
     }
 
@@ -615,6 +613,8 @@
 
     function moveNext(param) {
       let currentStepTitle = WizardHandler.wizard('configureIndicatorExtraction').currentStep().wzTitle
+
+
       if (currentStepTitle === $scope.viewWidgetVars.START_PAGE_WZ_TITLE) {
         if (Object.keys($scope.updatedExclusionSettings).length === 0) {
           $scope.updatedExclusionSettings = angular.copy(_defaultExclusionSettings);
@@ -624,8 +624,24 @@
         }
         _getNotEnteredIOCTypes();
         _loadAttributes();
+        WizardHandler.wizard('configureIndicatorExtraction').next();
       }
+
+
       if (currentStepTitle === $scope.viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_WZ_TITLE) {
+        if (Object.keys($scope.invalidIOCs).length > 0) {
+          const _invalidIOCList = Object.keys($scope.invalidIOCs).join(', ');
+          toaster.error({ body: $scope.viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_VALIDATE_IOC_ERROR_MSG + _invalidIOCList });
+          return;
+        }
+
+        if ($scope.editIOCTypeRegexFlag) {
+          const _iocRegexUnderEdit = Object.keys($scope.iocRegexUnderEdit).join(', ');
+          $scope.unsubmittedRegex = true;
+          toaster.error({ body: $scope.viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_EDIT_REGEX_ENTER_REGEX_ERROR_MSG + _iocRegexUnderEdit });
+          return;
+        }
+
         if (param === 'save') {
           _commitExclusionSettings();
           _commitRegexPatternChanges();
@@ -635,15 +651,24 @@
           }
           $scope.summary.exclusionSettingSummary = _exclusionSummary;
           $scope.isExclusionSettingChanged = _exclusionSummary.length > 0 ? true : false;
+          WizardHandler.wizard('configureIndicatorExtraction').next();
+
+        } else {
+          WizardHandler.wizard('configureIndicatorExtraction').next();
         }
       }
+
       if (currentStepTitle === $scope.viewWidgetVars.IOC_TYPE_MAPPING_PAGE_WZ_TITLE) {
         if (param === 'save') {
           _commitFieldMappingChanges();
           _computeFieldMappingSummary();
         }
+        WizardHandler.wizard('configureIndicatorExtraction').next();
       }
-      WizardHandler.wizard('configureIndicatorExtraction').next();
+
+      if (currentStepTitle === $scope.viewWidgetVars.FINISH_PAGE_WZ_TITLE) {
+        WizardHandler.wizard('configureIndicatorExtraction').next();
+      }
     }
 
 
@@ -720,6 +745,9 @@
 
             EXCLUDELIST_CONFIG_PAGE_SEARCH_PLACEHOLDER: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_SEARCH_PLACEHOLDER'),
             EXCLUDELIST_CONFIG_PAGE_SEARCH_RESULT_LABEL: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_SEARCH_RESULT_LABEL'),
+
+            EXCLUDELIST_CONFIG_PAGE_VALIDATE_IOC_ERROR_MSG: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_VALIDATE_IOC_ERROR_MSG'),
+
             EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_LABEL: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_LABEL'),
             EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_LAUNCH_BUTTON: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_LAUNCH_BUTTON'),
             EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_FILE_IMPORT_BUTTON: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_FILE_IMPORT_BUTTON'),
@@ -746,6 +774,8 @@
             EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ENTER_REGEX_PLACEHOLDER: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ENTER_REGEX_PLACEHOLDER'),
 
             EXCLUDELIST_CONFIG_PAGE_EDIT_REGEX_ENTER_REGEX_PLACEHOLDER: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_EDIT_REGEX_ENTER_REGEX_PLACEHOLDER'),
+            EXCLUDELIST_CONFIG_PAGE_EDIT_REGEX_TOOLTIP: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_EDIT_REGEX_TOOLTIP'),
+            EXCLUDELIST_CONFIG_PAGE_EDIT_REGEX_ENTER_REGEX_ERROR_MSG: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_EDIT_REGEX_ENTER_REGEX_ERROR_MSG'),
 
             IOC_TYPE_MAPPING_PAGE_WZ_TITLE: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_WZ_TITLE'),
             IOC_TYPE_MAPPING_PAGE_TITLE: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_TITLE'),

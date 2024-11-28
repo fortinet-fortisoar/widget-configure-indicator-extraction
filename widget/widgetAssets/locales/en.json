@@ -12,6 +12,8 @@
         "EXCLUDELIST_CONFIG_PAGE_SEARCH_PLACEHOLDER": "Search added artifacts",
         "EXCLUDELIST_CONFIG_PAGE_SEARCH_RESULT_LABEL": "Search Result :",
 
+        "EXCLUDELIST_CONFIG_PAGE_VALIDATE_IOC_ERROR_MSG": "Remove invalid indicator values from ",
+
         "EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_LABEL": "Add indicators manually or use",
         "EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_LAUNCH_BUTTON": "bulk import",
         "EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_FILE_IMPORT_BUTTON":"Import",
@@ -36,6 +38,8 @@
         "EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ENTER_REGEX_PLACEHOLDER": "Enter Regex Pattern (Optional)",
 
         "EXCLUDELIST_CONFIG_PAGE_EDIT_REGEX_ENTER_REGEX_PLACEHOLDER": "Enter Regex Pattern",
+        "EXCLUDELIST_CONFIG_PAGE_EDIT_REGEX_TOOLTIP": "Edit Regex",
+        "EXCLUDELIST_CONFIG_PAGE_EDIT_REGEX_ENTER_REGEX_ERROR_MSG": "Make sure to Submit or Cancel regex submission for ",
 
         "IOC_TYPE_MAPPING_PAGE_WZ_TITLE": "Field Mapping",
         "IOC_TYPE_MAPPING_PAGE_TITLE": "Indicator Field Type Mapping for ",
@@ -67,7 +71,7 @@
         "CANCEL_BUTTON":"Cancel",
         "BACK_BUTTON": "Back",
         "SKIP_BUTTON": "Skip",
-        "SAVE_BUTTON": "Save",
+        "SAVE_BUTTON": "Save and Continue",
         "SUBMIT_BUTTON": "Submit",
         "FINISH_BUTTON": "Finish"
     }

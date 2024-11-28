@@ -86,6 +86,10 @@
 	min-width: 200px !important;
 }
 
+.excluded-ui-select .custom-multi-select.ui-select-bootstrap.has-error {
+	border: 1px solid #da393d;
+}
+
 .add-indicator-type-form .has-error {
 	border: 1px solid #da393d;
 }
