@@ -651,6 +651,7 @@
           }
           $scope.summary.exclusionSettingSummary = _exclusionSummary;
           $scope.isExclusionSettingChanged = _exclusionSummary.length > 0 ? true : false;
+          toaster.success({ body: $scope.viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_EXCLUSION_SETTING_SUCCESS_MSG });
           WizardHandler.wizard('configureIndicatorExtraction').next();
 
         } else {
@@ -776,6 +777,8 @@
             EXCLUDELIST_CONFIG_PAGE_EDIT_REGEX_ENTER_REGEX_PLACEHOLDER: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_EDIT_REGEX_ENTER_REGEX_PLACEHOLDER'),
             EXCLUDELIST_CONFIG_PAGE_EDIT_REGEX_TOOLTIP: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_EDIT_REGEX_TOOLTIP'),
             EXCLUDELIST_CONFIG_PAGE_EDIT_REGEX_ENTER_REGEX_ERROR_MSG: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_EDIT_REGEX_ENTER_REGEX_ERROR_MSG'),
+
+            EXCLUDELIST_CONFIG_PAGE_EXCLUSION_SETTING_SUCCESS_MSG: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_EXCLUSION_SETTING_SUCCESS_MSG'),
 
             IOC_TYPE_MAPPING_PAGE_WZ_TITLE: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_WZ_TITLE'),
             IOC_TYPE_MAPPING_PAGE_TITLE: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_TITLE'),
