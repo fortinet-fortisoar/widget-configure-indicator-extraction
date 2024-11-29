@@ -39,9 +39,7 @@
 
         "EXCLUDELIST_CONFIG_PAGE_EDIT_REGEX_ENTER_REGEX_PLACEHOLDER": "Enter Regex Pattern",
         "EXCLUDELIST_CONFIG_PAGE_EDIT_REGEX_TOOLTIP": "Edit Regex",
-        "EXCLUDELIST_CONFIG_PAGE_EDIT_REGEX_ENTER_REGEX_ERROR_MSG": "Submit or cancel the regex submission for ",
-
-        "EXCLUDELIST_CONFIG_PAGE_EXCLUSION_SETTING_SUCCESS_MSG": "Exclusion settings have been saved successfully",
+        "EXCLUDELIST_CONFIG_PAGE_EDIT_REGEX_ENTER_REGEX_ERROR_MSG": "Make sure to Submit or Cancel regex submission for ",
 
         "IOC_TYPE_MAPPING_PAGE_WZ_TITLE": "Field Mapping",
         "IOC_TYPE_MAPPING_PAGE_TITLE": "Indicator Field Type Mapping for ",
