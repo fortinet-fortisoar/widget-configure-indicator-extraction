@@ -97,6 +97,7 @@
     $scope.fieldIndicatorTypeChanged = fieldIndicatorTypeChanged;
     $scope.searchParam = { searchByTitle: '', searchByIocType: '' };
     $scope.fieldMappingSearchFilter = fieldMappingSearchFilter;
+    var _testFieldMapping = {};
 
     // Summary Page
     var _fieldMappingSummary = { fieldMappingUpdate: [], fieldFlagsUpdate: [] }
@@ -190,6 +191,7 @@
       $scope.sortedFieldTypes = Object.entries(fieldTypeMapping).sort(function ([keyA], [keyB]) {
         return keyA.localeCompare(keyB);
       });
+      console.log($scope.sortedFieldTypes);
     }
 
 
@@ -222,6 +224,39 @@
       _loadAttributes();
     }
 
+    //   function _getModuleFields(_selectedModule) {
+    //     var entity = new Entity(_selectedModule);
+    //     entity.loadFields().then(function () {
+    //       _testFieldMapping = entity.getFormFields();
+    //       console.log(_testFieldMapping);
+    //     }).catch(function () {
+    //       toaster.error({ body: $scope.viewWidgetVars.IOC_TYPE_MAPPING_PAGE_FIELD_LOADING_ERROR });
+    //     });
+    //  return _testFieldMapping;
+    //   }
+
+
+    //   function _loadAttributes() {
+    //     // Fetch all the fields of the selected module
+    //     $scope.fieldTypeMapping = {};
+    //     $scope.iocTypePicklistItems = _updatedIndicatorTypePicklistItems.picklists.map(function (item) {
+    //       return item.itemValue;
+    //     });
+    //     const _selectedModule = $scope.selectedModule.toLowerCase();
+    //     let _test = _getModuleFields(_selectedModule);
+    //     console.log(_test);
+    //     let _fields = _testFieldMapping;
+    //     const excludedTypes = new Set(['datetime', 'picklist', 'checkbox', 'lookup', 'tags', 'integer']);
+    //     angular.forEach(_fields, function (value, key) {
+    //       if (!excludedTypes.has(value.type)) {
+    //         $scope.fieldTypeMapping[key] = {
+    //           title: value.title,
+    //           iocType: $scope.updatedIOCTypeFieldMapping.recordValue.fieldTypeMapping[_selectedModule][key] || $scope.viewWidgetVars.IOC_TYPE_MAPPING_PAGE_NOT_SET_LIST_ITEM
+    //         }
+    //       }
+    //     });
+    //     _getSortedFieldTypes($scope.fieldTypeMapping);
+    //   }
 
     function _loadAttributes() {
       // Fetch all the fields of the selected module
@@ -229,24 +264,26 @@
       $scope.iocTypePicklistItems = _updatedIndicatorTypePicklistItems.picklists.map(function (item) {
         return item.itemValue;
       });
-      var entity = new Entity($scope.selectedModule.toLowerCase());
+      const _selectedModule = $scope.selectedModule.toLowerCase();
+      $scope.fieldTypeMapping[_selectedModule] = {}
+      var entity = new Entity(_selectedModule);
       entity.loadFields().then(function () {
         let fields = entity.getFormFields();
         const excludedTypes = new Set(['datetime', 'picklist', 'checkbox', 'lookup', 'tags', 'integer']);
         angular.forEach(fields, function (value, key) {
           if (!excludedTypes.has(value.type)) {
-            $scope.fieldTypeMapping[key] = {
+            $scope.fieldTypeMapping[_selectedModule][key] = {
               title: value.title,
-              iocType: $scope.updatedIOCTypeFieldMapping.recordValue.fieldTypeMapping[key] || $scope.viewWidgetVars.IOC_TYPE_MAPPING_PAGE_NOT_SET_LIST_ITEM
+              iocType: $scope.updatedIOCTypeFieldMapping.recordValue.fieldTypeMapping[_selectedModule][key] || $scope.viewWidgetVars.IOC_TYPE_MAPPING_PAGE_NOT_SET_LIST_ITEM
             }
           }
         });
-        _getSortedFieldTypes($scope.fieldTypeMapping);
+        console.log($scope.fieldTypeMapping)
+        _getSortedFieldTypes($scope.fieldTypeMapping[_selectedModule]);
       }).catch(function () {
         toaster.error({ body: $scope.viewWidgetVars.IOC_TYPE_MAPPING_PAGE_FIELD_LOADING_ERROR });
       });
     }
-
 
     function updateDefangSelection(status) {
       // Sets a flag based of value of Defang checkbox
@@ -651,6 +688,7 @@
           }
           $scope.summary.exclusionSettingSummary = _exclusionSummary;
           $scope.isExclusionSettingChanged = _exclusionSummary.length > 0 ? true : false;
+          toaster.success({ body: $scope.viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_EXCLUSION_SETTING_SUCCESS_MSG });
           WizardHandler.wizard('configureIndicatorExtraction').next();
 
         } else {
@@ -705,16 +743,46 @@
 
             // Process each key in keystore record
             let keystoreDetails;
+            
             _defaultGlobalSettings = keystoreDetails = response['hydra:member'][0].jSONValue;
             _defaultExclusionSettings = { 'recordUUID': response['hydra:member'][0].uuid, 'recordValue': {} };
             _defaultIOCTypeFieldMapping = { 'recordUUID': response['hydra:member'][0].uuid, 'recordValue': {} };
             Object.keys(keystoreDetails).forEach(function (indicatorType) {
               if (indicatorType === 'Indicator Type Mapping') {
-                _defaultIOCTypeFieldMapping.recordValue = keystoreDetails[indicatorType];
+                let _fieldMappingObject = keystoreDetails[indicatorType].fieldTypeMapping;
+                
+                if (!Object.keys(_fieldMappingObject).includes($scope.selectedModule.toLowerCase())) {
+                  let _tempFieldMapping = {};
+                  let _defaultFields = Object.keys(_fieldMappingObject);
+                  $scope.moduleList.forEach(function (_moduleName) {
+                    let _selectedModule = _moduleName.toLowerCase();
+                    var entity = new Entity(_selectedModule);
+                    entity.loadFields().then(function () {
+                      let _moduleFields = Object.keys(entity.getFormFields()).filter(function (item) {
+                        return _defaultFields.includes(item);
+                      });
+                      console.log(_moduleFields)
+                      _tempFieldMapping[_selectedModule] = {};
+                      _moduleFields.forEach(function (item) {
+                        _tempFieldMapping[_selectedModule][item] = _fieldMappingObject[item];
+                      });
+                      console.log(_tempFieldMapping);
+                      keystoreDetails[indicatorType].fieldTypeMapping = _tempFieldMapping;
+                      _defaultIOCTypeFieldMapping.recordValue = keystoreDetails[indicatorType];
+                      console.log(_defaultIOCTypeFieldMapping);
+                    }).catch(function () {
+                      toaster.error({ body: $scope.viewWidgetVars.IOC_TYPE_MAPPING_PAGE_FIELD_LOADING_ERROR });
+                    });
+                  });
+                } else {
+                  _defaultIOCTypeFieldMapping.recordValue = keystoreDetails[indicatorType];
+                  console.log(_defaultIOCTypeFieldMapping);
+                }
               } else {
-                let iocExclusionDetails = keystoreDetails[indicatorType]
-                iocExclusionDetails.pattern = _getRegexPattern(indicatorType, _regexDict);
-                _defaultExclusionSettings.recordValue[indicatorType] = iocExclusionDetails;
+                let _iocExclusionDetails = keystoreDetails[indicatorType];
+                _iocExclusionDetails.pattern = _getRegexPattern(indicatorType, _regexDict);
+                _iocExclusionDetails.excludedIOCs = keystoreDetails[indicatorType].excludedIOCs.filter(function (item) { return item !== ''; });
+                _defaultExclusionSettings.recordValue[indicatorType] = _iocExclusionDetails;
               }
             });
           }
@@ -776,6 +844,8 @@
             EXCLUDELIST_CONFIG_PAGE_EDIT_REGEX_ENTER_REGEX_PLACEHOLDER: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_EDIT_REGEX_ENTER_REGEX_PLACEHOLDER'),
             EXCLUDELIST_CONFIG_PAGE_EDIT_REGEX_TOOLTIP: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_EDIT_REGEX_TOOLTIP'),
             EXCLUDELIST_CONFIG_PAGE_EDIT_REGEX_ENTER_REGEX_ERROR_MSG: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_EDIT_REGEX_ENTER_REGEX_ERROR_MSG'),
+
+            EXCLUDELIST_CONFIG_PAGE_EXCLUSION_SETTING_SUCCESS_MSG: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_EXCLUSION_SETTING_SUCCESS_MSG'),
 
             IOC_TYPE_MAPPING_PAGE_WZ_TITLE: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_WZ_TITLE'),
             IOC_TYPE_MAPPING_PAGE_TITLE: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_TITLE'),
