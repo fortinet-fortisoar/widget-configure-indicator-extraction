@@ -9,9 +9,9 @@
     .module('cybersponse')
     .controller('configureIndicatorExtraction200Ctrl', configureIndicatorExtraction200Ctrl);
 
-  configureIndicatorExtraction200Ctrl.$inject = ['$scope', 'widgetUtilityService', '$rootScope', 'widgetBasePath', 'WizardHandler', 'iocExtractionConfigService', 'toaster', 'Upload', 'API', 'Entity'];
+  configureIndicatorExtraction200Ctrl.$inject = ['$scope', 'widgetUtilityService', '$rootScope', 'widgetBasePath', 'WizardHandler', 'iocExtractionConfigService', 'toaster', 'Upload', 'API', 'Entity', '_'];
 
-  function configureIndicatorExtraction200Ctrl($scope, widgetUtilityService, $rootScope, widgetBasePath, WizardHandler, iocExtractionConfigService, toaster, Upload, API, Entity) {
+  function configureIndicatorExtraction200Ctrl($scope, widgetUtilityService, $rootScope, widgetBasePath, WizardHandler, iocExtractionConfigService, toaster, Upload, API, Entity, _) {
     // Exclusion List Setting Functionality
     var _defaultGlobalSettings = {};
     var _defaultExclusionSettings = {};
@@ -138,34 +138,42 @@
 
     function _computeFieldMappingSummary() {
       if (_fieldMappingSummary.fieldMappingUpdate.length > 0) {
-        let _updatedFieldMapping = new Set(Object.keys($scope.updatedIOCTypeFieldMapping.recordValue.fieldTypeMapping));
-        let _changedModules = [];
-        _fieldMappingSummary.fieldMappingUpdate.forEach(function (item) {
-          if (_updatedFieldMapping.has(item.field)) {
-            _changedModules.push(item.module);
+        let _touchedModules = new Set(_fieldMappingSummary.fieldMappingUpdate);
+        let _changedModules = new Set();
+        _touchedModules.forEach(function (_moduleName) {
+          let _updatedFieldMapping = $scope.updatedIOCTypeFieldMapping.recordValue.fieldTypeMapping[_moduleName.toLowerCase()];
+          let _defaultFieldMapping = _defaultIOCTypeFieldMapping.recordValue.fieldTypeMapping[_moduleName.toLowerCase()];
+          if (!_.isEqual(_updatedFieldMapping, _defaultFieldMapping)) {
+            _changedModules.add(_moduleName);
           }
         });
-        if (_changedModules.length > 0) {
-          const _fieldTypeSummaryMessage = $scope.viewWidgetVars.FINISH_PAGE_FIELD_TYPE_SUMMARY_MESSAGE + Array.from(new Set(_changedModules)).join(' and ');
+        if (_changedModules.size > 0) {
+          let _fieldTypeSummaryMessage = $scope.viewWidgetVars.FINISH_PAGE_FIELD_TYPE_SUMMARY_MESSAGE;
+          const _changedModulesArray = Array.from(_changedModules);
+          if (_changedModulesArray.length > 1) {
+            _fieldTypeSummaryMessage += _changedModulesArray.slice(0, -1).join(', ') + ' and ' + _changedModulesArray[_changedModulesArray.length - 1];
+          } else {
+            _fieldTypeSummaryMessage += _changedModulesArray[0];
+          }
           $scope.summary.fieldMappingSummary.push(_fieldTypeSummaryMessage);
         }
       } else {
         $scope.summary.fieldMappingSummary.push($scope.viewWidgetVars.FINISH_PAGE_NO_FIELD_MAPPING_CHANGE_MESSAGE);
       }
       if (_fieldMappingSummary.fieldFlagsUpdate.length > 0) {
-        _fieldMappingSummary.fieldFlagsUpdate.forEach(function (item) {
-          if ($scope.updatedIOCTypeFieldMapping.recordValue[item.field]) {
-            if (item.field === 'createFileIOCs') {
+        _fieldMappingSummary.fieldFlagsUpdate.forEach(function (field) {
+          if ($scope.updatedIOCTypeFieldMapping.recordValue[field]) {
+            if (field === 'createFileIOCs') {
               $scope.summary.fieldMappingSummary.push($scope.viewWidgetVars.FINISH_PAGE_CREATE_FILE_IOC_MESSAGE);
             }
-            if (item.field === 'addExcludedFileComment') {
+            if (field === 'addExcludedFileComment') {
               $scope.summary.fieldMappingSummary.push($scope.viewWidgetVars.FINISH_PAGE_ADD_EXCLUDED_FILE_COMMENT_MESSAGE);
             }
           } else {
-            if (item.field === 'createFileIOCs') {
+            if (field === 'createFileIOCs') {
               $scope.summary.fieldMappingSummary.push($scope.viewWidgetVars.FINISH_PAGE_SKIP_CREATE_FILE_IOC_MESSAGE);
             }
-            if (item.field === 'addExcludedFileComment') {
+            if (field === 'addExcludedFileComment') {
               $scope.summary.fieldMappingSummary.push($scope.viewWidgetVars.FINISH_PAGE_SKIP_EXCLUDED_FILE_COMMENT_MESSAGE);
             }
           }
@@ -201,18 +209,19 @@
 
     function fieldIndicatorTypeChanged(fieldName, iocType, action) {
       const mapping = $scope.updatedIOCTypeFieldMapping.recordValue;
+      const _selectedModule = $scope.selectedModule.toLowerCase();
 
       if (action === 'fieldMappingUpdate') {
         if (iocType && iocType !== $scope.viewWidgetVars.IOC_TYPE_MAPPING_PAGE_NOT_SET_LIST_ITEM) { // This checks for non-empty, non-undefined, and non-null values
-          mapping.fieldTypeMapping[fieldName] = iocType;
-          _fieldMappingSummary[action].push({ module: $scope.selectedModule, field: fieldName });
+          mapping.fieldTypeMapping[_selectedModule][fieldName] = iocType;
+          _fieldMappingSummary[action].push(_selectedModule);
         } else {
-          delete mapping.fieldTypeMapping[fieldName];
-          _fieldMappingSummary[action].push({ module: $scope.selectedModule, field: fieldName });
+          delete mapping.fieldTypeMapping[_selectedModule][fieldName];
+          _fieldMappingSummary[action].push(_selectedModule);
         }
       } else if (action === 'fieldFlagsUpdate') {
         mapping[fieldName] = iocType;
-        _fieldMappingSummary[action].push({ module: $scope.selectedModule, field: fieldName });
+        _fieldMappingSummary[action].push(fieldName);
       }
     }
 
@@ -229,19 +238,22 @@
       $scope.iocTypePicklistItems = _updatedIndicatorTypePicklistItems.picklists.map(function (item) {
         return item.itemValue;
       });
-      var entity = new Entity($scope.selectedModule.toLowerCase());
+      const _selectedModule = $scope.selectedModule.toLowerCase();
+      $scope.fieldTypeMapping[_selectedModule] = {}
+      var entity = new Entity(_selectedModule);
       entity.loadFields().then(function () {
         let fields = entity.getFormFields();
         const excludedTypes = new Set(['datetime', 'picklist', 'checkbox', 'lookup', 'tags', 'integer']);
         angular.forEach(fields, function (value, key) {
           if (!excludedTypes.has(value.type)) {
-            $scope.fieldTypeMapping[key] = {
+            $scope.fieldTypeMapping[_selectedModule][key] = {
               title: value.title,
-              iocType: $scope.updatedIOCTypeFieldMapping.recordValue.fieldTypeMapping[key] || $scope.viewWidgetVars.IOC_TYPE_MAPPING_PAGE_NOT_SET_LIST_ITEM
+              iocType: $scope.updatedIOCTypeFieldMapping.recordValue.fieldTypeMapping[_selectedModule][key] || $scope.viewWidgetVars.IOC_TYPE_MAPPING_PAGE_NOT_SET_LIST_ITEM
             }
           }
         });
-        _getSortedFieldTypes($scope.fieldTypeMapping);
+        console.log($scope.fieldTypeMapping)
+        _getSortedFieldTypes($scope.fieldTypeMapping[_selectedModule]);
       }).catch(function () {
         toaster.error({ body: $scope.viewWidgetVars.IOC_TYPE_MAPPING_PAGE_FIELD_LOADING_ERROR });
       });
@@ -473,6 +485,10 @@
 
 
     function uploadFiles(file) {
+      if (file === null || file === undefined) {
+        toaster.error({ body: $scope.viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_FILE_EXTENSION_INVALID });
+        return;
+      }
       if (file.size < _maxFileSize) {
         if (file.type) {
           file.upload = Upload.upload({
@@ -663,6 +679,7 @@
         if (param === 'save') {
           _commitFieldMappingChanges();
           _computeFieldMappingSummary();
+          toaster.success({ body: $scope.viewWidgetVars.IOC_TYPE_MAPPING_PAGE_SAVE_SUCCESS_MSG });
         }
         WizardHandler.wizard('configureIndicatorExtraction').next();
       }
@@ -762,6 +779,7 @@
             EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_USE_STANDARD_UPLOADER: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_USE_STANDARD_UPLOADER'),
             EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_FILE_SIZE_SHOULD_NOT_EXCEED_25MB: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_FILE_SIZE_SHOULD_NOT_EXCEED_25MB'),
             EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_FILE_CONTENT_INVALID: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_FILE_CONTENT_INVALID'),
+            EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_FILE_EXTENSION_INVALID: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_FILE_EXTENSION_INVALID'),
             EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_COMPLETED: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_COMPLETED'),
             EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_EXTRACT_DEFANGED_IOC: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_EXTRACT_DEFANGED_IOC'),
 
@@ -794,6 +812,7 @@
             IOC_TYPE_MAPPING_PAGE_ENABLE_CREATE_FILE_INDICATOR_TOOLTIP: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_ENABLE_CREATE_FILE_INDICATOR_TOOLTIP'),
             IOC_TYPE_MAPPING_PAGE_ENABLE_ADD_COMMENT_FOR_EXCLUDED_FILES: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_ENABLE_ADD_COMMENT_FOR_EXCLUDED_FILES'),
             IOC_TYPE_MAPPING_PAGE_ENABLE_ADD_COMMENT_FOR_EXCLUDED_FILES_TOOLTIP: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_ENABLE_ADD_COMMENT_FOR_EXCLUDED_FILES_TOOLTIP'),
+            IOC_TYPE_MAPPING_PAGE_SAVE_SUCCESS_MSG: widgetUtilityService.translate('configureIndicatorExtraction.IOC_TYPE_MAPPING_PAGE_SAVE_SUCCESS_MSG'),
 
             FINISH_PAGE_WZ_TITLE: widgetUtilityService.translate('configureIndicatorExtraction.FINISH_PAGE_WZ_TITLE'),
             FINISH_PAGE_TITLE: widgetUtilityService.translate('configureIndicatorExtraction.FINISH_PAGE_TITLE'),
