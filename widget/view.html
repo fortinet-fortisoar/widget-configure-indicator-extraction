@@ -118,7 +118,7 @@
                                             style="margin-left: -6px !important;"
                                             data-ng-click="setBulkImportFlags('bulkImportEnable')"
                                             id="indicator-bulk-import-button" aria-hidden="false"
-                                            data-ng-disabled="editIOCTypeRegexFlag"><span
+                                            data-ng-disabled="editIOCTypeRegexInProcess"><span
                                                 class="icon icon-import"></span>&nbsp;{{viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_LAUNCH_BUTTON}}
                                         </button>
 
@@ -127,7 +127,7 @@
                                             class="btn-link text-decoration-none font-light pull-right italic font-size-14"
                                             data-ng-click="setAddNewIOCFlags('addNewIOCTypeEnabled')"
                                             id="add-new-indicator-type" aria-hidden="false"
-                                            data-ng-disabled="editIOCTypeRegexFlag">{{viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_LAUNCH_BUTTON}}
+                                            data-ng-disabled="editIOCTypeRegexInProcess">{{viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_LAUNCH_BUTTON}}
                                         </button>
                                     </div>
 
@@ -281,7 +281,7 @@
                                     <!-- UI-SELECT Excluded List Div START -->
                                     <div data-ng-repeat="(indicatorType, exclusionDetails) in updatedExclusionSettings.recordValue"
                                         class="excluded-ui-select" data-ng-show="!bulkImportEnable">
-                                        <!-- && !editIOCTypeRegexFlag" -->
+                                        <!-- && !editIOCTypeRegexInProcess" -->
                                         <div class="padding-bottom-xlg">
 
                                             <div>
@@ -345,7 +345,7 @@
                                                                         ng-model="iocRegexUnderEdit[indicatorType].pattern"
                                                                         name="editRegexPattern"
                                                                         placeholder="{{viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_EDIT_REGEX_ENTER_REGEX_PLACEHOLDER}}"
-                                                                        id="editRegexPattern" data-ng-class="{'has-error': unsubmittedRegex}">
+                                                                        id="editRegexPattern" data-ng-class="{'has-error': isRegexInReview}">
                                                                 </div>
                                                             </form>
                                                         </div>

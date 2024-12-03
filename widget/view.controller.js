@@ -65,7 +65,7 @@
     $scope.clearDuplicateIOCErrorMsg = clearDuplicateIOCErrorMsg;
 
     // "Edit Indicator Type Regex" Functionality
-    $scope.unsubmittedRegex = false;
+    $scope.isRegexInReview = false;
     $scope.iocRegexUnderEdit = {};
     $scope.editIndicatorTypeRegex = editIndicatorTypeRegex;
     $scope.saveIOCTypeRegex = saveIOCTypeRegex;
@@ -110,8 +110,8 @@
     function resetEditRegexFlags(iocTypeName) {
       delete $scope.iocRegexUnderEdit[iocTypeName];
       if (Object.keys($scope.iocRegexUnderEdit).length === 0) {
-        $scope.editIOCTypeRegexFlag = false;
-        $scope.unsubmittedRegex = false;
+        $scope.editIOCTypeRegexInProcess = false;
+        $scope.isRegexInReview = false;
       }
     }
 
@@ -120,7 +120,7 @@
       const regexPattern = $scope.iocRegexUnderEdit[iocTypeName].pattern;
       $scope.updatedExclusionSettings.recordValue[iocTypeName].pattern[0] = regexPattern;
       _updatedIOCTypeReGexMapping.recordValue.forEach(function (item) {
-        if (item.indicator_type == iocTypeName) {
+        if (item.indicator_type === iocTypeName) {
           item.pattern_regx = regexPattern;
         }
       });
@@ -131,7 +131,7 @@
     function editIndicatorTypeRegex(indicatorType, iocRegex) {
       $scope.bulkImportEnable = false;
       $scope.addNewIndicatorType = false;
-      $scope.editIOCTypeRegexFlag = true;
+      $scope.editIOCTypeRegexInProcess = true;
       $scope.iocRegexUnderEdit[indicatorType] = { pattern: iocRegex, isEditing: true };
     }
 
@@ -423,7 +423,7 @@
         $scope.bulkImportEnable = false;
         $scope.isRegexAvailable = true;
         $scope.iocTypeSelected = false;
-        $scope.editIOCTypeRegexFlag = false;
+        $scope.editIOCTypeRegexInProcess = false;
       }
       if (flag === 'addNewIOCTypeDisabled') {
         $scope.addNewIndicatorType = false;
@@ -432,7 +432,7 @@
         $scope.isRegexAvailable = true;
         $scope.iocTypeSelected = false;
         $scope.duplicateIOCTypeFlag = false;
-        $scope.editIOCTypeRegexFlag = false;
+        $scope.editIOCTypeRegexInProcess = false;
       }
     }
 
@@ -472,7 +472,7 @@
         $scope.addNewIndicatorType = false;
         $scope.extractDefangedIOCsFlag = false;
         $scope.bulkImportInProgress = false;
-        $scope.editIOCTypeRegexFlag = false;
+        $scope.editIOCTypeRegexInProcess = false;
       }
       if (flag === 'bulkImportDisable') {
         $scope.bulkImportEnable = false;
@@ -651,9 +651,9 @@
           return;
         }
 
-        if ($scope.editIOCTypeRegexFlag) {
+        if ($scope.editIOCTypeRegexInProcess) {
           const _iocRegexUnderEdit = Object.keys($scope.iocRegexUnderEdit).join(', ');
-          $scope.unsubmittedRegex = true;
+          $scope.isRegexInReview = true;
           toaster.error({ body: $scope.viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_EDIT_REGEX_ENTER_REGEX_ERROR_MSG + _iocRegexUnderEdit });
           return;
         }

@@ -25,7 +25,7 @@
         "EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_USE_STANDARD_UPLOADER":"or click to use standard uploader",
         "EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_FILE_SIZE_SHOULD_NOT_EXCEED_25MB":"File size should not exceed 25MB",
         "EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_FILE_CONTENT_INVALID": "File Content is Null or Invalid",
-        "EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_FILE_EXTENSION_INVALID": "Invalid file or extension. Supported formats: .csv, .txt, .pdf, .xls, .xlsx, .doc, .docx",
+        "EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_FILE_EXTENSION_INVALID": "Invalid file or format. Supported formats: .csv, .txt, .pdf, .xls, .xlsx, .doc, .docx",
         "EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_COMPLETED": "Bulk Import Successful",
         "EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_EXTRACT_DEFANGED_IOC": "Extract Defanged Indicators",
 
