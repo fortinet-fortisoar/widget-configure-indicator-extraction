@@ -680,8 +680,11 @@
           _commitFieldMappingChanges();
           _computeFieldMappingSummary();
           toaster.success({ body: $scope.viewWidgetVars.IOC_TYPE_MAPPING_PAGE_SAVE_SUCCESS_MSG });
+          WizardHandler.wizard('configureIndicatorExtraction').next();
+        } else {
+          _computeFieldMappingSummary();
+          WizardHandler.wizard('configureIndicatorExtraction').next();
         }
-        WizardHandler.wizard('configureIndicatorExtraction').next();
       }
 
       if (currentStepTitle === $scope.viewWidgetVars.FINISH_PAGE_WZ_TITLE) {
