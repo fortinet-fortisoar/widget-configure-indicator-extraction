@@ -130,7 +130,7 @@
 
     function editIndicatorTypeRegex(indicatorType, iocRegex) {
       $scope.bulkImportEnable = false;
-      $scope.addNewIndicatorType = false;
+      $scope.addNewIndicatorTypeInProcess = false;
       $scope.editIOCTypeRegexInProcess = true;
       $scope.iocRegexUnderEdit[indicatorType] = { pattern: iocRegex, isEditing: true };
     }
@@ -418,15 +418,21 @@
 
 
     function setAddNewIOCFlags(flag) {
+      if ($scope.editIOCTypeRegexInProcess) {
+        const _iocRegexUnderEdit = Object.keys($scope.iocRegexUnderEdit).join(', ');
+        $scope.isRegexInReview = true;
+        toaster.error({ body: $scope.viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_EDIT_REGEX_ENTER_REGEX_ERROR_MSG + _iocRegexUnderEdit });
+        return;
+      }
       if (flag === 'addNewIOCTypeEnabled') {
-        $scope.addNewIndicatorType = true;
+        $scope.addNewIndicatorTypeInProcess = true;
         $scope.bulkImportEnable = false;
         $scope.isRegexAvailable = true;
         $scope.iocTypeSelected = false;
         $scope.editIOCTypeRegexInProcess = false;
       }
       if (flag === 'addNewIOCTypeDisabled') {
-        $scope.addNewIndicatorType = false;
+        $scope.addNewIndicatorTypeInProcess = false;
         $scope.selectedIndicatorType = { iocType: '', pattern: [], dropDownValue: '' };
         $scope.addCustomIOCType = false;
         $scope.isRegexAvailable = true;
@@ -458,6 +464,12 @@
 
 
     function setBulkImportFlags(flag) {
+      if ($scope.editIOCTypeRegexInProcess) {
+        const _iocRegexUnderEdit = Object.keys($scope.iocRegexUnderEdit).join(', ');
+        $scope.isRegexInReview = true;
+        toaster.error({ body: $scope.viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_EDIT_REGEX_ENTER_REGEX_ERROR_MSG + _iocRegexUnderEdit });
+        return;
+      }
       const resetFileUpload = () => {
         $scope.bulkImportIOCExtractionDone = false;
         $scope.uploadedFileFlag = false;
@@ -469,7 +481,7 @@
       if (flag === 'bulkImportEnable') {
         $scope.bulkImportIOCExtractionDone = false;
         $scope.bulkImportEnable = true;
-        $scope.addNewIndicatorType = false;
+        $scope.addNewIndicatorTypeInProcess = false;
         $scope.extractDefangedIOCsFlag = false;
         $scope.bulkImportInProgress = false;
         $scope.editIOCTypeRegexInProcess = false;
@@ -658,6 +670,16 @@
           return;
         }
 
+        if ($scope.addNewIndicatorTypeInProcess) {
+          toaster.error({ body: $scope.viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_SUBMIT_ERROR_MSG });
+          return;
+        }
+
+        if ($scope.bulkImportEnable){
+          toaster.error({ body: $scope.viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_SUBMIT_ERROR });
+          return;
+        }
+
         if (param === 'save') {
           _commitExclusionSettings();
           _commitRegexPatternChanges();
@@ -680,8 +702,11 @@
           _commitFieldMappingChanges();
           _computeFieldMappingSummary();
           toaster.success({ body: $scope.viewWidgetVars.IOC_TYPE_MAPPING_PAGE_SAVE_SUCCESS_MSG });
+          WizardHandler.wizard('configureIndicatorExtraction').next();
+        } else {
+          _computeFieldMappingSummary();
+          WizardHandler.wizard('configureIndicatorExtraction').next();
         }
-        WizardHandler.wizard('configureIndicatorExtraction').next();
       }
 
       if (currentStepTitle === $scope.viewWidgetVars.FINISH_PAGE_WZ_TITLE) {
@@ -782,6 +807,7 @@
             EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_FILE_EXTENSION_INVALID: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_FILE_EXTENSION_INVALID'),
             EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_COMPLETED: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_COMPLETED'),
             EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_EXTRACT_DEFANGED_IOC: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_EXTRACT_DEFANGED_IOC'),
+            EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_SUBMIT_ERROR: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_SUBMIT_ERROR'),
 
             EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_LAUNCH_BUTTON: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_LAUNCH_BUTTON'),
             EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_FORM_LABEL: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_FORM_LABEL'),
@@ -791,6 +817,7 @@
             EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_EMPTY_ERR_MSG: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_EMPTY_ERR_MSG'),
             EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ENTER_IOC_PLACEHOLDER: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ENTER_IOC_PLACEHOLDER'),
             EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ENTER_REGEX_PLACEHOLDER: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ENTER_REGEX_PLACEHOLDER'),
+            EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_SUBMIT_ERROR_MSG: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_SUBMIT_ERROR_MSG'),
 
             EXCLUDELIST_CONFIG_PAGE_EDIT_REGEX_ENTER_REGEX_PLACEHOLDER: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_EDIT_REGEX_ENTER_REGEX_PLACEHOLDER'),
             EXCLUDELIST_CONFIG_PAGE_EDIT_REGEX_TOOLTIP: widgetUtilityService.translate('configureIndicatorExtraction.EXCLUDELIST_CONFIG_PAGE_EDIT_REGEX_TOOLTIP'),

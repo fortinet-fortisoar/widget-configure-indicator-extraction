@@ -117,8 +117,8 @@
                                             class="btn-link text-decoration-none font-light italic font-size-14"
                                             style="margin-left: -6px !important;"
                                             data-ng-click="setBulkImportFlags('bulkImportEnable')"
-                                            id="indicator-bulk-import-button" aria-hidden="false"
-                                            data-ng-disabled="editIOCTypeRegexInProcess"><span
+                                            id="indicator-bulk-import-button" aria-hidden="false">
+                                            <span
                                                 class="icon icon-import"></span>&nbsp;{{viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_LAUNCH_BUTTON}}
                                         </button>
 
@@ -127,7 +127,7 @@
                                             class="btn-link text-decoration-none font-light pull-right italic font-size-14"
                                             data-ng-click="setAddNewIOCFlags('addNewIOCTypeEnabled')"
                                             id="add-new-indicator-type" aria-hidden="false"
-                                            data-ng-disabled="editIOCTypeRegexInProcess">{{viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_LAUNCH_BUTTON}}
+                                            data-ng-disabled="addNewIndicatorTypeInProcess">{{viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_LAUNCH_BUTTON}}
                                         </button>
                                     </div>
 
@@ -212,7 +212,8 @@
                                     <!-- Bulk Import Div END -->
 
                                     <!-- Add New IOC Div START -->
-                                    <div id="add-new-indicator-type-container" data-ng-show="addNewIndicatorType"
+                                    <div id="add-new-indicator-type-container"
+                                        data-ng-show="addNewIndicatorTypeInProcess"
                                         class="bulk-import-container-background margin-bottom-22">
                                         <label class="control-label display-block manual-input-list-container"
                                             style="padding: 10px 20px;">
@@ -294,7 +295,8 @@
                                                             class="icon icon-information" aria-hidden="true"></i></span>
                                                 </label>
                                                 <!-- Regex Edit Button -->
-                                                <span class="control-label" data-uib-tooltip="{{viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_EDIT_REGEX_TOOLTIP}}"
+                                                <span class="control-label"
+                                                    data-uib-tooltip="{{viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_EDIT_REGEX_TOOLTIP}}"
                                                     data-tooltip-placement="top-left" data-tooltip-append-to-body="true"
                                                     data-ng-if="exclusionDetails.isRegexEditable"
                                                     data-ng-click="editIndicatorTypeRegex(indicatorType, exclusionDetails.pattern[0])"><i
@@ -345,7 +347,8 @@
                                                                         ng-model="iocRegexUnderEdit[indicatorType].pattern"
                                                                         name="editRegexPattern"
                                                                         placeholder="{{viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_EDIT_REGEX_ENTER_REGEX_PLACEHOLDER}}"
-                                                                        id="editRegexPattern" data-ng-class="{'has-error': isRegexInReview}">
+                                                                        id="editRegexPattern"
+                                                                        data-ng-class="{'has-error': isRegexInReview}">
                                                                 </div>
                                                             </form>
                                                         </div>

@@ -28,6 +28,7 @@
         "EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_FILE_EXTENSION_INVALID": "Invalid file or format. Supported formats: .csv, .txt, .pdf, .xls, .xlsx, .doc, .docx",
         "EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_COMPLETED": "Bulk Import Successful",
         "EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_EXTRACT_DEFANGED_IOC": "Extract Defanged Indicators",
+        "EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_SUBMIT_ERROR": "Import or Cancel the bulk import indicators",
 
         "EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_LAUNCH_BUTTON": "+ Add New Indicator Type",
         "EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_FORM_LABEL": "Adding New Indicator Type",
@@ -37,10 +38,11 @@
         "EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_EMPTY_ERR_MSG": "Indicator type cannot be blank",
         "EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ENTER_IOC_PLACEHOLDER": "Enter Indicator Type",
         "EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_ENTER_REGEX_PLACEHOLDER": "Enter Regex Pattern (Optional)",
+        "EXCLUDELIST_CONFIG_PAGE_ADD_IOC_TYPE_SUBMIT_ERROR_MSG": "Submit or Cancel the new indicator type addition",
 
         "EXCLUDELIST_CONFIG_PAGE_EDIT_REGEX_ENTER_REGEX_PLACEHOLDER": "Enter Regex Pattern",
         "EXCLUDELIST_CONFIG_PAGE_EDIT_REGEX_TOOLTIP": "Edit Regex",
-        "EXCLUDELIST_CONFIG_PAGE_EDIT_REGEX_ENTER_REGEX_ERROR_MSG": "Submit or cancel the regex submission for ",
+        "EXCLUDELIST_CONFIG_PAGE_EDIT_REGEX_ENTER_REGEX_ERROR_MSG": "Submit or Cancel the regex submission for ",
 
         "EXCLUDELIST_CONFIG_PAGE_EXCLUSION_SETTING_SUCCESS_MSG": "Exclusion settings have been saved successfully",
 
