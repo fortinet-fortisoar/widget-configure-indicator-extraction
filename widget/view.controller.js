@@ -103,7 +103,7 @@
     var _exclusionSummary = [];
     $scope.summary = {
       exclusionSettingSummary: [],
-      fieldMappingSummary: []
+      fieldMappingSummary: { fieldMappingUpdate: [], fieldFlagsUpdate: [] }
     }
 
 
@@ -138,6 +138,7 @@
 
     function _computeFieldMappingSummary() {
       if (_fieldMappingSummary.fieldMappingUpdate.length > 0) {
+        $scope.summary.fieldMappingSummary.fieldMappingUpdate = [];
         let _touchedModules = new Set(_fieldMappingSummary.fieldMappingUpdate);
         let _changedModules = new Set();
         _touchedModules.forEach(function (_moduleName) {
@@ -155,26 +156,29 @@
           } else {
             _fieldTypeSummaryMessage += _changedModulesArray[0];
           }
-          $scope.summary.fieldMappingSummary.push(_fieldTypeSummaryMessage);
+          $scope.summary.fieldMappingSummary.fieldMappingUpdate.push(_fieldTypeSummaryMessage);
+        } else {
+          $scope.summary.fieldMappingSummary.fieldMappingUpdate.push($scope.viewWidgetVars.FINISH_PAGE_NO_FIELD_MAPPING_CHANGE_MESSAGE);
         }
       } else {
-        $scope.summary.fieldMappingSummary.push($scope.viewWidgetVars.FINISH_PAGE_NO_FIELD_MAPPING_CHANGE_MESSAGE);
+        $scope.summary.fieldMappingSummary.fieldMappingUpdate.push($scope.viewWidgetVars.FINISH_PAGE_NO_FIELD_MAPPING_CHANGE_MESSAGE);
       }
       if (_fieldMappingSummary.fieldFlagsUpdate.length > 0) {
-        _fieldMappingSummary.fieldFlagsUpdate.forEach(function (field) {
-          if ($scope.updatedIOCTypeFieldMapping.recordValue[field]) {
-            if (field === 'createFileIOCs') {
-              $scope.summary.fieldMappingSummary.push($scope.viewWidgetVars.FINISH_PAGE_CREATE_FILE_IOC_MESSAGE);
+        $scope.summary.fieldMappingSummary.fieldFlagsUpdate = [];
+        let _touchedFlags = new Set(_fieldMappingSummary.fieldFlagsUpdate);
+        _touchedFlags.forEach(function (_flagName) {
+          let _updatedFlag = $scope.updatedIOCTypeFieldMapping.recordValue[_flagName];
+          let _defaultFlag = _defaultIOCTypeFieldMapping.recordValue[_flagName];
+          if (_updatedFlag !== _defaultFlag) {
+            if (_flagName === 'createFileIOCs') {
+              $scope.summary.fieldMappingSummary.fieldFlagsUpdate.push(
+                _updatedFlag ? $scope.viewWidgetVars.FINISH_PAGE_CREATE_FILE_IOC_MESSAGE : $scope.viewWidgetVars.FINISH_PAGE_SKIP_CREATE_FILE_IOC_MESSAGE
+              );
             }
-            if (field === 'addExcludedFileComment') {
-              $scope.summary.fieldMappingSummary.push($scope.viewWidgetVars.FINISH_PAGE_ADD_EXCLUDED_FILE_COMMENT_MESSAGE);
-            }
-          } else {
-            if (field === 'createFileIOCs') {
-              $scope.summary.fieldMappingSummary.push($scope.viewWidgetVars.FINISH_PAGE_SKIP_CREATE_FILE_IOC_MESSAGE);
-            }
-            if (field === 'addExcludedFileComment') {
-              $scope.summary.fieldMappingSummary.push($scope.viewWidgetVars.FINISH_PAGE_SKIP_EXCLUDED_FILE_COMMENT_MESSAGE);
+            if (_flagName === 'addExcludedFileComment') {
+              $scope.summary.fieldMappingSummary.fieldFlagsUpdate.push(
+                _updatedFlag ? $scope.viewWidgetVars.FINISH_PAGE_ADD_EXCLUDED_FILE_COMMENT_MESSAGE : $scope.viewWidgetVars.FINISH_PAGE_SKIP_EXCLUDED_FILE_COMMENT_MESSAGE
+              );
             }
           }
         });
@@ -675,7 +679,7 @@
           return;
         }
 
-        if ($scope.bulkImportEnable){
+        if ($scope.bulkImportEnable) {
           toaster.error({ body: $scope.viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_SUBMIT_ERROR });
           return;
         }
@@ -704,7 +708,7 @@
           toaster.success({ body: $scope.viewWidgetVars.IOC_TYPE_MAPPING_PAGE_SAVE_SUCCESS_MSG });
           WizardHandler.wizard('configureIndicatorExtraction').next();
         } else {
-          _computeFieldMappingSummary();
+          // _computeFieldMappingSummary();
           WizardHandler.wizard('configureIndicatorExtraction').next();
         }
       }
@@ -716,6 +720,12 @@
 
 
     function moveBack() {
+      // let currentStepTitle = WizardHandler.wizard('configureIndicatorExtraction').currentStep().wzTitle
+
+      // if (currentStepTitle === $scope.viewWidgetVars.FINISH_PAGE_WZ_TITLE) {
+      //   $scope.summary.fieldMappingSummary = { fieldMappingUpdate: [], fieldFlagsUpdate: [] };
+      //   console.log($scope.summary);
+      // }
       WizardHandler.wizard('configureIndicatorExtraction').previous();
     }
 

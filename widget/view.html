@@ -609,7 +609,14 @@
                                     </div>
                                     <div>
                                         <ul>
-                                            <li data-ng-repeat="item in summary.fieldMappingSummary">
+                                            <li data-ng-repeat="item in summary.fieldMappingSummary.fieldMappingUpdate">
+                                                <span class="control-label grey-text">{{item}}</span>
+                                            </li>
+                                            <li data-ng-if="!summary.fieldMappingSummary.fieldMappingUpdate.length">
+                                                <span
+                                                    class="control-label grey-text">{{viewWidgetVars.FINISH_PAGE_NO_FIELD_MAPPING_CHANGE_MESSAGE}}</span>
+                                            </li>
+                                            <li data-ng-repeat="item in summary.fieldMappingSummary.fieldFlagsUpdate">
                                                 <span class="control-label grey-text">{{item}}</span>
                                             </li>
                                         </ul>
