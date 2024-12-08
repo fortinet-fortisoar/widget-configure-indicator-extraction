@@ -256,7 +256,6 @@
             }
           }
         });
-        console.log($scope.fieldTypeMapping)
         _getSortedFieldTypes($scope.fieldTypeMapping[_selectedModule]);
       }).catch(function () {
         toaster.error({ body: $scope.viewWidgetVars.IOC_TYPE_MAPPING_PAGE_FIELD_LOADING_ERROR });
@@ -708,7 +707,6 @@
           toaster.success({ body: $scope.viewWidgetVars.IOC_TYPE_MAPPING_PAGE_SAVE_SUCCESS_MSG });
           WizardHandler.wizard('configureIndicatorExtraction').next();
         } else {
-          // _computeFieldMappingSummary();
           WizardHandler.wizard('configureIndicatorExtraction').next();
         }
       }
@@ -722,10 +720,6 @@
     function moveBack() {
       // let currentStepTitle = WizardHandler.wizard('configureIndicatorExtraction').currentStep().wzTitle
 
-      // if (currentStepTitle === $scope.viewWidgetVars.FINISH_PAGE_WZ_TITLE) {
-      //   $scope.summary.fieldMappingSummary = { fieldMappingUpdate: [], fieldFlagsUpdate: [] };
-      //   console.log($scope.summary);
-      // }
       WizardHandler.wizard('configureIndicatorExtraction').previous();
     }
 
