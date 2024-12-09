@@ -218,10 +218,10 @@
       if (action === 'fieldMappingUpdate') {
         if (iocType && iocType !== $scope.viewWidgetVars.IOC_TYPE_MAPPING_PAGE_NOT_SET_LIST_ITEM) { // This checks for non-empty, non-undefined, and non-null values
           mapping.fieldTypeMapping[_selectedModule][fieldName] = iocType;
-          _fieldMappingSummary[action].push(_selectedModule);
+          _fieldMappingSummary[action].push($scope.selectedModule);
         } else {
           delete mapping.fieldTypeMapping[_selectedModule][fieldName];
-          _fieldMappingSummary[action].push(_selectedModule);
+          _fieldMappingSummary[action].push($scope.selectedModule);
         }
       } else if (action === 'fieldFlagsUpdate') {
         mapping[fieldName] = iocType;
@@ -633,15 +633,15 @@
             const _addedItemCount = sortedUpdatedItem.length - _sameItemCount.length;
             const _removedItemCount = sortedDefaultItem.length - _sameItemCount.length;
             if (_addedItemCount === 0){
-              let summaryMsg = iocType + ' Updated: ' + Math.abs(_removedItemCount) + ' Removed';
+              let summaryMsg = iocType + ': ' + Math.abs(_removedItemCount) + ' Removed';
               _exclusionSummary.push(summaryMsg);
             }
             if (_removedItemCount === 0){
-              let summaryMsg = iocType + ' Updated: ' + Math.abs(_addedItemCount) + ' Added';
+              let summaryMsg = iocType + ': ' + Math.abs(_addedItemCount) + ' Added';
               _exclusionSummary.push(summaryMsg);
             }
             if (_addedItemCount !== 0 && _removedItemCount !== 0){
-              let summaryMsg = iocType + ' Updated: ' + Math.abs(_addedItemCount) + ' Added, ' + Math.abs(_removedItemCount) + ' Removed';
+              let summaryMsg = iocType + ': ' + Math.abs(_addedItemCount) + ' Added, ' + Math.abs(_removedItemCount) + ' Removed';
               _exclusionSummary.push(summaryMsg);
             }
           }
