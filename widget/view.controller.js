@@ -100,10 +100,10 @@
 
     // Summary Page
     var _fieldMappingSummary = { fieldMappingUpdate: [], fieldFlagsUpdate: [] }
-    var _exclusionSummary = [];
+    var _exclusionSummary = []; // Data for summary page of exclusion list setting
     $scope.summary = {
       exclusionSettingSummary: [],
-      fieldMappingSummary: []
+      fieldMappingSummary: { fieldMappingUpdate: [], fieldFlagsUpdate: [] }
     }
 
 
@@ -138,6 +138,7 @@
 
     function _computeFieldMappingSummary() {
       if (_fieldMappingSummary.fieldMappingUpdate.length > 0) {
+        $scope.summary.fieldMappingSummary.fieldMappingUpdate = [];
         let _touchedModules = new Set(_fieldMappingSummary.fieldMappingUpdate);
         let _changedModules = new Set();
         _touchedModules.forEach(function (_moduleName) {
@@ -155,26 +156,29 @@
           } else {
             _fieldTypeSummaryMessage += _changedModulesArray[0];
           }
-          $scope.summary.fieldMappingSummary.push(_fieldTypeSummaryMessage);
+          $scope.summary.fieldMappingSummary.fieldMappingUpdate.push(_fieldTypeSummaryMessage);
+        } else {
+          $scope.summary.fieldMappingSummary.fieldMappingUpdate.push($scope.viewWidgetVars.FINISH_PAGE_NO_FIELD_MAPPING_CHANGE_MESSAGE);
         }
       } else {
-        $scope.summary.fieldMappingSummary.push($scope.viewWidgetVars.FINISH_PAGE_NO_FIELD_MAPPING_CHANGE_MESSAGE);
+        $scope.summary.fieldMappingSummary.fieldMappingUpdate.push($scope.viewWidgetVars.FINISH_PAGE_NO_FIELD_MAPPING_CHANGE_MESSAGE);
       }
       if (_fieldMappingSummary.fieldFlagsUpdate.length > 0) {
-        _fieldMappingSummary.fieldFlagsUpdate.forEach(function (field) {
-          if ($scope.updatedIOCTypeFieldMapping.recordValue[field]) {
-            if (field === 'createFileIOCs') {
-              $scope.summary.fieldMappingSummary.push($scope.viewWidgetVars.FINISH_PAGE_CREATE_FILE_IOC_MESSAGE);
+        $scope.summary.fieldMappingSummary.fieldFlagsUpdate = [];
+        let _touchedFlags = new Set(_fieldMappingSummary.fieldFlagsUpdate);
+        _touchedFlags.forEach(function (_flagName) {
+          let _updatedFlag = $scope.updatedIOCTypeFieldMapping.recordValue[_flagName];
+          let _defaultFlag = _defaultIOCTypeFieldMapping.recordValue[_flagName];
+          if (_updatedFlag !== _defaultFlag) {
+            if (_flagName === 'createFileIOCs') {
+              $scope.summary.fieldMappingSummary.fieldFlagsUpdate.push(
+                _updatedFlag ? $scope.viewWidgetVars.FINISH_PAGE_CREATE_FILE_IOC_MESSAGE : $scope.viewWidgetVars.FINISH_PAGE_SKIP_CREATE_FILE_IOC_MESSAGE
+              );
             }
-            if (field === 'addExcludedFileComment') {
-              $scope.summary.fieldMappingSummary.push($scope.viewWidgetVars.FINISH_PAGE_ADD_EXCLUDED_FILE_COMMENT_MESSAGE);
-            }
-          } else {
-            if (field === 'createFileIOCs') {
-              $scope.summary.fieldMappingSummary.push($scope.viewWidgetVars.FINISH_PAGE_SKIP_CREATE_FILE_IOC_MESSAGE);
-            }
-            if (field === 'addExcludedFileComment') {
-              $scope.summary.fieldMappingSummary.push($scope.viewWidgetVars.FINISH_PAGE_SKIP_EXCLUDED_FILE_COMMENT_MESSAGE);
+            if (_flagName === 'addExcludedFileComment') {
+              $scope.summary.fieldMappingSummary.fieldFlagsUpdate.push(
+                _updatedFlag ? $scope.viewWidgetVars.FINISH_PAGE_ADD_EXCLUDED_FILE_COMMENT_MESSAGE : $scope.viewWidgetVars.FINISH_PAGE_SKIP_EXCLUDED_FILE_COMMENT_MESSAGE
+              );
             }
           }
         });
@@ -252,7 +256,6 @@
             }
           }
         });
-        console.log($scope.fieldTypeMapping)
         _getSortedFieldTypes($scope.fieldTypeMapping[_selectedModule]);
       }).catch(function () {
         toaster.error({ body: $scope.viewWidgetVars.IOC_TYPE_MAPPING_PAGE_FIELD_LOADING_ERROR });
@@ -614,24 +617,36 @@
       const updatedExclusionSettings = $scope.updatedExclusionSettings.recordValue;
       const defaultExclusionSettings = _defaultExclusionSettings.recordValue;
       const defaultExclusionItems = new Set(Object.keys(defaultExclusionSettings));
+      _exclusionSummary = []; // Reinitialize to prevent duplicates or old values
 
       Object.keys(updatedExclusionSettings).forEach(function (iocType) {
         const updatedItem = updatedExclusionSettings[iocType];
         const defaultItem = defaultExclusionSettings[iocType];
+        const sortedUpdatedItem = updatedItem.excludedIOCs.slice().sort();
+        const sortedDefaultItem = defaultItem !== undefined ? defaultItem.excludedIOCs.slice().sort() : [];
         _defaultGlobalSettings[iocType] = updatedItem;
 
         if (defaultExclusionItems.has(iocType)) {
-          let _diffCount = updatedItem.excludedIOCs.length - defaultItem.excludedIOCs.length;
-          if (_diffCount > 0) {
-            let summaryMsg = iocType + ' added: ' + _diffCount;
-            _exclusionSummary.push(summaryMsg);
-          }
-          if (_diffCount < 0) {
-            let summaryMsg = iocType + ' removed: ' + Math.abs(_diffCount);
-            _exclusionSummary.push(summaryMsg);
+          // Calculate the difference between the updated and existing exclude list values
+          if (!_.isEqual(sortedUpdatedItem, sortedDefaultItem)) {
+            const _sameItemCount = _.intersection(sortedUpdatedItem, sortedDefaultItem);
+            const _addedItemCount = sortedUpdatedItem.length - _sameItemCount.length;
+            const _removedItemCount = sortedDefaultItem.length - _sameItemCount.length;
+            if (_addedItemCount === 0){
+              let summaryMsg = iocType + ' Updated: ' + Math.abs(_removedItemCount) + ' Removed';
+              _exclusionSummary.push(summaryMsg);
+            }
+            if (_removedItemCount === 0){
+              let summaryMsg = iocType + ' Updated: ' + Math.abs(_addedItemCount) + ' Added';
+              _exclusionSummary.push(summaryMsg);
+            }
+            if (_addedItemCount !== 0 && _removedItemCount !== 0){
+              let summaryMsg = iocType + ' Updated: ' + Math.abs(_addedItemCount) + ' Added, ' + Math.abs(_removedItemCount) + ' Removed';
+              _exclusionSummary.push(summaryMsg);
+            }
           }
         } else {
-          let summaryMsg = "New Indicator Type '" + iocType + "'. Values added: " + updatedItem.excludedIOCs.length;
+          let summaryMsg = "New Indicator Type '" + iocType + "' Included: " + sortedUpdatedItem.length + ' Added';
           _exclusionSummary.push(summaryMsg);
         }
       });
@@ -675,7 +690,7 @@
           return;
         }
 
-        if ($scope.bulkImportEnable){
+        if ($scope.bulkImportEnable) {
           toaster.error({ body: $scope.viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_BULK_IMPORT_SUBMIT_ERROR });
           return;
         }
@@ -687,7 +702,7 @@
             _commitIndicatorTypePicklist(_customIOCTypeList);
             _customIOCTypeList = [];
           }
-          $scope.summary.exclusionSettingSummary = _exclusionSummary;
+          $scope.summary.exclusionSettingSummary = _.uniq(_exclusionSummary);
           $scope.isExclusionSettingChanged = _exclusionSummary.length > 0 ? true : false;
           toaster.success({ body: $scope.viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_EXCLUSION_SETTING_SUCCESS_MSG });
           WizardHandler.wizard('configureIndicatorExtraction').next();
@@ -704,7 +719,6 @@
           toaster.success({ body: $scope.viewWidgetVars.IOC_TYPE_MAPPING_PAGE_SAVE_SUCCESS_MSG });
           WizardHandler.wizard('configureIndicatorExtraction').next();
         } else {
-          _computeFieldMappingSummary();
           WizardHandler.wizard('configureIndicatorExtraction').next();
         }
       }
@@ -751,7 +765,7 @@
             _defaultGlobalSettings = keystoreDetails = response['hydra:member'][0].jSONValue;
             _defaultExclusionSettings = { 'recordUUID': response['hydra:member'][0].uuid, 'recordValue': {} };
             _defaultIOCTypeFieldMapping = { 'recordUUID': response['hydra:member'][0].uuid, 'recordValue': {} };
-            Object.keys(keystoreDetails).forEach(function (indicatorType) {
+            Object.keys(keystoreDetails).sort().forEach(function (indicatorType) {
               if (indicatorType === 'Indicator Type Mapping') {
                 _defaultIOCTypeFieldMapping.recordValue = keystoreDetails[indicatorType];
               } else {
