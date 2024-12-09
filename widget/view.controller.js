@@ -100,7 +100,7 @@
 
     // Summary Page
     var _fieldMappingSummary = { fieldMappingUpdate: [], fieldFlagsUpdate: [] }
-    var _exclusionSummary = [];
+    var _exclusionSummary = []; // Data for summary page of exclusion list setting
     $scope.summary = {
       exclusionSettingSummary: [],
       fieldMappingSummary: { fieldMappingUpdate: [], fieldFlagsUpdate: [] }
@@ -617,24 +617,36 @@
       const updatedExclusionSettings = $scope.updatedExclusionSettings.recordValue;
       const defaultExclusionSettings = _defaultExclusionSettings.recordValue;
       const defaultExclusionItems = new Set(Object.keys(defaultExclusionSettings));
+      _exclusionSummary = []; // Reinitialize to prevent duplicates or old values
 
       Object.keys(updatedExclusionSettings).forEach(function (iocType) {
         const updatedItem = updatedExclusionSettings[iocType];
         const defaultItem = defaultExclusionSettings[iocType];
+        const sortedUpdatedItem = updatedItem.excludedIOCs.slice().sort();
+        const sortedDefaultItem = defaultItem !== undefined ? defaultItem.excludedIOCs.slice().sort() : [];
         _defaultGlobalSettings[iocType] = updatedItem;
 
         if (defaultExclusionItems.has(iocType)) {
-          let _diffCount = updatedItem.excludedIOCs.length - defaultItem.excludedIOCs.length;
-          if (_diffCount > 0) {
-            let summaryMsg = iocType + ' added: ' + _diffCount;
-            _exclusionSummary.push(summaryMsg);
-          }
-          if (_diffCount < 0) {
-            let summaryMsg = iocType + ' removed: ' + Math.abs(_diffCount);
-            _exclusionSummary.push(summaryMsg);
+          // Calculate the difference between the updated and existing exclude list values
+          if (!_.isEqual(sortedUpdatedItem, sortedDefaultItem)) {
+            const _sameItemCount = _.intersection(sortedUpdatedItem, sortedDefaultItem);
+            const _addedItemCount = sortedUpdatedItem.length - _sameItemCount.length;
+            const _removedItemCount = sortedDefaultItem.length - _sameItemCount.length;
+            if (_addedItemCount === 0){
+              let summaryMsg = iocType + ' Updated: ' + Math.abs(_removedItemCount) + ' Removed';
+              _exclusionSummary.push(summaryMsg);
+            }
+            if (_removedItemCount === 0){
+              let summaryMsg = iocType + ' Updated: ' + Math.abs(_addedItemCount) + ' Added';
+              _exclusionSummary.push(summaryMsg);
+            }
+            if (_addedItemCount !== 0 && _removedItemCount !== 0){
+              let summaryMsg = iocType + ' Updated: ' + Math.abs(_addedItemCount) + ' Added, ' + Math.abs(_removedItemCount) + ' Removed';
+              _exclusionSummary.push(summaryMsg);
+            }
           }
         } else {
-          let summaryMsg = "New Indicator Type '" + iocType + "'. Values added: " + updatedItem.excludedIOCs.length;
+          let summaryMsg = "New Indicator Type '" + iocType + "' Included: " + sortedUpdatedItem.length + ' Added';
           _exclusionSummary.push(summaryMsg);
         }
       });
@@ -690,7 +702,7 @@
             _commitIndicatorTypePicklist(_customIOCTypeList);
             _customIOCTypeList = [];
           }
-          $scope.summary.exclusionSettingSummary = _exclusionSummary;
+          $scope.summary.exclusionSettingSummary = _.uniq(_exclusionSummary);
           $scope.isExclusionSettingChanged = _exclusionSummary.length > 0 ? true : false;
           toaster.success({ body: $scope.viewWidgetVars.EXCLUDELIST_CONFIG_PAGE_EXCLUSION_SETTING_SUCCESS_MSG });
           WizardHandler.wizard('configureIndicatorExtraction').next();
@@ -718,8 +730,6 @@
 
 
     function moveBack() {
-      // let currentStepTitle = WizardHandler.wizard('configureIndicatorExtraction').currentStep().wzTitle
-
       WizardHandler.wizard('configureIndicatorExtraction').previous();
     }
 
@@ -755,7 +765,7 @@
             _defaultGlobalSettings = keystoreDetails = response['hydra:member'][0].jSONValue;
             _defaultExclusionSettings = { 'recordUUID': response['hydra:member'][0].uuid, 'recordValue': {} };
             _defaultIOCTypeFieldMapping = { 'recordUUID': response['hydra:member'][0].uuid, 'recordValue': {} };
-            Object.keys(keystoreDetails).forEach(function (indicatorType) {
+            Object.keys(keystoreDetails).sort().forEach(function (indicatorType) {
               if (indicatorType === 'Indicator Type Mapping') {
                 _defaultIOCTypeFieldMapping.recordValue = keystoreDetails[indicatorType];
               } else {
