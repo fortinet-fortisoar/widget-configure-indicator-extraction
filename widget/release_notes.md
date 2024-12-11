@@ -2,7 +2,7 @@
 
 We are enhancing the widget with the following features:
 
-#### 1. **Dynamic Data Display**  
+#### 1. **Usability Improvements**  
 - Now, this wizard shows IOC settings in a more structured and user friendly way. Users now can review/edit the indicator types and add custom Regex for a new ones using user interface.
 
 #### 2. **IOC Validation (Manual Input)**  
