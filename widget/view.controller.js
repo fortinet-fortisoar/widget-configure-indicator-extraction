@@ -632,22 +632,28 @@
             const _sameItemCount = _.intersection(sortedUpdatedItem, sortedDefaultItem);
             const _addedItemCount = sortedUpdatedItem.length - _sameItemCount.length;
             const _removedItemCount = sortedDefaultItem.length - _sameItemCount.length;
-            if (_addedItemCount === 0){
+            if (_addedItemCount === 0) {
               let summaryMsg = iocType + ': ' + Math.abs(_removedItemCount) + ' Removed';
               _exclusionSummary.push(summaryMsg);
             }
-            if (_removedItemCount === 0){
+            if (_removedItemCount === 0) {
               let summaryMsg = iocType + ': ' + Math.abs(_addedItemCount) + ' Added';
               _exclusionSummary.push(summaryMsg);
             }
-            if (_addedItemCount !== 0 && _removedItemCount !== 0){
+            if (_addedItemCount !== 0 && _removedItemCount !== 0) {
               let summaryMsg = iocType + ': ' + Math.abs(_addedItemCount) + ' Added, ' + Math.abs(_removedItemCount) + ' Removed';
               _exclusionSummary.push(summaryMsg);
             }
           }
         } else {
-          let summaryMsg = "New Indicator Type '" + iocType + "' Included: " + sortedUpdatedItem.length + ' Added';
-          _exclusionSummary.push(summaryMsg);
+          if (sortedUpdatedItem.length > 0) {
+            let summaryMsg = "New Indicator Type '" + iocType + "' Included: " + sortedUpdatedItem.length + ' Added';
+            _exclusionSummary.push(summaryMsg);
+          }
+          else {
+            let summaryMsg = "New Indicator Type '" + iocType + "' Included";
+            _exclusionSummary.push(summaryMsg);
+          }
         }
       });
       iocExtractionConfigService.updateKeyStoreRecord(_defaultGlobalSettings, $scope.updatedExclusionSettings.recordUUID);
