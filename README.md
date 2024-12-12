@@ -10,7 +10,7 @@
 
 - **Applicable**: Setup Guide Widget
 
-- [Release Notes](./release_notes.md)
+- [Release Notes](./widget/release_notes.md)
 
 # Overview  
 
