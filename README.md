@@ -10,27 +10,24 @@
 
 - **Applicable**: Setup Guide Widget
 
-# Overview
+- [Release Notes](./release_notes.md)
 
-Streamline your threat management with the **Indicator Extraction Configuration** widget in your FortiSOAR environment. This powerful tool allows you to customize the indicator extraction process by excluding indicators specific to your organization’s needs. By excluding these indicators, you ensure that corresponding Indicators of Compromise (IoCs) are excluded from data ingestion.
+# Overview  
 
-## Key Features:
+Optimize your threat management with the **Indicator Extraction Configuration** widget in your FortiSOAR environment. This dynamic tool enables you to fine-tune the indicator extraction process by excluding specific indicators tailored to your organization's unique needs. By excluding these indicators, you can ensure that unwanted Indicators of Compromise (IoCs) are omitted during data ingestion, enhancing the relevance and accuracy of your threat analysis.  
 
-- **Custom Exclusions**: Add one or more indicators of any type, unique to your organization, to the exclusion list.
+## Key Features  
 
-- **Streamlined Threat Detection**: Prevent the creation of redundant IoCs, optimizing threat analysis efficiency.
+- **Custom Exclusions**: Easily add one or more indicators of any type to the exclusion list. Benefit from bulk upload options and the flexibility to define custom indicator types, making this widget an essential part of your security toolkit.  
 
-- **Enhanced Security**: Tailor indicator extraction to focus on relevant threats, reducing noise and false positives.
+- **Streamlined Threat Detection**: Prevent redundant IoCs from cluttering your workflows, ensuring efficient and accurate threat analysis.  
 
-- **Operational Efficiency:** Simplify threat triage and response by focusing on pertinent data.
+- **Enhanced Security**: Refine indicator extraction to prioritize relevant threats, minimizing noise and reducing false positives.  
 
-- **Adaptability:** Easily update exclusions as your security requirements evolve.
+- **Operational Efficiency**: Simplify your threat triage and response efforts by maintaining a focused, clutter-free dataset.  
 
-By leveraging the **Indicator Extraction Configuration** widget, you empower your security operations team to proactively manage threats with precision and efficiency by excluding false positives using this widget, thereby safeguarding your organization against potential risks.
+- **Adaptability**: Quickly update your exclusion list to align with evolving security needs.  
 
-![configure-indicator-extraction](./docs/res/indicator-extraction-settings-page.png)
+- **User-Friendly Wizard**: A step-by-step wizard guides you through the configuration process, making it simple and intuitive.  
 
-## Next Steps
-
-| [Installation](./docs/setup.md#installation) | [Configuration](./docs/setup.md#configuration) | [Usage](./docs/usage.md) |
-|----------------------------------------------|------------------------------------------------|--------------------------|
+Head over to the SOAR Framework solution pack documentation to leverage the **Indicator Extraction Configuration** wizard!
